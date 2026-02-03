@@ -1,3 +1,5 @@
+/* this is the main css*/
+
 *{
     padding: 0;
     margin:0; 
@@ -122,4 +124,25 @@ nav{
     gap: 1.2rem;
     font-size: 0.9rem;
   }
+}
+
+
+@media only screen and (max-width:1920px ){
+
+}
+
+@media only screen and (min-width: 1440px ){
+
+}
+
+@media only screen and (min-width: 1280px) {
+
+}
+
+@media only screen and (min-width:969px){
+
+}
+
+@media only screen and (min-width: 320px){
+  
 }
