@@ -14,12 +14,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  const defaultAvatars = [
-    "../images/iPad-IU-Dewdrop.png",
-    "../images/iPad-IU-Pebble.png",
-    "../images/iPad-IU-Twinkle.png",
-    "../images/iPad-IU-Whimsy.png"
-  ];
+const defaultAvatars = [
+  "assets/default-avatars/Dewdrop.png",
+  "assets/default-avatars/Pebble.png",
+  "assets/default-avatars/Twinkle.png",
+  "assets/default-avatars/Whimsy.png"
+];
 
   const pickr = Pickr.create({
     el: "#background-color",

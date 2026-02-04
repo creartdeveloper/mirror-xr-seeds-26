@@ -15,7 +15,7 @@
 </head>
 <style>
 
-    html, body {
+    html {
             margin: 0;
             padding: 0;
             width: 100%;
@@ -25,7 +25,7 @@
 
     body{
             min-height: 100svh;
-            background-image: url("./poll/assets/background/chat-bg.jpg");
+            background-image: url("../poll/assets/background/chat-bg.jpg");
             background-size: cover; 
             background-position: center bottom;
             background-repeat: no-repeat;
@@ -36,12 +36,18 @@
 </head>
 
 <body>
-    <nav class=nav-header>
+    <nav class="nav-header">
         <div class="nav-logo">
             <img src="../poll/assets/logo/logo.png"  alt="Mirror XR Logo" class="logo">
         </div>
+        <ul class="nav-links" id="nav-links">
+            <li><a href = "#">Home</a></li>
+            <li><a href = "#">Score</a></li>
+            <li><a href = "#">Gallery</a></li>
+            <li><a href = "#">Contact</a></li>
+        </ul>
     </nav>
-    <div class="app-shell">
+    <main class="app-shell">
         <div class="app-content">
             <div class="profile-container">
                 <div class="avatar-grid"> 
