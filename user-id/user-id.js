@@ -1,25 +1,31 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Profile page JS loaded");
 
+/*DOM elements*/
+
   const avatars = document.querySelectorAll(".avatar");
   const selectedAvatarImg = document.getElementById("selectedAvatarImg");
   const defaultAvatarImg = document.getElementById("defaultAvatarimg");
   const usernameInput = document.getElementById("usernameInput");
-  const selectedAvatar = document.querySelector(".selected-avatar");
+  const selectedAvatarBox = document.querySelector(".selected-avatar");
   const nextButton = document.getElementById("nextButton");
 
-  if (!avatars.length || !nextButton || !usernameInput || !selectedAvatar) {
+  if (!avatars.length || !nextButton || !usernameInput || !selectedAvatarBox || !selectedAvatarImg || !defaultAvatarImg) {
     console.error("Critical DOM elements missing");
     return;
   }
 
+  const hasRealAvatar = sessionStorage.getItem("realAvatarSelected") == "true";
 
-const defaultAvatars = [
-  "assets/default-avatars/Dewdrop.png",
-  "assets/default-avatars/Pebble.png",
-  "assets/default-avatars/Twinkle.png",
-  "assets/default-avatars/Whimsy.png"
-];
+
+  const defaultAvatars = [
+    "assets/default-avatars/Dewdrop.png",
+    "assets/default-avatars/Pebble.png",
+    "assets/default-avatars/Twinkle.png",
+    "assets/default-avatars/Whimsy.png"
+  ];
+
+/*color picker*/
 
   const pickr = Pickr.create({
     el: "#background-color",
@@ -41,29 +47,55 @@ const defaultAvatars = [
 
   pickr.on("save", (color) => {
     const hex = color.toHEXA().toString();
-    selectedAvatar.style.backgroundColor = hex;
+    selectedAvatarBox.style.backgroundColor = hex;
     sessionStorage.setItem("avatarBgColor", hex);
     pickr.hide();
     updateNextButtonState();
   });
 
-  function assignDefaultAvatar() {
-    if (!sessionStorage.getItem("realAvatarSelected")) {
-      const randomAvatar =
-        defaultAvatars[Math.floor(Math.random() * defaultAvatars.length)];
+  /*restore selected avatar*/
 
-      defaultAvatarImg.src = randomAvatar;
-      defaultAvatarImg.style.display = "block";
-      selectedAvatarImg.style.display = "none";
+  function restoreSelectedAvatar() {
+    if(!hasRealAvatar) return; 
 
-      sessionStorage.setItem("isDefaultAvatar", "true");
+    const savedAvatar = sessionStorage.getItem("selectedAvatar");
+    const savedBg = sessionStorage.getItem("avatarBgColor");
+    const savedUsername = sessionStorage.getItem("username");
 
-      usernameInput.disabled = false;
+    if (savedAvatar) {
+      selectedAvatarImg.src = savedAvatar; 
+      selectedAvatarImg.style.display="block";
+      defaultAvatarImg.style.display="none";
+    }
+
+    if (savedBg) {
+      selectedAvatarBox.style.backgroundColor = savedBg;
+    }
+
+    if (savedUsername) {
+      usernameInput.value = savedUsername; 
+      usernameInput.disabled = false; 
       usernameInput.classList.add("enabled");
     }
+
+    pickr.enable();
   }
+/*default avatar*/
+  function assignDefaultAvatar() {
+    if(hasRealAvatar) return;
 
+    const randomAvatar = defaultAvatars[Math.floor(Math.random() * defaultAvatars.length)];
+    
+    defaultAvatarImg.src = randomAvatar;
+    defaultAvatarImg.style.display = "block";
+    selectedAvatarImg.style.display = "none";
 
+    sessionStorage.setItem("isDefaultAvatar", "true");
+
+    usernameInput.disabled = false;
+    usernameInput.classList.add("enabled");
+  }
+/*username */
   const adjectives = [
     "Bouncy","Zippy","Snappy","Wiggly","Sparkly",
     "Chunky","Fizzy","Speedy","Goofy","Spooky",
@@ -86,7 +118,7 @@ const defaultAvatars = [
     nouns[getRandomInt(0, nouns.length - 1)] +
     getRandomInt(0, 9);
 
-
+/*avatar selection*/
   avatars.forEach(avatar => {
     avatar.addEventListener("click", () => {
       avatars.forEach(a => a.classList.remove("selected"));
@@ -115,16 +147,17 @@ const defaultAvatars = [
       updateNextButtonState();
     });
   });
+/*username input*/
 
   usernameInput.addEventListener("input", () => {
     sessionStorage.setItem("username", usernameInput.value.trim());
     updateNextButtonState();
   });
-
+/*next button*/
   nextButton.addEventListener("click", () => {
-    window.location.href = "../Chat/chat.html";
+    window.location.replace("../poll/poll1.html");
   });
-
+/*button state*/
   function updateNextButtonState() {
     const hasUsername = !!sessionStorage.getItem("username");
     const hasBg = sessionStorage.getItem("isDefaultAvatar")
@@ -134,6 +167,7 @@ const defaultAvatars = [
     nextButton.disabled = !(hasUsername && hasBg);
   }
 
+  restoreSelectedAvatar();
   assignDefaultAvatar();
   updateNextButtonState();
 });
