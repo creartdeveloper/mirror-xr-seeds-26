@@ -1,109 +1,142 @@
+<!--- landing page / main page-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Delius&family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="./user-id.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css"/>
 
 
-    
+
     <title>Mirror App</title>
-    <style>
+</head>
+<style>
 
-        html, body {
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                height: 100%;
-                overflow-x:hidden;
-        }
+    html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow-x:hidden;
+    }
 
-        body{
-                min-height: 100svh;
-                background-image: url("../poll/assets/background/chat-bg.jpg");
-                background-size: cover; 
-                background-position: center bottom;
-                background-repeat: no-repeat;
+    body{
+            min-height: 100svh;
+            background-image: url("./poll/assets/background/chat-bg.jpg");
+            background-size: cover; 
+            background-position: center bottom;
+            background-repeat: no-repeat;
 
-        }
+    }
 
-    </style>
+</style>
 </head>
 
-    <body>
-        <nav class=nav-header>
-            <div class="nav-logo">
-                <img src="../poll/assets/logo/logo.png"  alt="Mirror XR Logo" class="logo">
-            </div>
-        </nav>
-        <div class="app-shell">
-            <div class="app-content">
-                <div class="profile-container">
-                    <div class="avatar-grid"> 
-                        <button class="avatar" data-id="1">
-                            <img src="../images/1.avif" alt="Avatar 1">
+<body>
+    <nav class=nav-header>
+        <div class="nav-logo">
+            <img src="../poll/assets/logo/logo.png"  alt="Mirror XR Logo" class="logo">
+        </div>
+    </nav>
+    <div class="app-shell">
+        <div class="app-content">
+            <div class="profile-container">
+                <div class="avatar-grid"> 
+                    <button class="avatar" data-id="1">
+                        <img src="./assets/01.png" alt="Avatar 1">
 
-                        </button>
-                        <button class="avatar" data-id="2">
-                            <img src="../images/2.avif" alt="Avatar 2">
-                        </button>
-                        <button class="avatar" data-id="3">
-                            <img src="../images/3.avif" alt="Avatar 3">
-                        </button>
-                        <button class="avatar" data-id="4">
-                            <img src="../images/4.png" alt="Avatar 4">
-                        </button>
-                        <button class="avatar" data-id="5">
-                            <img src="../images/5.jpg" alt="Avatar 2">
-                        </button>
-                        <button class="avatar" data-id="6"></button>
-                        <button class="avatar" data-id="7"></button>
-                        <button class="avatar" data-id="8"></button>
-
-
-                        <button class="avatar" data-id="9"></button>
-                        <button class="avatar" data-id="10"></button>
-                        <button class="avatar" data-id="11"></button>
-                        <button class="avatar" data-id="12"></button>
-
-
-                        <button class="avatar" data-id="13"></button>
-                        <button class="avatar" data-id="14"></button>
-                        <button class="avatar" data-id="15"></button>
-                        <button class="avatar" data-id="16"></button>
+                    </button>
+                    <button class="avatar" data-id="2">
+                        <img src="./assets/02.png" alt="Avatar 2">
+                    </button>
+                    <button class="avatar" data-id="3">
+                        <img src="./assets/03.png" alt="Avatar 3">
+                    </button>
+                    <button class="avatar" data-id="4">
+                        <img src="./assets/04.png" alt="Avatar 4">
+                    </button>
+                    <button class="avatar" data-id="5">
+                        <img src="./assets/05.png" alt="Avatar 5">
+                    </button>
+                    <button class="avatar" data-id="6">
+                        <img src="./assets/06.png" alt="Avatar 6">
+                    </button>
+                    <button class="avatar" data-id="7">
+                        <img src="./assets/07.png" alt="Avatar 7">
+                    </button>
+                    <button class="avatar" data-id="8">
+                        <img src="./assets/08.png" alt="Avatar 8">
+                    </button>
 
 
-                        <button class="avatar" data-id="17"></button>
-                        <button class="avatar" data-id="18"></button>
-                        <button class="avatar" data-id="19"></button>
-                        <button class="avatar" data-id="20"></button>
+                    <button class="avatar" data-id="9">
+                        <img src="./assets/09.png" alt="Avatar 9">
+                    </button>
+                    <button class="avatar" data-id="10">
+                        <img src="./assets/10.png" alt="Avatar 10">
+                    </button>
+                    <button class="avatar" data-id="11">
+                        <img src="./assets/11.png" alt="Avatar 11">
+                    </button>
+                    <button class="avatar" data-id="12">
+                        <img src="./assets/12.png" alt="Avatar 12">
+                    </button>
+
+
+                    <button class="avatar" data-id="13">
+                        <img src="./assets/13.png" alt="Avatar 13">
+                    </button>
+                    <button class="avatar" data-id="14">
+                        <img src="./assets/14.png" alt="Avatar 14">
+                    </button>
+                    <button class="avatar" data-id="15">
+                        <img src="./assets/15.png" alt="Avatar 15">
+                    </button>
+                    <button class="avatar" data-id="16">
+                        <img src="./assets/16.png" alt="Avatar 16">
+                    </button>
+
+
+                    <button class="avatar" data-id="17">
+                        <img src="./assets/17.png" alt="Avatar 17">
+                    </button>
+                    <button class="avatar" data-id="18">
+                        <img src="./assets/18.png" alt="Avatar 18">
+                    </button>
+                    <button class="avatar" data-id="19">
+                        <img src="./assets/19.png" alt="Avatar 19">
+                    </button>
+                    <button class="avatar" data-id="20">
+                        <img src="./assets/20.png" alt="Avatar 20">
+                    </button>
+                </div>
+                <div class="avatar-background">
+                    <label class="color-swatch">
+                        <input type="color" id="background-color" value="#FFFFFF">
+                        <span class="swatch-preview"></span>
+                    </label>
+                </div>
+                <div class="bottom-bar">
+                    <div class="default-avatar" id="defaultavatar">
+                        <img id ="defaultAvatarimg" alt="default avatar">
                     </div>
-                    <div class="avatar-background">
-                        <label class="color-swatch">
-                            <input type="color" id="background-color" value="#FFFFFF">
-                            <span class="swatch-preview"></span>
-                        </label>
+                    
+                    <div class="selected-avatar">
+                        <img id="selectedAvatarImg" alt="selectedAvatar">
                     </div>
-                    <div class="bottom-bar">
-                        <div class="default-avatar" id="defaultavatar">
-                            <img id ="defaultAvatarimg" alt="default avatar">
-                        </div>
-                        
-                        <div class="selected-avatar">
-                            <img id="selectedAvatarImg" alt="selectedAvatar">
-                        </div>
-                        <input type="text" id="usernameInput" placeholder="Choose a Username" disabled>
-                        <button class="next-button" id="nextButton" type="button">Next</button>
-                    </div>
+                    <input type="text" id="usernameInput" placeholder="Choose a Username" disabled>
+                    <button class="next-button" id="nextButton" type="button">Next</button>
                 </div>
             </div>
         </div>
-                <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
-                <script src="./user-id.js"></script>
+    </div>
+            <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+            <script src="./user-id.js"></script>
 
-            </div>
         </div>
-    </body>
+    </div>
+</body>
 </html>
