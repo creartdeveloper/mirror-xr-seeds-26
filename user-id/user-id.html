@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Delius&family=Pacifico&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./userID.css">
+    <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css"/>
 
 
@@ -22,7 +22,7 @@
 
         body{
                 min-height: 100svh;
-                background-image: url("./assets/images/chat-bg.jpg");
+                background-image: url("../poll/assets/background/chat-bg.jpg");
                 background-size: cover; 
                 background-position: center bottom;
                 background-repeat: no-repeat;
@@ -33,12 +33,13 @@
 </head>
 
     <body>
+        <nav class=nav-header>
+            <div class="nav-logo">
+                <img src="../poll/assets/logo/logo.png"  alt="Mirror XR Logo" class="logo">
+            </div>
+        </nav>
         <div class="app-shell">
             <div class="app-content">
-                <div class="logo-wrapper">
-                    <img src="../images/logo.png" alt="Mirror XR Logo" class="logo">
-                </div>
-
                 <div class="profile-container">
                     <div class="avatar-grid"> 
                         <button class="avatar" data-id="1">
@@ -97,8 +98,10 @@
                         <button class="next-button" id="nextButton" type="button">Next</button>
                     </div>
                 </div>
+            </div>
+        </div>
                 <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
-                <script src="./userID.js"></script>
+                <script src="./user-id.js"></script>
 
             </div>
         </div>
