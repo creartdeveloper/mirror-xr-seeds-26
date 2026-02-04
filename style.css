@@ -27,7 +27,18 @@ nav{
     align-items: center; 
     justify-content: space-between; 
 }
+ .nav-links{
+    display: flex;
+    gap:1.5rem;
+    list-style:none;
 
+ }
+
+.nav-links a{
+    color:white;
+    text-decoration: none; 
+    opacity:0.85;
+}
 .logo {
     width: auto;
     height: 40px;
@@ -108,9 +119,68 @@ nav{
 
 .app-content{
     width: min(100%, 1200px);
-    padding: 2rem;
+    max-width:1200px;
+    display:flex;
+    flex-direction:column; 
+    align-items:center;
 
 }
+
+.message-box {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 6 / 5; /* preserves original 600x500 design */
+    padding: 5px;
+    border-radius: 24px;
+    background-image: url("./poll/assets/poll-components/text-box.png");
+
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.msg-text-box {
+    margin-top: 18%;
+    width: 83%;
+    height: 45%;
+    padding: 10px;
+    background-color: transparent;
+    border: none;
+    resize: none;
+    overflow: hidden;
+    font-family: "Delius", serif;
+    font-size: clamp(16px, 2.5vw, 22px);
+}
+
+.msg-text-box:focus {
+    outline: none;
+}
+.emoji-button {
+    font-size: 48px;
+    padding: 0.25rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}  
+
+.emoji-container {
+    display: flex;
+    gap:1rem;
+    padding: 0.6rem 1rem;
+    border-radius: 999px;
+    width:fit-content; 
+    backdrop-filter: blur(6px);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.emoji-button:hover{
+    transform: scale(1.15);
+}
+
 
 @media (max-width: 768px) {
 
