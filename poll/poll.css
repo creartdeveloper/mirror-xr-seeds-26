@@ -1,19 +1,43 @@
-.items-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  gap: clamp(12px, 3vw, 20px);
-  margin-top: 1rem;
+.poll-section{
+  margin-top: 1.2rem;
+  text-align: center;
+  width:100%;
 }
 
-.item img {
-  width: clamp(48px, 6vw, 72px);
-  height: auto;
-
-  transition: transform 0.2s ease, opacity 0.2s ease;
+.poll-question {
+  font-family: "Delius", serif;
+  font-size: clamp(18px, 3.8vw, 26px);
+  color: white;
+  margin-bottom: 0.8rem;
 }
 
-.item:hover img {
-  transform: scale(1.08);
+.poll-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(120px, 1fr));
+  gap: 0.6rem;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.poll-option {
+  padding: 0.7rem 1rem;
+  border-radius: 18px;
+  border: none;
+  font-size: clamp(15px, 3.5vw, 18px);
+  font-family: "Poppins", sans-serif;
+  background: rgba(255, 255, 255, 0.18);
+  color: white;
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.poll-option:hover {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.poll-option.selected {
+  background: linear-gradient(135deg, #9b7cff, #ff9de2);
+  color: white;
 }
