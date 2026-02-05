@@ -61,7 +61,7 @@ const showId   = sessionStorage.getItem("showId") || "test-show-1";
 const userId   = sessionStorage.getItem("userId") || "test-user";
 const username = sessionStorage.getItem("username") || "TestUser";
 const avatar   = sessionStorage.getItem("avatar") || "";
-
+const parentPollKey = sessionStorage.getItem("parentPollKey") || null;
 const levelId = document.body.dataset.level; // p1 / p2 / p3 / p4
 const path = sessionStorage.getItem("pollPath") || "";
 
@@ -80,11 +80,14 @@ async function submitVote(pollKey) {
         avatar,
         levelId,
         pollKey,
+        parentPollKey,
         timestamp: Timestamp.now()
       }
     );
 
     console.log("Vote saved:", pollKey);
+
+    sessionStorage.setItem("parentPollKey", pollKey);
   } catch (err) {
     console.error("Vote failed:", err);
   }

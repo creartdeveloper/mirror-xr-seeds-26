@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #main-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-left: 30%;
+        }
+
+        /* Common styles for all boxes */
+        .box {
+            width: 750px;
+            height: 150px;
+            font-size: 25px;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            align-items: center;
+        }
+
+        /* Individual box colors */
+        #dewdrop {
+            background-color: rgb(239, 14, 33);
+        }
+        #pebble {
+            background-color: rgb(13, 235, 53);
+        }
+        #twinkle {
+            background-color: rgb(239, 224, 10);
+        }
+        #whimsy {
+            background-color: rgb(241, 7, 222);
+        }
+
+        /* Styles for text and emoji sections */
+        .text-section {
+            flex: 1;
+            padding-right: 20px;
+        }
+
+        .emoji-section {
+            width: 100px;
+            text-align: center;
+            font-size: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-container">
+        <div id="dewdrop" class="box">
+            <div class="text-section"></div>
+            <div class="emoji-section"></div>
+        </div>
+        <div id="pebble" class="box">
+            <div class="text-section"></div>
+            <div class="emoji-section"></div>
+        </div>
+        <div id="twinkle" class="box">
+            <div class="text-section"></div>
+            <div class="emoji-section"></div>
+        </div>
+        <div id="whimsy" class="box">
+            <div class="text-section"></div>
+            <div class="emoji-section"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+        import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js";
+        import { getFirestore, collection, query, orderBy, limit, getDocs, where } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+        import {getMajorityForLevel} from "./count.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDiCIatzcDsnHdX_t-m15S1a8pNlrB2egs",
+            authDomain: "mira-7360b.firebaseapp.com",
+            projectId: "mira-7360b",
+            storageBucket: "mira-7360b.appspot.com",
+            messagingSenderId: "76074103771",
+            appId: "1:76074103771:web:1a2d4ca7e8b5df27a82dfe",
+            measurementId: "G-9YL8FHBDRX"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const storage = getStorage(app);
+        const db = getFirestore(app);
+        
+        const MAGICAL_ITEM_COLLECTION = "magical_item";
+        const PAGE_TYPES = ["dewdrop", "twinkle", "pebble", "whimsy"];
+        const EMOJI_COLLECTION = "emoji";
+
+        const emojiStates = {
+            dewdrop: { emoji: null, timestamp: null },
+            twinkle: { emoji: null, timestamp: null },
+            pebble: { emoji: null, timestamp: null },
+            whimsy: { emoji: null, timestamp: null }
+        };
+
+        const pageItems = {
+            "dewdrop": null,
+            "pebble": null,
+            "twinkle": null,
+            "whimsy": null
+        };
+
+        async function loadSelectedItemAndEmoji() {
+            const currentTime = new Date();
+
+            for(let i = 0; i < PAGE_TYPES.length; i++) {
+                const pageType = PAGE_TYPES[i];
+                const element = document.getElementById(pageType);
+                const textSection = element.querySelector('.text-section');
+                const emojiSection = element.querySelector('.emoji-section');
+                
+                try {
+                    const itemQuery = query(
+                        collection(db, MAGICAL_ITEM_COLLECTION),
+                        where("page_type", "==", pageType),
+                        orderBy("timestamp", "desc"),
+                        limit(1)  
+                    );
+
+                    const emojiQuery = query(
+                        collection(db, EMOJI_COLLECTION),
+                        where("pageType", "==", pageType),
+                        orderBy("timestamp", "desc"),
+                        limit(1)
+                    );
+
+                    const [itemSnapshot, emojiSnapshot] = await Promise.all([
+                        getDocs(itemQuery),
+                        getDocs(emojiQuery)
+                    ]);
+
+                    // Handle item display
+                    if (!itemSnapshot.empty) {
+                        const itemData = itemSnapshot.docs[0].data();
+                        if(pageItems[pageType] || pageItems[pageType] != itemData.item) {
+                            const displayText = `${pageType}...${itemData.item}....`;
+                            if (textSection) {
+                                textSection.textContent = displayText;
+                            }
+                        }
+                    }
+
+                    // Handle emoji display
+                    if (!emojiSnapshot.empty) {
+                        const emojiData = emojiSnapshot.docs[0].data();
+                        const newEmojiTimestamp = emojiData.timestamp.toDate();
+
+                        if (!emojiStates[pageType].timestamp || 
+                            newEmojiTimestamp > emojiStates[pageType].timestamp) {
+                            emojiStates[pageType] = {
+                                emoji: emojiData.emoji,
+                                timestamp: newEmojiTimestamp
+                            };
+                            if (emojiSection) {
+                                emojiSection.textContent = emojiData.emoji;
+                            }
+                        }
+                    }
+
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+        }
+
+        async function checkAndCleanEmojis() {
+            const currentTime = new Date();
+            
+            for(let i = 0; i < PAGE_TYPES.length; i++) {
+                const pageType = PAGE_TYPES[i];
+                
+                if (emojiStates[pageType].timestamp) {
+                    const emojiTime = emojiStates[pageType].timestamp;
+                    const timeDifference = (currentTime - emojiTime);
+                    
+                    if (timeDifference >= 12000) {
+                        //emojiStates[pageType] = { emoji: null, timestamp: null };
+                        const element = document.getElementById(pageType);
+                        const emojiSection = element.querySelector('.emoji-section');
+                        
+                        if (emojiSection) {
+                            emojiSection.textContent = '';
+                        }
+                    }
+                }
+            }
+        }
+
+        // Start the intervals
+        setInterval(loadSelectedItemAndEmoji, 1000);
+        setInterval(checkAndCleanEmojis, 8000);
+
+        async function loadPollResults() {
+        const showId = "test-show-1";
+
+        const p1 = await getMajorityForLevel(db, "p1", showId);
+        const p2 = await getMajorityForLevel(db, "p2", showId);
+
+        // Example: update text
+        document.querySelector("#dewdrop .text-section")
+            .textContent = `P1 winner: ${p1.winner}`;
+
+        document.querySelector("#pebble .text-section")
+            .textContent = `P2 winner: ${p2.winner}`;
+        }
+
+        setInterval(loadPollResults, 1000);
+    </script>
+</body>
+</html>
