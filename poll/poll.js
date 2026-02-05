@@ -65,6 +65,13 @@ const parentPollKey = sessionStorage.getItem("parentPollKey") || null;
 const levelId = document.body.dataset.level; // p1 / p2 / p3 / p4
 const path = sessionStorage.getItem("pollPath") || "";
 
+const poll_flow = {
+  p1: "poll2.html",
+  p2: "poll3.html",
+  p3: "poll4.html",
+  p4: null // last poll
+};
+
 if (!levelId) {
   console.error("Missing data-level on body");
 }
@@ -103,13 +110,20 @@ document.querySelectorAll(".poll-bar").forEach(btn => {
 
 //next button 
 const nextButton = document.getElementById("nextButton");
+
 if (nextButton) {
   nextButton.addEventListener("click", () => {
-    const vote = sessionStorage.getItem("poll1Vote");
-    if (!vote) {
-      alert("Please select an option first");
+    const currentLevel = document.body.dataset.level;
+    const nextPage = POLL_FLOW[currentLevel];
+
+    console.log("LEVEL:", currentLevel);
+    console.log("NEXT PAGE:", nextPage);
+
+    if (!nextPage) {
+      alert("No next page found");
       return;
     }
-    window.location.href = "poll2.html";
+
+    window.location.href = nextPage;
   });
 }
