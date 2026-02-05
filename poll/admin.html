@@ -91,10 +91,22 @@
         const storage = getStorage(app);
         const db = getFirestore(app);
         
-        const MAGICAL_ITEM_COLLECTION = "magical_item";
-        const PAGE_TYPES = ["dewdrop", "twinkle", "pebble", "whimsy"];
-        const EMOJI_COLLECTION = "emoji";
+        const showId = "test-show-1";
+        const POLL_LEVELS = ["p1", "p2", "p3", "p4"];
 
+        async function loadPollResults() {
+            for (const level of POLL_LEVELS) {
+            const result = await getMajorityForLevel(db, level, showId);
+
+            const box = document.getElementById(level);
+            if (!box) continue;
+
+            box.querySelector(".text-section").textContent =
+                `Winner: ${result.winner || "-"} | A:${result.counts.a} B:${result.counts.b} C:${result.counts.c} D:${result.counts.d}`;
+            }
+        }
+
+        setInterval(loadPollResults, 1000);
         const emojiStates = {
             dewdrop: { emoji: null, timestamp: null },
             twinkle: { emoji: null, timestamp: null },
