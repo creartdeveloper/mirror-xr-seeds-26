@@ -1,17 +1,26 @@
 /* this is the main css*/
+:root {
+  --nav-height: 72px;
+}
+
 
 *{
     padding: 0;
     margin:0; 
     box-sizing: border-box;
 }
-
-body{
-    font-family:"Poppins",sans-serif; 
-    min-height:100svh;
-
+html, body {
+  height: 100%;
+  overflow: hidden;
 }
 
+body {
+  font-family: "Poppins", sans-serif;
+  background-image: url("./poll/assets/background/chat-bg.jpg");
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+}
 nav{
   position: fixed;
   top: 0;
@@ -99,59 +108,58 @@ nav{
     cursor: pointer; 
 }
 
-
-.app-shell{
+.app-shell {
   padding-top: var(--nav-height);
+  height: 100dvh;
   width: 100%;
-  min-height: 100svh;
+
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  background-size: cover; 
-  background-position: center;
-  background-repeat: no-repeat;
-  overflow: hidden;
+  align-items: flex-start;
 }
 
-.app-content{
+.app-content {
   width: min(94vw, 900px);
-  height: calc(100svh - var(--nav-height));
+  height: calc(100dvh - var(--nav-height));
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
 
+  gap: clamp(0.2rem, 1vh, 0.4rem);
 }
 
 .message-box {
+  margin-top: clamp(0.8rem, 2vh, 1.4rem);
   position: relative;
   width: min(90%, 520px);
   aspect-ratio: 4 / 3;
-  max-height: 38svh;
 
   background-image: url("./poll/assets/poll-components/text-box.png");
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
 
-  display: flex;
-  align-items: center;    
+  display: block;
+  align-items: center;
   justify-content: center;
 }
 
 .msg-text-box {
-  width: 72%;
-  height: 42%;
-  resize: none;
-  border: none;
+  position: absolute;
+  top: 26%;
+  left: 18%;
+  width: 64%;
+  height: 36%;
+
   background: transparent;
+  border: none;
+  resize: none;
 
   font-family: "Delius", cursive;
   font-size: clamp(0.85rem, 1.6vw, 1rem);
   color: #555;
-
-  text-align: left;
 }
 
 .msg-text-box:focus {
@@ -200,12 +208,12 @@ nav{
     width:fit-content; 
     backdrop-filter: blur(8px);
     background: rgba(255, 255, 255, 0.12);
-    margin-top: 0.8rem;
+    margin-top: 0.4rem;
 }
 
 .magical-items {
-  margin-top: 0.7rem;
-  margin-bottom: 0.4rem;
+  margin-top: 0.4rem;
+  margin-bottom: 0.3rem;
 }
 
 .items-container {
@@ -272,39 +280,87 @@ nav{
     display: flex;
     gap: 1.2rem;
     font-size: 0.9rem;
+
+  }
+  .body{
+    overscroll-behavior: none;
+  }
+
+  .app-content{
+    overflow:hidden;
   }
 }
 
-@media (max-height: 700px) {
-  .message-box {
-    max-height: 32svh;
+@media(max-width: 1440px) {
+  .message-box{
+    width: 480px;
+  }
+
+  .item img {
+    width: 56px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .message-box{
+    width: 440px;
+  }
+  .emoji-container{
+    margin-top:0.3rem;
+  }
+
+  .app-content{
+    gap: 0.35rem;
+  }
+}
+
+@media (max-width: 969px) {
+  .message-box{
+    width: 90%;
+    aspect-ratio: 3 / 2;
+    max-height: 28vh;
+    margin-top: 0.6rem;
+  }
+
+  .msg-text-box {
+    top: 28%;
+    height: 34%;
+    font-size: 0.85rem;
+  }
+
+  .item img{
+    width:42px; 
+
+  }
+  .emoji-button{
+    font-size: 26px;
   }
 
   .emoji-container {
-    margin-top: 0.4rem;
+    padding: 0.35rem 0.6rem;
+    gap: 8px;
+    margin-top: 0.2rem;
   }
 
   .magical-items {
-    margin-top: 0.3rem;
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
   }
 }
 
-@media only screen and (max-width:1920px ){
+@media (max-width: 320px){
+  .message-box{
+    aspect-ratio: 3 / 2;
+  }
+  .emoji-container{
+    padding: 0.3rem 0.5rem;
+  }
 
-}
+  .item img{
+    width:40px;
+  }
 
-@media only screen and (min-width: 1440px ){
-
-}
-
-@media only screen and (min-width: 1280px) {
-
-}
-
-@media only screen and (min-width:969px){
-
-}
-
-@media only screen and (min-width: 320px){
-  
+  .app-content{
+    gap: 0.25rem;
+  }
 }
