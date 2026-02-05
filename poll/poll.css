@@ -1,43 +1,97 @@
-.poll-section{
-  margin-top: 1.2rem;
+.poll{
+  margin-top: 0.8rem;
+  padding: 0.8rem 1rem;
+  display:flex; 
+  flex-direction: column; 
+  align-items: center;
+  gap: 0.4rem; 
+  z-index: 5;
+  width: min(92%, 520px);
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
   text-align: center;
-  width:100%;
 }
 
 .poll-question {
-  font-family: "Delius", serif;
-  font-size: clamp(18px, 3.8vw, 26px);
-  color: white;
-  margin-bottom: 0.8rem;
+  font-family: "Delius", cursive;
+  font-size: clamp(16px, 2.6vw, 20px);
+  font-weight: 600;
+  color:#f3eaff;
+  margin-bottom: 0.4rem; 
+  text-align: center; 
 }
-
 .poll-options {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(120px, 1fr));
-  gap: 0.6rem;
-  max-width: 420px;
-  margin: 0 auto;
+  display:flex; 
+  justify-content: center; 
+  gap: 0.4rem;
+}
+.poll-option{
+  width:36px; 
+  height: 36px; 
+  padding: 0; 
+  border-radius: 8px; 
+  border: none; 
+  font-family: "Delius", cursive; 
+  font-size: 0.9rem; 
+  background: rgba(255, 255, 255, 0.85);
+  color:#333;
+  cursor:pointer;
+  transition: transform 0.15s ease, backgrounds 0.15s ease;
 }
 
-.poll-option {
-  padding: 0.7rem 1rem;
-  border-radius: 18px;
-  border: none;
-  font-size: clamp(15px, 3.5vw, 18px);
-  font-family: "Poppins", sans-serif;
-  background: rgba(255, 255, 255, 0.18);
-  color: white;
-  backdrop-filter: blur(6px);
-  cursor: pointer;
-  transition: transform 0.15s ease, background 0.15s ease;
-}
-
-.poll-option:hover {
-  transform: scale(1.05);
-  background: rgba(255, 255, 255, 0.28);
-}
-
-.poll-option.selected {
+.poll-option.selected{
   background: linear-gradient(135deg, #9b7cff, #ff9de2);
+  color: white; 
+}
+
+.pick-a-magical-item-image{
+  display: block;
+  margin: 0.4rem auto 0.6rem; 
+  max-width: 240px; 
+  width: 80%; 
+  height:auto;
+}
+.poll-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.poll-bar {
+  height: 28px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.22);
+
+  display: flex;
+  align-items: center;
+  padding-left: 0.6rem;
+
+  font-size: 0.8rem;
   color: white;
+
+  cursor: pointer;
+}
+
+.poll-bar:hover {
+  transform: scale(1.02);
+  background: rgba(255,255,255,0.3);
+}
+
+
+.poll-bar.selected {
+  background: linear-gradient(135deg, #9b7cff, #ff9de2);
+}
+@media (max-height: 700px) {
+  .message-box {
+    max-height: 32svh;
+  }
+
+  .emoji-container {
+    margin-top: 0.4rem;
+  }
+
+  .magical-items {
+    margin-top: 0.3rem;
+  }
 }
