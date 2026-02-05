@@ -27,3 +27,10 @@ document.addEventListener("DOMContentLoaded", function() {
         optionA.textCount = optionAVotes;
     }
 });
+
+const avatarImg = document.getElementById("chatAvatarImg");
+const savedAvatar = sessionStorage.getItem("selectedAvatar");
+
+if (savedAvatar && avatarImg) {
+    avatarImg.src = savedAvatar;
+}

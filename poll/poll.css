@@ -82,16 +82,3 @@
 .poll-bar.selected {
   background: linear-gradient(135deg, #9b7cff, #ff9de2);
 }
-@media (max-height: 700px) {
-  .message-box {
-    max-height: 32svh;
-  }
-
-  .emoji-container {
-    margin-top: 0.4rem;
-  }
-
-  .magical-items {
-    margin-top: 0.3rem;
-  }
-}

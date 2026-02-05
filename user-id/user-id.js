@@ -160,11 +160,12 @@ document.addEventListener("DOMContentLoaded", () => {
 /*button state*/
   function updateNextButtonState() {
     const hasUsername = !!sessionStorage.getItem("username");
-    const hasBg = sessionStorage.getItem("isDefaultAvatar")
-      ? true
-      : !!sessionStorage.getItem("avatarBgColor");
 
-    nextButton.disabled = !(hasUsername && hasBg);
+    const hasAvatar = 
+      sessionStorage.getItem("realAvatarSelected") === "true" ||
+      sessionStorage.getItem("isDefaultAvatar") === "true";
+
+      nextButton.disabled = !(hasUsername && hasAvatar);
   }
 
   restoreSelectedAvatar();
