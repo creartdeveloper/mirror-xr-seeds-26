@@ -1,43 +1,48 @@
-.poll{
-  margin-top: 0.8rem;
-  padding: 0.8rem 1rem;
-  display:flex; 
-  flex-direction: column; 
+.poll {
+  margin-top: 0.4rem;
+  padding: 0.5rem 0.6rem;
+
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.4rem; 
-  z-index: 5;
-  width: min(92%, 520px);
+  gap: 0.3rem;
+
+  width: min(90%, 460px);
+
   background: rgba(255,255,255,0.12);
   backdrop-filter: blur(10px);
-  border-radius: 16px;
+  border-radius: 14px;
   text-align: center;
 }
 
 .poll-question {
   font-family: "Delius", cursive;
-  font-size: clamp(16px, 2.6vw, 20px);
+  font-size: clamp(14px, 2.4vw, 18px);
   font-weight: 600;
-  color:#f3eaff;
-  margin-bottom: 0.4rem; 
-  text-align: center; 
+  color: #f3eaff;
+
+  margin-bottom: 0.2rem;
 }
 .poll-options {
-  display:flex; 
-  justify-content: center; 
-  gap: 0.4rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.35rem;
 }
-.poll-option{
-  width:36px; 
-  height: 36px; 
-  padding: 0; 
-  border-radius: 8px; 
-  border: none; 
-  font-family: "Delius", cursive; 
-  font-size: 0.9rem; 
+
+.poll-option {
+  width: 32px;
+  height: 32px;
+
+  border-radius: 8px;
+  border: none;
+
+  font-family: "Delius", cursive;
+  font-size: 0.85rem;
+
   background: rgba(255, 255, 255, 0.85);
-  color:#333;
-  cursor:pointer;
-  transition: transform 0.15s ease, backgrounds 0.15s ease;
+  color: #333;
+
+  cursor: pointer;
 }
 
 .poll-option.selected{
@@ -55,22 +60,21 @@
 .poll-bars {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.25rem;
 }
 
 .poll-bar {
-  height: 28px;
-  border-radius: 10px;
+  height: 22px;
+  border-radius: 8px;
+
   background: rgba(255,255,255,0.22);
+  padding-left: 0.5rem;
+
+  font-size: 0.75rem;
+  color: white;
 
   display: flex;
   align-items: center;
-  padding-left: 0.6rem;
-
-  font-size: 0.8rem;
-  color: white;
-
-  cursor: pointer;
 }
 
 .poll-bar:hover {
@@ -83,3 +87,33 @@
   background: linear-gradient(135deg, #9b7cff, #ff9de2);
 }
 
+@media (max-width: 969px) {
+  .poll {
+    padding: 0.4rem 0.5rem;
+    gap: 0.25rem;
+  }
+
+  .poll-question {
+    font-size: 14px;
+  }
+
+  .poll-bar {
+    height: 20px;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .poll {
+    padding: 0.4rem 0.5rem;
+  }
+
+  .poll-question {
+    font-size: 13px;
+  }
+
+  .poll-bar {
+    height: 20px;
+    font-size: 0.65rem;
+  }
+}
