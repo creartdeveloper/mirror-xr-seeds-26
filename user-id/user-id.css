@@ -1,10 +1,11 @@
 
 .app-shell{
+    padding-top: var(--nav-height);
     width: 100%;
     min-height: 100svh;
     display:flex;
     justify-content:center;
-    align-items:center;
+    align-items:flex;
 }
 
 .app-content{
@@ -13,6 +14,8 @@
     flex-direction: column;
     align-items: center;
     padding:0 0.5 rem;
+    max-height: calc(100svh - var(--nav-height));
+    overflow-y: auto;
 }
 
 .profile-container{
@@ -27,6 +30,9 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
     gap:12px;
+    max-height: 45vh;
+    overflow-y: auto;
+    padding-right: 4px;
 }
 
 .avatar{
@@ -94,14 +100,20 @@
 }
 
 .selected-avatar {
-    width: 48px; 
-    height: 48px; 
-    border-radius: 12px;
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+
+  backdrop-filter: blur(6px);
+  padding: 6px;
+  overflow: hidden; 
+  transition: background-color 0.2s ease; 
+  box-shadow: 0 6px 14px rgba(0,0,0,0.25);
 
 }
 
@@ -115,10 +127,10 @@
 }
 
 .selected-avatar img {
-    width: 38px; 
-    height: 38px; 
-    object-fit: contain; 
-    display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 10px; 
 }
 
 #selectedAvatarImg{
@@ -193,15 +205,20 @@
   }
 
   .avatar-grid {
-    gap: 8px;
+    max-height: 40vh;
+    grid-template-columns: repeat(4, 1fr);
   }
-
+  .selected-avatar {
+    width: 56px;
+    height: 56px;
+  }
   .logo-wrapper {
     margin-bottom: 1.5rem;
   }
   
   .bottom-bar {
-    padding: 0.6rem;
+    margin-top: 12px;
+    padding: 10px 12px;
   }
 
   #usernameInput {

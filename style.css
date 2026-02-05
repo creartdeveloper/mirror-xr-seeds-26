@@ -134,36 +134,33 @@ nav{
 
   gap: clamp(0.25rem, 0.7vh, 0.5rem);
 }
-
 .message-box {
-  margin-top: clamp(0.8rem, 2vh, 1.4rem);
   position: relative;
-  width: min(90%, 520px);
+  width: min(88%, 420px);
   aspect-ratio: 4 / 3;
+  max-height: 34vh;
 
   background-image: url("./poll/assets/poll-components/text-box.png");
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
 
-  display: block;
-  align-items: center;
-  justify-content: center;
+  margin-top: 0.6rem;
 }
 
 .msg-text-box {
   position: absolute;
-  top: 30%;
+  top: 26%;
   left: 18%;
-  width: 62%;
-  height: 30%;
+  width: 64%;
+  height: 34%;
 
   background: transparent;
   border: none;
   resize: none;
 
   font-family: "Delius", cursive;
-  font-size: clamp(0.9rem, 1.1vw, 1.05rem);
+  font-size: clamp(0.75rem, 1.2vw, 0.95rem);
   color: #555;
 }
 

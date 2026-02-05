@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const selectedAvatarImg = document.getElementById("selectedAvatarImg");
   const defaultAvatarImg = document.getElementById("defaultAvatarimg");
   const usernameInput = document.getElementById("usernameInput");
-  const selectedAvatarBox = document.querySelector(".selected-avatar");
+  const selectedAvatarBox = document.getElementById("selectedAvatarBox");
   const nextButton = document.getElementById("nextButton");
 
   if (!avatars.length || !nextButton || !usernameInput || !selectedAvatarBox || !selectedAvatarImg || !defaultAvatarImg) {
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  pickr.disable();
+  pickr.enable();
 
   pickr.on("save", (color) => {
     const hex = color.toHEXA().toString();
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const savedBg = sessionStorage.getItem("avatarBgColor");
     const savedUsername = sessionStorage.getItem("username");
 
-    if (savedAvatar) {
+    if (savedAvatar && hasRealAvatar) {
       selectedAvatarImg.src = savedAvatar; 
       selectedAvatarImg.style.display="block";
       defaultAvatarImg.style.display="none";
@@ -172,3 +172,4 @@ document.addEventListener("DOMContentLoaded", () => {
   assignDefaultAvatar();
   updateNextButtonState();
 });
+
