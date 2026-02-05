@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Delius&family=Pacifico&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
-    <!-- <link rel="stylesheet" href="../poll.css"> -->
+    <link rel="stylesheet" href="./poll.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css"/>
 
 
@@ -52,8 +52,8 @@
             <div class="message-box">
                 <textarea maxlength="100" placeholder="Type message here" class="msg-text-box"></textarea>
             </div>
-            <div class="selected-avatar">
-
+            <div class="chat-avatar">
+                <img id="chatAvatarImg" alt="selected avatar"/>
             </div>
             <div class="emoji-container">
                 <button class="emoji-button">😄</button>
@@ -77,10 +77,20 @@
                         <img src="./assets/p1/D.png"; alt="D">
                     </div>
                 </div>
+                <div class="pick-a-magical-item-bar">
+                    <img class="pick-a-magical-item-image" src="./assets/poll-components/Pick-a-Magical-Item.png" alt="pick-a-magical-item">
+                </div>
             </div>
-            <div class="polls">
-
+            <div class="poll" id="poll">
+                <h2 class="Question-1">Question 1: pick a magical item?</h2>
+                <div class="poll-bars">
+                    <button class="poll-bar" data-option="A">A</button>
+                    <button class="poll-bar" data-option="B">B</button>
+                    <button class="poll-bar" data-option="C">C</button>
+                    <button class="poll-bar" data-option="D">D</button>
+                </div>
             </div>
+            <button class="next-button" id="nextButton" type="button">Next</button>
             <div class="footer">
 
             </div>
@@ -167,7 +177,7 @@
                 sessionStorage.setItem('selectedMagicalItem', selectedItem);
             });
         });
-        document.querySelectorAll('.emoji-btn').forEach(button => {
+        document.querySelectorAll('.emoji-button').forEach(button => {
             button.addEventListener('click', async function() {
                 // // Remove selected class from all buttons
                 // document.querySelectorAll('.emoji-btn').forEach(btn => {

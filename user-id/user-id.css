@@ -157,35 +157,6 @@
     cursor: pointer;
 }
 
-.next-button {
-  cursor: pointer;
-  height: 42px;
-  position: relative;
-  overflow: hidden;
-  z-index: 0;
-
-  padding: 6px 14px;
-  border-radius: 14px;
-
-  font-size: 1.4rem;
-  font-weight: 150;
-  white-space: nowrap;
-  color: white;
-
-  background: linear-gradient(
-    to bottom,
-    #9dff7a 0%,
-    #4fd93a 45%,
-    #2bbf1e 100%
-  );
-
-  box-shadow:
-    inset 0 2px 0 rgba(255,255,255,0.45),
-    inset 0 -2px 0 rgba(0,0,0,0.25),
-    0 6px 14px rgba(0,0,0,0.25);
-
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
 
 .next-button::before {
   content: "";
