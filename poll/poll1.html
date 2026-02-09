@@ -44,16 +44,16 @@
             <div class="magical-items">
                 <div class="items-container">
                     <div class="item" data-item="cup">
-                        <img src="./assets/P1/A.png"; alt="A">
+                        <img src="./assets/P1/A.png" alt="A">
                     </div>
                     <div class="item" data-item="plate">
-                        <img src="./assets/p1/B.png"; alt="B">
+                        <img src="./assets/p1/B.png" alt="B">
                     </div>
                     <div class="item" data-item="jar">
-                        <img src="./assets/p1/C.png"; alt="C">
+                        <img src="./assets/p1/C.png" alt="C">
                     </div>
                     <div class="item" data-item="feather">
-                        <img src="./assets/p1/D.png"; alt="D">
+                        <img src="./assets/p1/D.png" alt="D">
                     </div>
                 </div>
                 <div class="pick-a-magical-item-bar">
@@ -63,10 +63,10 @@
             <div class="poll" id="poll">
                 <h2 class="Question-1">Question 1: pick a magical item?</h2>
                 <div class="poll-bars">
-                    <button class="poll-bar" data-option="A">A</button>
-                    <button class="poll-bar" data-option="B">B</button>
-                    <button class="poll-bar" data-option="C">C</button>
-                    <button class="poll-bar" data-option="D">D</button>
+                    <button class="poll-bar" data-option="a">A</button>
+                    <button class="poll-bar" data-option="b">B</button>
+                    <button class="poll-bar" data-option="c">C</button>
+                    <button class="poll-bar" data-option="d">D</button>
                 </div>
             </div>
             <button class="next-button" id="nextButton" type="button">Next</button>
@@ -75,13 +75,6 @@
             </div>
         </div>
     </main>
-    <script type="module" src="./poll.js">
-        document.querySelectorAll('.poll-bar').forEach(btn => {
-            btn.addEventListener('click', () => {
-            console.log("Clicked option:", btn.dataset.option);
-            });
-        });
-    </script>
-
+    <script type="module" src="./poll.js"></script>
 </body>
 </html>

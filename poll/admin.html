@@ -25,16 +25,16 @@
         }
 
         /* Individual box colors */
-        #dewdrop {
-            background-color: rgb(239, 14, 33);
+        #result-bar {
+            background-color: rgb(141, 52, 52);
         }
-        #pebble {
+        #result-bar2 {
             background-color: rgb(13, 235, 53);
         }
-        #twinkle {
+        #result-bar3 {
             background-color: rgb(239, 224, 10);
         }
-        #whimsy {
+        #result-bar4 {
             background-color: rgb(241, 7, 222);
         }
 
@@ -51,181 +51,86 @@
         }
     </style>
 </head>
-<body>
+<body data-level ="p1">
     <div id="main-container">
-        <div id="dewdrop" class="box">
-            <div class="text-section"></div>
-            <div class="emoji-section"></div>
+        <div class="poll-container" data-level="p1">
+            <h2>Poll 1</h2>
+            <div class="result-bar1" data-option="a">
+                Option A
+                <span id="count-p1-a">0</span>
+            </div>
+            <div id="result-bar2" data-option="b">
+                Option B
+                <span id="count-p1-b">0</span>
+            </div>
+            <div id="result-bar3" data-option="c">
+                Option C
+                <span id="count-p1-c">0</span>
+            </div>
+            <div id="result-bar4" data-option="d">
+                Option D
+                <span id="count-p1-d">0</span>
+            </div>
         </div>
-        <div id="pebble" class="box">
-            <div class="text-section"></div>
-            <div class="emoji-section"></div>
+        <div class="poll-container" data-level="p2">
+            <h2>Poll 2</h2>
+            <div class="result-bar1" data-option="a">
+                Option A
+                <span id="count-p2-a">0</span>
+            </div>
+            <div id="result-bar2" data-option="b">
+                Option B
+                <span id="count-p2-b">0</span>
+            </div>
+            <div id="result-bar3" data-option="c">
+                Option C
+                <span id="count-p2-c">0</span>
+            </div>
+            <div id="result-bar4" data-option="d">
+                Option D
+                <span id="count-p2-d">0</span>
+            </div>
         </div>
-        <div id="twinkle" class="box">
-            <div class="text-section"></div>
-            <div class="emoji-section"></div>
+        <div class="poll-container" data-level="p3">
+            <h2> Poll 3</h2>
+            <div class="result-bar1" data-option="a">
+                Option A
+                <span id="count-p3-a">0</span>
+            </div>
+            <div id="result-bar2" data-option="b">
+                Option B
+                <span id="count-p3-b">0</span>
+            </div>
+            <div id="result-bar3" data-option="c">
+                Option C
+                <span id="count-p3-c">0</span>
+            </div>
+            <div id="result-bar4" data-option="d">
+                Option D
+                <span id="count-p3-d">0</span>
+            </div>
         </div>
-        <div id="whimsy" class="box">
-            <div class="text-section"></div>
-            <div class="emoji-section"></div>
+        <div class="poll-container" data-level="p4">
+            <h2>Poll 4</h2>
+            <div class="result-bar1" data-option="a">
+                Option A
+                <span id="count-p4-a">0</span>
+            </div>
+            <div id="result-bar2" data-option="b">
+                Option B
+                <span id="count-p4-b">0</span>
+            </div>
+            <div id="result-bar3" data-option="c">
+                Option C
+                <span id="count-p4-c">0</span>
+            </div>
+            <div id="result-bar4" data-option="d">
+                Option D
+                <span id="count-p4-d">0</span>
+            </div>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-        import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js";
-        import { getFirestore, collection, query, orderBy, limit, getDocs, where } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-        import {getMajorityForLevel} from "./count.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDiCIatzcDsnHdX_t-m15S1a8pNlrB2egs",
-            authDomain: "mira-7360b.firebaseapp.com",
-            projectId: "mira-7360b",
-            storageBucket: "mira-7360b.appspot.com",
-            messagingSenderId: "76074103771",
-            appId: "1:76074103771:web:1a2d4ca7e8b5df27a82dfe",
-            measurementId: "G-9YL8FHBDRX"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const storage = getStorage(app);
-        const db = getFirestore(app);
-        
-        const showId = "test-show-1";
-        const POLL_LEVELS = ["p1", "p2", "p3", "p4"];
-
-        async function loadPollResults() {
-            for (const level of POLL_LEVELS) {
-            const result = await getMajorityForLevel(db, level, showId);
-
-            const box = document.getElementById(level);
-            if (!box) continue;
-
-            box.querySelector(".text-section").textContent =
-                `Winner: ${result.winner || "-"} | A:${result.counts.a} B:${result.counts.b} C:${result.counts.c} D:${result.counts.d}`;
-            }
-        }
-
-        setInterval(loadPollResults, 1000);
-        const emojiStates = {
-            dewdrop: { emoji: null, timestamp: null },
-            twinkle: { emoji: null, timestamp: null },
-            pebble: { emoji: null, timestamp: null },
-            whimsy: { emoji: null, timestamp: null }
-        };
-
-        const pageItems = {
-            "dewdrop": null,
-            "pebble": null,
-            "twinkle": null,
-            "whimsy": null
-        };
-
-        async function loadSelectedItemAndEmoji() {
-            const currentTime = new Date();
-
-            for(let i = 0; i < PAGE_TYPES.length; i++) {
-                const pageType = PAGE_TYPES[i];
-                const element = document.getElementById(pageType);
-                const textSection = element.querySelector('.text-section');
-                const emojiSection = element.querySelector('.emoji-section');
-                
-                try {
-                    const itemQuery = query(
-                        collection(db, MAGICAL_ITEM_COLLECTION),
-                        where("page_type", "==", pageType),
-                        orderBy("timestamp", "desc"),
-                        limit(1)  
-                    );
-
-                    const emojiQuery = query(
-                        collection(db, EMOJI_COLLECTION),
-                        where("pageType", "==", pageType),
-                        orderBy("timestamp", "desc"),
-                        limit(1)
-                    );
-
-                    const [itemSnapshot, emojiSnapshot] = await Promise.all([
-                        getDocs(itemQuery),
-                        getDocs(emojiQuery)
-                    ]);
-
-                    // Handle item display
-                    if (!itemSnapshot.empty) {
-                        const itemData = itemSnapshot.docs[0].data();
-                        if(pageItems[pageType] || pageItems[pageType] != itemData.item) {
-                            const displayText = `${pageType}...${itemData.item}....`;
-                            if (textSection) {
-                                textSection.textContent = displayText;
-                            }
-                        }
-                    }
-
-                    // Handle emoji display
-                    if (!emojiSnapshot.empty) {
-                        const emojiData = emojiSnapshot.docs[0].data();
-                        const newEmojiTimestamp = emojiData.timestamp.toDate();
-
-                        if (!emojiStates[pageType].timestamp || 
-                            newEmojiTimestamp > emojiStates[pageType].timestamp) {
-                            emojiStates[pageType] = {
-                                emoji: emojiData.emoji,
-                                timestamp: newEmojiTimestamp
-                            };
-                            if (emojiSection) {
-                                emojiSection.textContent = emojiData.emoji;
-                            }
-                        }
-                    }
-
-                } catch (error) {
-                    console.error('Error:', error);
-                }
-            }
-        }
-
-        async function checkAndCleanEmojis() {
-            const currentTime = new Date();
-            
-            for(let i = 0; i < PAGE_TYPES.length; i++) {
-                const pageType = PAGE_TYPES[i];
-                
-                if (emojiStates[pageType].timestamp) {
-                    const emojiTime = emojiStates[pageType].timestamp;
-                    const timeDifference = (currentTime - emojiTime);
-                    
-                    if (timeDifference >= 12000) {
-                        //emojiStates[pageType] = { emoji: null, timestamp: null };
-                        const element = document.getElementById(pageType);
-                        const emojiSection = element.querySelector('.emoji-section');
-                        
-                        if (emojiSection) {
-                            emojiSection.textContent = '';
-                        }
-                    }
-                }
-            }
-        }
-
-        // Start the intervals
-        setInterval(loadSelectedItemAndEmoji, 1000);
-        setInterval(checkAndCleanEmojis, 8000);
-
-        async function loadPollResults() {
-        const showId = "test-show-1";
-
-        const p1 = await getMajorityForLevel(db, "p1", showId);
-        const p2 = await getMajorityForLevel(db, "p2", showId);
-
-        // Example: update text
-        document.querySelector("#dewdrop .text-section")
-            .textContent = `P1 winner: ${p1.winner}`;
-
-        document.querySelector("#pebble .text-section")
-            .textContent = `P2 winner: ${p2.winner}`;
-        }
-
-        setInterval(loadPollResults, 1000);
-    </script>
+    <script type="module" src="./count.js"></script>
 </body>
 </html>

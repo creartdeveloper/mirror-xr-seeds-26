@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Profile page JS loaded");
 
@@ -10,11 +11,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const selectedAvatarBox = document.getElementById("selectedAvatarBox");
   const nextButton = document.getElementById("nextButton");
 
+  //if elements are missing 
   if (!avatars.length || !nextButton || !usernameInput || !selectedAvatarBox || !selectedAvatarImg || !defaultAvatarImg) {
     console.error("Critical DOM elements missing");
     return;
   }
 
+  // track whether user selected an avatar
   const hasRealAvatar = sessionStorage.getItem("realAvatarSelected") == "true";
 
 
@@ -137,6 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       pickr.enable();
 
+      //auto generate username once
       if (!usernameAssigned) {
         const name = generateUsername();
         usernameInput.value = name;
@@ -155,6 +159,12 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 /*next button*/
   nextButton.addEventListener("click", () => {
+
+    //unique id (no two users with same username) to be resued in the next pages + link avatar, username , votes
+    if(!sessionStorage.getItem("userId")){
+      const userId = crypto.randomUUID();
+      sessionStorage.setItem("userId", userId);
+    }
     window.location.replace("../poll/poll1.html");
   });
 /*button state*/
