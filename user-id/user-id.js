@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
     defaultAvatarImg.style.display = "block";
     selectedAvatarImg.style.display = "none";
 
-    sessionStorage.setItem("isDefaultAvatar", "true");
+    sessionStorage.setItem("avatar", randomAvatar);
 
     usernameInput.disabled = false;
     usernameInput.classList.add("enabled");
@@ -136,6 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       sessionStorage.setItem("selectedAvatar", img.src);
       sessionStorage.setItem("realAvatarSelected", "true");
+      sessionStorage.setItem("avatar", img.src);
       sessionStorage.removeItem("isDefaultAvatar");
 
       pickr.enable();
