@@ -37,13 +37,17 @@ document.addEventListener("DOMContentLoaded", () => {
     avatarImg.style.display = "block";
   }
   
+  const username = sessionStorage.getItem("username");
+  const usernameSpan = document.getElementById("chatUsername");
+
+  if (username && usernameSpan) {
+    usernameSpan.textContent = username;
+  }
   //session data
   // ID for live show session
   const showId   = sessionStorage.getItem("showId") || "test-show-1";
   //users unique ID
   const userId   = sessionStorage.getItem("userId");
-  //users selected username and avatar
-  const username = sessionStorage.getItem("username") || "TestUser";
   let currentPollIndex = 0; 
   let selectedOption = null;
 

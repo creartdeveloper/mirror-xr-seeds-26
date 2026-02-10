@@ -10,8 +10,8 @@
     box-sizing: border-box;
 }
 html, body {
-  height: 100%;
-  overscroll-behavior:none;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 body {
@@ -32,8 +32,8 @@ nav{
 }
 
 .nav-header{
-    padding:1rem 2rem;
-    width:100%; 
+    padding:1rem;
+    max-width:100%; 
     display:flex;
     align-items: center; 
     justify-content: space-between; 
@@ -119,7 +119,9 @@ nav{
   align-items: flex-start;
 }
 .app-content {
-  width: min(94vw, 900px);
+  width:100%;
+  max-width:900px;
+  padding-inline:12px;
   height: calc(100dvh - var(--nav-height));
   overflow:visible;
   display: grid;
@@ -170,26 +172,27 @@ nav{
   outline: none;
 }
 
-.chat-avatar{
-    position:absolute; 
+.chat-avatar-wrapper {
+  position: absolute;
+  right: -26px;
+  bottom: -18px;
 
-    bottom: -18px; 
-    right: 12px; 
-
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    overflow:hidden; 
-
-    background: rgba(255,255,255,0.25);
-    backdrop-filter: blur(6px);
-    box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+#chatAvatarImg {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
 }
 
-.chat-avatar img{
-    width:100%;
-    height:100%;
-    object-fit: cover;
+#chatUsername {
+  font-size: 13px;
+  color: white;
+  opacity: 0.9;
+  white-space: nowrap;
 }
 .emoji-button {
   font-size: clamp(24px, 4vw, 36px);
@@ -277,21 +280,6 @@ nav{
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-@media (max-width: 768px) {
-
-  .nav-header {
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 1.2rem;
-    font-size: 0.9rem;
-
-  }
-}
 
 @media(max-width: 1440px) {
   .message-box{
@@ -366,5 +354,13 @@ nav{
     width: 38px;
     height: 38px;
     bottom: -12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .next-button {
+    font-size: 1.1rem;
+    padding: 6px 12px;
+    max-width: 100%;
   }
 }

@@ -175,11 +175,20 @@ document.addEventListener("DOMContentLoaded", () => {
 /*next button*/
   nextButton.addEventListener("click", () => {
 
-    //unique id (no two users with same username) to be resued in the next pages + link avatar, username , votes
-    if(!sessionStorage.getItem("userId")){
+    // ensure username + avatar are final and saved
+    const finalUsername = usernameInput.value.trim();
+    const finalAvatar =
+      sessionStorage.getItem("avatar") || selectedAvatarImg.src;
+
+    sessionStorage.setItem("username", finalUsername);
+    sessionStorage.setItem("avatar", finalAvatar);
+
+    // unique user id
+    if (!sessionStorage.getItem("userId")) {
       const userId = crypto.randomUUID();
       sessionStorage.setItem("userId", userId);
     }
+
     window.location.replace("../poll/poll.html");
   });
 /*button state*/
