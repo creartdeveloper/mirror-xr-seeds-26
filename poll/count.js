@@ -1,3 +1,4 @@
+//show id needs to be tracked 
 import { db } from "./firebase.js";
 import {collection,query,where,onSnapshot} from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 

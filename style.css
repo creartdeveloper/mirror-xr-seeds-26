@@ -216,12 +216,14 @@ nav{
     margin-top: 0.4rem;
 }
 
-.magical-items {
-  margin-top: 0.4rem;
-  margin-bottom: 0.3rem;
+.pick-a-magical-item{
+  display:flex; 
+  flex-direction:row;
+  justify-content: center;
+  align-items:center;
+  gap:16px;
 }
-
-.items-container {
+/* .items-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -241,7 +243,7 @@ nav{
 
 .item img:hover {
   transform: scale(1.08);
-}
+} */
 
 .next-button {
   cursor: pointer;
@@ -341,11 +343,6 @@ nav{
     padding: 0.35rem 0.6rem;
     gap: 8px;
     margin-top: 0.2rem;
-  }
-
-  .magical-items {
-    margin-top: 0.2rem;
-    margin-bottom: 0.2rem;
   }
   .chat-avatar {
     width: 42px;

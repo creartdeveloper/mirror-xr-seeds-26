@@ -1,3 +1,4 @@
+
 .poll {
   margin-top: 0.4rem;
   padding: 0.5rem 0.6rem;
@@ -59,8 +60,9 @@
 }
 .poll-bars {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  flex-direction: row;
+  gap: 16px;
+  align-items:center;
 }
 
 .poll-bar {

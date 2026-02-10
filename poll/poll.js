@@ -9,6 +9,47 @@ import {
   Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
+document.querySelectorAll('.poll-item').forEach(item => {
+  item.addEventListener('click', function() {
+    //if item is already selected
+    if (this.classList.contains('selected')) {
+      return;
+    }
+
+    const container = document.querySelector('.items-container');
+    const imgElement = this.querySelector('img');
+    const selectedItem = this.getAttribute('data-item');
+
+    switch(selectedItem) {
+      case 'A':
+        imgElement.src = "./assets/P1/S-A.png";
+        break;
+      case 'B':
+        imgElement.src = "./assets/P1/S-B.png";
+        break;
+      case 'C':
+        imgElement.src = "./assets/P1/S-C.png";
+        break;
+      case 'D':
+        imgElement.src = "./assets/P1/S-D.png";
+    }
+    //store selected item to firebase
+    addSelectedItem(selectedItem);
+    //hide all other items
+    document.querySelectorAll('./poll-item').forEach(otherItem => {
+      if (otherItem !== this) {
+        otherItem.classList.add('hidden');
+
+      }
+    });
+    //add selected class to clicked item
+    this.classList.add('selected');
+    // add single item class to container for centering
+    container.classList.add('single-item');
+    // store selected item in session 
+    sessionStorage.setItem('selectedItem', selectedItem);
+    });
+});
 document.addEventListener("DOMContentLoaded", () => {
   // ID for live show session
   const showId   = sessionStorage.getItem("showId") || "test-show-1";
@@ -59,7 +100,7 @@ async function submitVote(pollOption) {
 }
 
   //next button 
-  const pollButtons = document.querySelectorAll(".poll-bar");
+  const pollButtons = document.querySelectorAll(".poll-item");
   const nextButton = document.getElementById("nextButton");
 
     //disable next button till vote is made
@@ -67,7 +108,7 @@ async function submitVote(pollOption) {
 
   pollButtons.forEach(button => {
     button.addEventListener("click", async () => {
-      if (hasVoted) return; // 🔒 prevent multiple votes
+      if (hasVoted) return; //prevent multiple votes
 
       pollButtons.forEach(b => b.classList.remove("selected"));
       button.classList.add("selected");
