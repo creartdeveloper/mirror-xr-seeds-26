@@ -10,9 +10,25 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("poll.js is running");
+  // console.log("poll.js is running");
+  const polls=[
+    {
+      pollId:"P1", 
+      assetPath:"./assets/P1", 
+      questionImage:"./assets/poll-components/Pick-a-Magical-Item.png",
+      options:["A", "B", "C", "D"], 
+      duration: 30
+    },
+    // {
+    //   pollId :"p2", 
+    //   type: "list",
+    //   question:"",
+    //   options:[,],
+    //   duration: 30
+    // }
+  ];
   // load avatar
-  const avatar = sessionStorage.getItem("avatar");
+  const avatar = sessionStorage.getItem("selectedAvatar");
   const avatarImg = document.getElementById("chatAvatarImg");
   
   if (avatar && avatarImg) {
@@ -27,32 +43,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const userId   = sessionStorage.getItem("userId");
   //users selected username and avatar
   const username = sessionStorage.getItem("username") || "TestUser";
-  const levelId   = document.body.dataset.level;
+  let currentPollIndex = 0; 
+  let selectedOption = null;
 
-  if(!userId || !levelId) {
-    console.error("Missing userId or levelId.Redirecting to profile.");
-    window.location.href ="../user-id/user-id.html";
-    return;
-  }
-
-  const poll_flow = {
-    p1: "poll2.html",
-    p2: "poll3.html",
-    p3: "poll4.html",
-    p4: null // last poll
-  };
-
-  let hasVoted = false;
 
   async function submitVote(pollOption) {
+    //add new document row to firestore collection
+    //each document represents one vote from one user
     await addDoc(
       collection(db, "Mirror-XR-AF26-poll-magical-item"),
       {
+        //live shows the vote belongs to 
         showId,
+        //unique identifier for voting user
         userId,
         username,
         avatar,
-        levelId,
+        //poll this votes for and replaces seperate HTML page
+        pollId: polls[currentPollIndex].pollId,
+        //poll answer selected
         pollOption,
         timestamp: Timestamp.now()
       }
@@ -62,60 +71,64 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   //next button 
-  const pollButtons = document.querySelectorAll(".poll-item");
-  const containers = document.querySelector(".poll-bars");
   const nextButton = document.getElementById("nextButton");
 
     //disable next button till vote is made
   if (nextButton) nextButton.disabled = true;
 
-  pollButtons.forEach(button => {
-    button.addEventListener("click", async () => {
-      if (hasVoted) return; //prevent multiple votes
-
-      const option = button.dataset.option; 
-      if(!option) return;
-
-      //swap image from a.png to s-a.png
-      const img = button.querySelector("img");
-      img.src = `./assets/P1/S-${option}.png`;
-      //selected
-      button.classList.add("selected");
-      //submit and save the vote
-      await submitVote(option);
-      hasVoted = true;
-
-      //enable the next button
-      if (nextButton) nextButton.disabled = false;
-    });
-  });
 
 
   if (nextButton) {
     nextButton.addEventListener("click", async (e) => {
       e.preventDefault();
 
-      if (!hasVoted) return;
-
-      const nextPage = poll_flow[levelId];
-      if (!nextPage) return;
-
-      const nextLevel = nextPage.replace("poll", "p").replace(".html", "");
-
-      try {
-        await setDoc(
-          doc(db, "shows", showId),
-          {
-            currentPoll: nextLevel,
-            updatedAt: serverTimestamp()
-          },
-          { merge: true }
-        );
-      } catch (err) {
-        console.warn(err.message);
+      if (!selectedOption) {
+        alert("Please pick a magical item ✨");
+        return;
       }
 
-      window.location.href = nextPage;
+      await submitVote(selectedOption);
+
+      currentPollIndex++;
+
+
+      if (currentPollIndex >= polls.length) {
+        console.log("Poll flow finished");
+        return;
+      }
     });
   }
+
+  function loadPoll() {
+    const poll = polls[currentPollIndex];
+
+    selectedOption = null;
+    nextButton.disabled = true;
+
+    const imagePoll = document.getElementById("poll");       // magical items
+    const listPoll  = document.getElementById("pollList");  // question rows
+
+    // hide both first
+    imagePoll.style.display = "none";
+    listPoll.style.display = "none";
+
+    // update header image if this poll has one
+    const headerImg = document.querySelector(".pick-a-magical-item-image");
+    if (headerImg && poll.questionImage) {
+      headerImg.src = poll.questionImage;
+    }
+
+    // decide which poll UI to show
+    if (poll.type === "image") {
+      imagePoll.style.display = "block";
+      renderImagePoll(poll);
+    }
+
+    if (poll.type === "list") {
+      listPoll.style.display = "flex";
+      renderListPoll(poll);
+    }
+  }
+
+  loadPoll();
 });
