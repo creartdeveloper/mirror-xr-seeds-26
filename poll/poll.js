@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const polls=[
     {
       pollId:"P1", 
+      type:"image",
       assetPath:"./assets/P1", 
       questionImage:"./assets/poll-components/Pick-a-Magical-Item.png",
       options:["A", "B", "C", "D"], 
@@ -101,34 +102,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function loadPoll() {
     const poll = polls[currentPollIndex];
+    const container = document.getElementById("pollOptions");
 
     selectedOption = null;
     nextButton.disabled = true;
+    container.innerHTML = "";
 
-    const imagePoll = document.getElementById("poll");       // magical items
-    const listPoll  = document.getElementById("pollList");  // question rows
-
-    // hide both first
-    imagePoll.style.display = "none";
-    listPoll.style.display = "none";
-
-    // update header image if this poll has one
+    // show magical item header image
     const headerImg = document.querySelector(".pick-a-magical-item-image");
     if (headerImg && poll.questionImage) {
       headerImg.src = poll.questionImage;
+      headerImg.style.display = "block";
     }
 
-    // decide which poll UI to show
-    if (poll.type === "image") {
-      imagePoll.style.display = "block";
-      renderImagePoll(poll);
-    }
+    // render magical item images (A–D)
+    poll.options.forEach(option => {
+      const button = document.createElement("button");
+      button.className = "poll-item";
+      button.dataset.option = option;
 
-    if (poll.type === "list") {
-      listPoll.style.display = "flex";
-      renderListPoll(poll);
-    }
+      const img = document.createElement("img");
+      img.src = `${poll.assetPath}/${option}.png`;
+      img.alt = option;
+
+      button.appendChild(img);
+
+      button.addEventListener("click", () => {
+        // reset all images
+        document.querySelectorAll(".poll-item img").forEach(i => {
+          const opt = i.alt;
+          i.src = `${poll.assetPath}/${opt}.png`;
+        });
+
+        // mark selected
+        img.src = `${poll.assetPath}/S-${option}.png`;
+        selectedOption = option;
+        nextButton.disabled = false;
+      });
+
+      container.appendChild(button);
+    });
   }
+
 
   loadPoll();
 });

@@ -180,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const userId = crypto.randomUUID();
       sessionStorage.setItem("userId", userId);
     }
-    window.location.replace("../poll/poll1.html");
+    window.location.replace("../poll/poll.html");
   });
 /*button state*/
   function updateNextButtonState() {
