@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if(!userId || !levelId) {
     console.error("Missing userId or levelId.Redirecting to profile.");
-    window.location.href ="../user-id.user-id.html";
+    window.location.href ="../user-id/user-id.html";
     return;
   }
 
@@ -76,12 +76,16 @@ document.addEventListener("DOMContentLoaded", () => {
       const option = button.dataset.option; 
       if(!option) return;
 
-      pollButtons.forEach(b => b.classList.remove("selected"));
+      //swap image from a.png to s-a.png
+      const img = button.querySelector("img");
+      img.src = `./assets/P1/S-${option}.png`;
+      //selected
       button.classList.add("selected");
-
+      //submit and save the vote
       await submitVote(option);
       hasVoted = true;
 
+      //enable the next button
       if (nextButton) nextButton.disabled = false;
     });
   });

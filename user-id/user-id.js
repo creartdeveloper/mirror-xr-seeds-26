@@ -1,6 +1,13 @@
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("Profile page JS loaded");
+  // console.log("Profile page JS loaded");
+
+  // RESET avatar state on refresh
+  sessionStorage.removeItem("realAvatarSelected");
+  sessionStorage.removeItem("selectedAvatar");
+  sessionStorage.removeItem("avatar");
+  sessionStorage.removeItem("avatarBgColor");
+  sessionStorage.removeItem("isDefaultAvatar");
 
 /*DOM elements*/
 
@@ -28,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "assets/default-avatars/Whimsy.png"
   ];
 
+
 /*color picker*/
 
   const pickr = Pickr.create({
@@ -50,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   pickr.on("save", (color) => {
     const hex = color.toHEXA().toString();
+    
     selectedAvatarBox.style.backgroundColor = hex;
     sessionStorage.setItem("avatarBgColor", hex);
     pickr.hide();
@@ -69,6 +78,8 @@ document.addEventListener("DOMContentLoaded", () => {
       selectedAvatarImg.src = savedAvatar; 
       selectedAvatarImg.style.display="block";
       defaultAvatarImg.style.display="none";
+
+      sessionStorage.setItem("avatar", savedAvatar);
     }
 
     if (savedBg) {
@@ -80,6 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
       usernameInput.disabled = false; 
       usernameInput.classList.add("enabled");
     }
+
 
     pickr.enable();
   }
@@ -94,6 +106,8 @@ document.addEventListener("DOMContentLoaded", () => {
     selectedAvatarImg.style.display = "none";
 
     sessionStorage.setItem("avatar", randomAvatar);
+    sessionStorage.setItem("isDefaultAvatar", "true");
+
 
     usernameInput.disabled = false;
     usernameInput.classList.add("enabled");

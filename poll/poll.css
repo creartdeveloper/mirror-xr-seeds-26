@@ -1,93 +1,54 @@
 
 .poll {
-  margin-top: 0.4rem;
-  padding: 0.5rem 0.6rem;
+  width: 100%; 
+  display:flex;
+  justify-content: center; 
+  margin-top: 0.6rem;
+}
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.3rem;
-
-  width: min(90%, 460px);
-
+.poll-bars {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  padding: 16px;
+  border-radius: 20px;
   background: rgba(255,255,255,0.12);
   backdrop-filter: blur(10px);
-  border-radius: 14px;
-  text-align: center;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.25);
 }
 
-.poll-question {
-  font-family: "Delius", cursive;
-  font-size: clamp(14px, 2.4vw, 18px);
-  font-weight: 600;
-  color: #f3eaff;
-
-  margin-bottom: 0.2rem;
-}
-.poll-options {
-  display: flex;
-  justify-content: center;
-  gap: 0.35rem;
-}
-
-.poll-option {
-  width: 32px;
-  height: 32px;
-
-  border-radius: 8px;
-  border: none;
-
-  font-family: "Delius", cursive;
-  font-size: 0.85rem;
-
-  background: rgba(255, 255, 255, 0.85);
-  color: #333;
-
+.poll-item{
+  background: transparent;
+  border:none;
+  padding:0;
   cursor: pointer;
+  border-radius: 18px;
+  overflow: hidden;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+
 }
 
-.poll-option.selected{
-  background: linear-gradient(135deg, #9b7cff, #ff9de2);
-  color: white; 
+.poll-item img{
+  width: 100%; 
+  aspect-ratio: 1 / 1; 
+  object-fit: cover;
+  border-radius:18px;
+}
+
+.poll-item:hover{
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.35);
 }
 
 .pick-a-magical-item-image{
   display: block;
-  margin: 0.4rem auto 0.6rem; 
-  max-width: 240px; 
+  margin: 0.6rem auto 0.4rem; 
+  max-width: 200px; 
   width: 80%; 
   height:auto;
-}
-.poll-bars {
-  display: flex;
-  flex-direction: row;
-  gap: 16px;
-  align-items:center;
+  opacity: 0.9;
 }
 
-.poll-bar {
-  height: 22px;
-  border-radius: 8px;
-
-  background: rgba(255,255,255,0.22);
-  padding-left: 0.5rem;
-
-  font-size: 0.75rem;
-  color: white;
-
-  display: flex;
-  align-items: center;
-}
-
-.poll-bar:hover {
-  transform: scale(1.02);
-  background: rgba(255,255,255,0.3);
-}
-
-
-.poll-bar.selected {
-  background: linear-gradient(135deg, #9b7cff, #ff9de2);
-}
 
 @media (max-width: 969px) {
   .poll {
