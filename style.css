@@ -11,7 +11,7 @@
 }
 html, body {
   height: 100%;
-  overflow: hidden;
+  overscroll-behavior:none;
 }
 
 body {
@@ -20,6 +20,7 @@ body {
   background-size: cover;
   background-position: center bottom;
   background-repeat: no-repeat;
+  overscroll-behavior: none;
 }
 nav{
   position: fixed;
@@ -289,13 +290,6 @@ nav{
     gap: 1.2rem;
     font-size: 0.9rem;
 
-  }
-  .body{
-    overscroll-behavior: none;
-  }
-
-  .app-content{
-    overflow:hidden;
   }
 }
 
