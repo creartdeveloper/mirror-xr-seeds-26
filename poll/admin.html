@@ -4,60 +4,68 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
     <title>Document</title>
-    <style>
+<style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background-image: url("../poll/assets/background/chat-bg.jpg");
+            background-size: cover;
+            background-position: center bottom;
+            background-repeat: no-repeat;
+            overscroll-behavior: none;
+        }
         #main-container {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-left: 30%;
-            font-color: rgb()
+            gap: 20px;
+            max-width: 900px;
+            margin: 40px auto;
         }
 
-        /* Common styles for all boxes */
-        .box {
-            width: 750px;
-            height: 150px;
-            font-size: 25px;
+        .admin-showid {
+            margin: 20px;
+        }
+
+        .poll-container {
+            display: none;
+        }
+
+        .poll-container.active {
+            display: block;
+        }
+
+        .poll-container h2 {
+            margin-bottom: 15px;
+        }
+
+        .poll-container > div {
+            height: 60px;
             display: flex;
+            align-items: center;
             justify-content: space-between;
             padding: 0 20px;
-            align-items: center;
-        
+            font-size: 20px;
+            color: white;
+            border-radius: 8px;
         }
 
+        .result-bar1 { background: #8d3434; }
+        #result-bar2 { background: #0deb35; }
+        #result-bar3 { background: #efe00a; }
+        #result-bar4 { background: #f107de; }
 
-        /* Individual box colors */
-        #result-bar {
-            background-color: rgb(141, 52, 52);
+        #nextPoll {
+            margin-top: 30px;
+            padding: 10px 20px;
         }
-        #result-bar2 {
-            background-color: rgb(13, 235, 53);
-        }
-        #result-bar3 {
-            background-color: rgb(239, 224, 10);
-        }
-        #result-bar4 {
-            background-color: rgb(241, 7, 222);
-        }
-
-        /* Styles for text and emoji sections */
-        .text-section {
-            flex: 1;
-            padding-right: 20px;
-        }
-
-        .emoji-section {
-            width: 100px;
-            text-align: center;
-            font-size: 40px;
-        }
-
-        
-    </style>
+</style>
 </head>
-<body data-level ="p1">
+<body>
+    <div class="admin-showid">
+        <input type="text" id="adminShowIdInput" placeholder="Enter Show ID">
+        <button id="loadShow">Load Show</button>
+        <button id="resetShow">Reset This Show</button>
+    </div>
     <div id="main-container">
         <div class="poll-container" data-level="p1">
             <h2>Poll 1</h2>
@@ -78,6 +86,7 @@
                 <span id="count-p1-d">0</span>
             </div>
         </div>
+        
         <div class="poll-container" data-level="p2">
             <h2>Poll 2</h2>
             <div class="result-bar1" data-option="a">
@@ -97,6 +106,7 @@
                 <span id="count-p2-d">0</span>
             </div>
         </div>
+
         <div class="poll-container" data-level="p3">
             <h2> Poll 3</h2>
             <div class="result-bar1" data-option="a">
@@ -116,6 +126,7 @@
                 <span id="count-p3-d">0</span>
             </div>
         </div>
+
         <div class="poll-container" data-level="p4">
             <h2>Poll 4</h2>
             <div class="result-bar1" data-option="a">
@@ -135,8 +146,9 @@
                 <span id="count-p4-d">0</span>
             </div>
         </div>
-    </div>
 
+        <button id="nextPoll">Next</button>
+    </div>
     <script type="module" src="./count.js"></script>
 </body>
 </html>

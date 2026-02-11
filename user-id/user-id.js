@@ -183,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
       sessionStorage.setItem("userId", userId);
     }
 
-    window.location.replace("../poll/poll.html");
+    window.location.replace("../poll/poll1.html");
   });
 /*button state*/
   function updateNextButtonState() {

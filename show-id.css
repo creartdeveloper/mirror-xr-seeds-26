@@ -1,19 +1,45 @@
+.app-shell {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;   
+    align-items: center;       
+}
+
+.app-content {
+    text-align: center;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background-image: url("./poll/assets/background/chat-bg.jpg");
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  overscroll-behavior: none;
+}
+
+.logo {
+    width: auto;
+    height: 40px;
+    display:center;
+
+}
 .show-id {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  margin-top: 40px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
 }
 
 .show-id input {
-  width: 60px;
-  height: 70px;
-  font-size: 28px;
-  text-align: center;
-  border-radius: 12px;
-  border: 2px solid white;
-  background: rgba(255,255,255,0.2);
-  color: white;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    font-size: 24px;
+    border-radius: 12px;
+    border: 2px solid rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.1);
+    color: white;
 }
 
 .show-id input:focus {
