@@ -47,15 +47,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  pickr.enable();
+  pickr.on('change', (color) => {
+      const selectedColor = color.toHEXA().toString();
 
-  pickr.on("save", (color) => {
-    const hex = color.toHEXA().toString();
-    
-    selectedAvatarBox.style.backgroundColor = hex;
-    sessionStorage.setItem("avatarBgColor", hex);
-    pickr.hide();
-    updateNextButtonState();
+      const selectedAvatar = document.querySelector('.selected-avatar');
+
+      if (selectedAvatar) {
+          selectedAvatar.style.backgroundColor = selectedColor;
+      }
   });
 
   /*restore selected avatar*/
@@ -159,6 +158,17 @@ document.addEventListener("DOMContentLoaded", () => {
       updateNextButtonState();
     });
   });
+
+  const colorInput = document.getElementById("background-color");
+  const swatchPreview = document.querySelector(".swatch-preview");
+
+  if (colorInput && swatchPreview) {
+      swatchPreview.style.background = colorInput.value;
+
+      colorInput.addEventListener("input", () => {
+          swatchPreview.style.background = colorInput.value;
+      });
+  }
 /*username input*/
 
   usernameInput.addEventListener("input", () => {

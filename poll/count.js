@@ -23,13 +23,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // next button
   document.getElementById("nextPoll").addEventListener("click", () => {
-    polls[currentIndex].classList.remove("active");
-    currentIndex++;
-
-    if (currentIndex < polls.length) {
+    if (currentIndex < polls.length -1 ){
+      polls[currentIndex].classList.remove("active");
+      currentIndex++;
       polls[currentIndex].classList.add("active");
     }
   });
+
+  //back button
+  document.getElementById("backPoll").addEventListener("click", () => {
+    
+    if (currentIndex > 0){
+      polls[currentIndex].classList.remove("active");
+      currentIndex--;
+      polls[currentIndex].classList.add("active");
+    }
+  })
+
 
   // load show button
   document.getElementById("loadShow").addEventListener("click", () => {
@@ -42,8 +52,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     currentShowId = input;
 
-    unsubscribeFunctions.forEach(unsub => unsub());
-    unsubscribeFunctions = [];
+    unsubscribeListeners.forEach(unsub => unsub());
+    unsubscribeListeners = [];
+
 
     document.querySelectorAll("[id^='count-']").forEach(el => {
       el.textContent = 0;

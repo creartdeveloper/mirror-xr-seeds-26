@@ -352,12 +352,12 @@ nav{
   }
 }
 
-@media (max-width: 320px){
+@media (max-width: 360px){
   .message-box{
     aspect-ratio: 3 / 2;
   }
   .emoji-container{
-    padding: 0.3rem 0.5rem;
+    padding: 0.3rem 0.5rem; /*20px*/
   }
 
   .item img{

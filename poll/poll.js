@@ -24,6 +24,23 @@ document.addEventListener("DOMContentLoaded", () => {
   //users selected username and avatar
   const username = sessionStorage.getItem("username");
   const avatar   = sessionStorage.getItem("avatar");
+  // Restore username
+  const usernameSpan = document.getElementById("chatUsername");
+  if (usernameSpan && username) {
+    usernameSpan.textContent = username;
+  }
+
+  // Restore avatar image
+  const avatarImg = document.getElementById("chatAvatarImg");
+  if (avatarImg && avatar) {
+    avatarImg.src = avatar;
+  }
+
+  // Restore avatar background color
+  const savedColor = sessionStorage.getItem("avatarColor");
+  if (savedColor && avatarImg && avatarImg.parentElement) {
+    avatarImg.parentElement.style.backgroundColor = savedColor;
+  }
 
   // link polls 1 -4
   const parentPollOption = sessionStorage.getItem("parentPollOption") || null;
@@ -118,4 +135,23 @@ async function submitVote(pollOption) {
       window.location.href = nextPage;
     });
   }
+
+  const rows = document.querySelectorAll(".option-row");
+
+  rows.forEach(row => {
+    row.addEventListener("click", () => {
+
+      // remove previous selection
+      rows.forEach(r => r.classList.remove("selected"));
+
+      // mark selected
+      row.classList.add("selected");
+
+      const option = row.dataset.option;
+      console.log("Selected:", option);
+
+      // submitVote(option);  <-- your Firebase function
+    });
+  });
+
 });
