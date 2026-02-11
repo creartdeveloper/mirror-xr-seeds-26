@@ -2,13 +2,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   // console.log("Profile page JS loaded");
 
-  // RESET avatar state on refresh
-  sessionStorage.removeItem("realAvatarSelected");
-  sessionStorage.removeItem("selectedAvatar");
-  sessionStorage.removeItem("avatar");
-  sessionStorage.removeItem("avatarBgColor");
-  sessionStorage.removeItem("isDefaultAvatar");
-
 /*DOM elements*/
 
   const avatars = document.querySelectorAll(".avatar");
@@ -170,6 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   usernameInput.addEventListener("input", () => {
     sessionStorage.setItem("username", usernameInput.value.trim());
+    usernameInput.value = usernameInput.value.replace(/[^a-zA-Z0-9]/g, "");
     updateNextButtonState();
   });
 /*next button*/
@@ -193,10 +187,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 /*button state*/
   function updateNextButtonState() {
-    const hasUsername = !!sessionStorage.getItem("username");
+    // read username from sessionstorage and if username is null -> "" and trim (remove spaces from start and end)
+    const name = (sessionStorage.getItem("username") || "").trim();
+    const hasUsername = name.length >=2 && name.length <=15; // atleast 2 char and <15 char
 
     const hasAvatar = 
       sessionStorage.getItem("realAvatarSelected") === "true" ||
+
       sessionStorage.getItem("isDefaultAvatar") === "true";
 
       nextButton.disabled = !(hasUsername && hasAvatar);

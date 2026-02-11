@@ -19,10 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //map dom elements to counts
     const counters = {
-      a: container.querySelector(`#count-${levelId}-a`), //save votes fdor option a
-      b: container.querySelector(`#count-${levelId}-b`),
-      c: container.querySelector(`#count-${levelId}-c`),
-      d: container.querySelector(`#count-${levelId}-d`)
+      a: container.querySelector(`#count-${levelId}-A`), //save votes fdor option a
+      b: container.querySelector(`#count-${levelId}-B`),
+      c: container.querySelector(`#count-${levelId}-C`),
+      d: container.querySelector(`#count-${levelId}-D`)
     };
 
     //firestore query .

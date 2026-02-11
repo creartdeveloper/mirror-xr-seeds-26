@@ -13,24 +13,18 @@
 
     <title>Mirror App</title>
 </head>
-<body>
+<body data-level="p1">
     <nav class="nav-header">
         <div class="nav-logo">
             <img src="./assets/logo/logo.png"  alt="Mirror XR Logo" class="logo">
         </div>
-        <ul class="nav-links" id="nav-links">
-            <li><a href = "#">Home</a></li>
-            <li><a href = "#">Score</a></li>
-            <li><a href = "#">Gallery</a></li>
-            <li><a href = "#">Contact</a></li>
-        </ul>
     </nav>
     <main class="app-shell">
         <div class="app-content">
             <div class="message-box">
                 <textarea maxlength="100" placeholder="Type message here" class="msg-text-box"></textarea>
             
-                <div class="chat-avatar-wrapper">
+                <div class="chat-avatar">
                     <span id="chatUsername"></span>
                     <img id="chatAvatarImg" alt="selected avatar"/>
                 </div>
@@ -43,7 +37,30 @@
                 <button class="emoji-button">🥰</button>
             </div>
             <div class="poll" id="poll">
-                <div class="poll-bars" id="pollOptions">
-                    
+                <div class="poll-bars">
+                    <button class="poll-item" data-option="A">
+                        <img src="./assets/P1/A.png" alt="A">
+                    </button>
+                    <button class="poll-item" data-option="B">
+                        <img src="./assets/P1/B.png" alt="B">
+                    </button>
+                    <button class="poll-item" data-option="C">
+                        <img src="./assets/P1/C.png" alt="C">
+                    </button>
+                    <button class="poll-item" data-option="D">
+                        <img src="./assets/P1/D.png" alt="D">
+                    </button>
                 </div>
             </div>
+            <div class="pick-a-magical-item-bar">
+                <img class="pick-a-magical-item-image" src="./assets/poll-components/Pick-a-Magical-Item.png" alt="pick-a-magical-item">
+                <button class="next-button" id="nextButton" type="button">Next</button>
+            </div>
+            <div class="footer">
+
+            </div>
+        </div>
+    </main>
+    <script type="module" src="./poll.js"></script>
+</body>
+</html>

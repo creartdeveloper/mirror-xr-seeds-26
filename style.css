@@ -52,12 +52,6 @@ nav{
     align-items: center; 
     justify-content: space-between; 
 }
- .nav-links{
-    display: flex;
-    gap:1.5rem;
-    list-style:none;
-
- }
 
 .nav-links a{
     color:white;
@@ -187,7 +181,7 @@ nav{
   outline: none;
 }
 
-.chat-avatar-wrapper {
+.chat-avatar {
   position: absolute;
   right: -26px;
   bottom: -18px;

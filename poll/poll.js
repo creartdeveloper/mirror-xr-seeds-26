@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   pollButtons.forEach(button => {
     button.addEventListener("click", async () => {
-      if (hasVoted) return; // 🔒 prevent multiple votes
+      if (hasVoted) return; // prevent multiple votes
 
       pollButtons.forEach(b => b.classList.remove("selected"));
       button.classList.add("selected");
@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = nextPage;
     });
   }
-  
+
   function loadPoll() {
     const poll = polls[currentPollIndex];
     const container = document.getElementById("pollOptions");
