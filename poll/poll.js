@@ -21,16 +21,24 @@ document.addEventListener("DOMContentLoaded", () => {
       duration: 30
     },
     // {
-    //   pollId :"p2", 
+    //   pollId :"p2",  
     //   type: "list",
     //   question:"",
     //   options:[,],
     //   duration: 30
     // }
   ];
+
+  //session data
+  // ID for live show session
+  const showId   = sessionStorage.getItem("showId");
+  //users unique ID
+  const userId   = sessionStorage.getItem("userId");
   // load avatar
   const avatar = sessionStorage.getItem("selectedAvatar");
   const avatarImg = document.getElementById("chatAvatarImg");
+  //link polls1-4
+  const parentPollOption = sessionStorage.getItem("parentPollOption");
   
   if (avatar && avatarImg) {
     avatarImg.src = avatar; 
@@ -43,14 +51,18 @@ document.addEventListener("DOMContentLoaded", () => {
   if (username && usernameSpan) {
     usernameSpan.textContent = username;
   }
-  //session data
-  // ID for live show session
-  const showId   = sessionStorage.getItem("showId") || "test-show-1";
-  //users unique ID
-  const userId   = sessionStorage.getItem("userId");
+
   let currentPollIndex = 0; 
   let selectedOption = null;
 
+  const poll_flow = {
+  p1: "poll2.html",
+  p2: "poll3.html",
+  p3: "poll4.html",
+  p4: null // last poll
+};
+
+  let hasVoted = false;
 
   async function submitVote(pollOption) {
     //add new document row to firestore collection
@@ -65,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
         username,
         avatar,
         //poll this votes for and replaces seperate HTML page
-        pollId: polls[currentPollIndex].pollId,
+        parentPollOption,
         //poll answer selected
         pollOption,
         timestamp: Timestamp.now()
@@ -77,33 +89,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //next button 
   const nextButton = document.getElementById("nextButton");
-
     //disable next button till vote is made
   if (nextButton) nextButton.disabled = true;
 
+  pollButtons.forEach(button => {
+    button.addEventListener("click", async () => {
+      if (hasVoted) return; // 🔒 prevent multiple votes
+
+      pollButtons.forEach(b => b.classList.remove("selected"));
+      button.classList.add("selected");
+
+      const pollOption = button.dataset.option?.toLowerCase();
+      if (!pollOption) return;
+
+      await submitVote(pollOption);
+      hasVoted = true;
+
+      if (nextButton) nextButton.disabled = false;
+    });
+  });
 
 
   if (nextButton) {
     nextButton.addEventListener("click", async (e) => {
       e.preventDefault();
 
-      if (!selectedOption) {
-        alert("Please pick a magical item ✨");
+      if (!hasVoted) {
+        alert("Please vote first");
         return;
       }
 
-      await submitVote(selectedOption);
+      const nextPage = poll_flow[levelId];
+      if (!nextPage) return;
 
-      currentPollIndex++;
-
-
-      if (currentPollIndex >= polls.length) {
-        console.log("Poll flow finished");
-        return;
+      const nextLevel = nextPage.replace("poll", "p").replace(".html", "");
+      try{
+        await setDoc(
+          doc(db, "shows", showId),
+          {
+            currentPoll: nextLevel,
+            updatedAt: serverTimestamp()
+          },
+          { merge: true }
+        );
+      } catch (err) {
+        console.warn("Could not update show state:", err.message);
       }
+      window.location.href = nextPage;
     });
   }
-
+  
   function loadPoll() {
     const poll = polls[currentPollIndex];
     const container = document.getElementById("pollOptions");
