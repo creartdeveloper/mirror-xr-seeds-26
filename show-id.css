@@ -1,0 +1,22 @@
+.show-id {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.show-id input {
+  width: 60px;
+  height: 70px;
+  font-size: 28px;
+  text-align: center;
+  border-radius: 12px;
+  border: 2px solid white;
+  background: rgba(255,255,255,0.2);
+  color: white;
+}
+
+.show-id input:focus {
+  outline: none;
+  border-color: #ffccff;
+}

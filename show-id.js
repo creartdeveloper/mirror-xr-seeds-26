@@ -1,6 +1,6 @@
 /* generate showid/pin*/
 
-const inputs = document.querySelectorAll('.show-id pin');
+const inputs = document.querySelectorAll('.show-id input');
 //CHANGE THIS PIN PER SHOW
 const CURRENT_SHOW_ID = "1200";
 
@@ -31,8 +31,9 @@ function validatePin(){
     });
 
     if (enteredPin === CURRENT_SHOW_ID){
+        //save showID 
         sessionStorage.setItem("showId", enteredPin);
-        window.location.href = "../user-id/user-id.html";
+        window.location.href = "./user-id/user-id.html";
     } else {
         alert("Please enter the correct PIN");
 
