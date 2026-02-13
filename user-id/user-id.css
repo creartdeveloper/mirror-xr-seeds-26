@@ -87,20 +87,7 @@
     cursor: pointer;
 }
 
-.swatch-preview {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 3px solid white;
-    background: #ffffff;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
-    transition: 0.25s ease;
-}
 
-.color-swatch:hover .swatch-preview {
-    transform: scale(1.1);
-    box-shadow: 0 0 20px rgba(255,255,255,0.8);
-}
 /* 
 .bottom-bar{
   display: flex;

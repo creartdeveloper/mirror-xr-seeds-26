@@ -47,15 +47,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  pickr.on('change', (color) => {
-      const selectedColor = color.toHEXA().toString();
+pickr.on('change', (color) => {
+    const selectedColor = color.toHEXA().toString();
 
-      const selectedAvatar = document.querySelector('.selected-avatar');
+    const selectedAvatar = document.querySelector('.selected-avatar');
 
-      if (selectedAvatar) {
-          selectedAvatar.style.backgroundColor = selectedColor;
-      }
-  });
+    if (selectedAvatar) {
+        selectedAvatar.style.backgroundColor = selectedColor;
+    }
+});
 
   /*restore selected avatar*/
 
