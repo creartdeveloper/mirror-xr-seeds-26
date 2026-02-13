@@ -1,13 +1,7 @@
 
 import { db } from "./firebase.js";
-import {
-  collection,
-  doc, 
-  setDoc,
-  addDoc,
-  serverTimestamp,
-  Timestamp
-} from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+import {onSnapshot,collection,doc, setDoc,addDoc,serverTimestamp,Timestamp} from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+
 
 document.addEventListener("DOMContentLoaded", () => {
   // ID for live show session
@@ -16,11 +10,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const userId   = sessionStorage.getItem("userId");
 
 
-  if (!showId || !userId) {
-    console.error("Missing showid or userid"); 
-    window.location.href = "../show-id.html"; 
+  if (!userId) {
+    userId = crypto.randomUUID();
+    sessionStorage.setItem("userId", userId);
+  }
+
+  if (!showId) {
+    console.error("Missing showId");
+    window.location.href = "../show-id.html";
     return;
   }
+
   //users selected username and avatar
   const username = sessionStorage.getItem("username");
   const avatar   = sessionStorage.getItem("avatar");
@@ -55,103 +55,65 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  const poll_flow = {
-    p1: "poll2.html",
-    p2: "poll3.html",
-    p3: "poll4.html",
-    p4: null // last poll
-  };
 
-  let hasVoted = false;
-
-async function submitVote(pollOption) {
-  await addDoc(
-    collection(db, "Mirror-XR-AF26-poll-magical-item"),
-    {
-      showId,
-      userId,
-      username,
-      avatar,
-      levelId,
-      pollOption,
-      parentPollOption,
-      timestamp: Timestamp.now()
-    }
-  );
-
-  sessionStorage.setItem("parentPollOption", pollOption);
-}
-
-  //next button 
-  const pollButtons = document.querySelectorAll(".poll-item");
-  const nextButton = document.getElementById("nextButton");
-
-    //disable next button till vote is made
-  if (nextButton) nextButton.disabled = true;
-
-  pollButtons.forEach(button => {
-    button.addEventListener("click", async () => {
-      if (hasVoted) return; //prevent multiple votes
-
-      pollButtons.forEach(b => b.classList.remove("selected"));
-      button.classList.add("selected");
-
-      const pollOption = button.dataset.option?.toLowerCase();
-      if (!pollOption) return;
-
-      await submitVote(pollOption);
-      hasVoted = true;
-
-      if (nextButton) nextButton.disabled = false;
-    });
-  });
-
-
-  if (nextButton) {
-    nextButton.addEventListener("click", async (e) => {
-      e.preventDefault();
-
-      if (!hasVoted) {
-        alert("Please vote first");
-        return;
+  async function submitVote(pollOption) {
+    await addDoc(
+      collection(db, "Mirror-XR-AF26-poll-magical-item"),
+      {
+        showId,
+        userId,
+        username,
+        avatar,
+        levelId,
+        pollOption,
+        parentPollOption,
+        timestamp: serverTimestamp()
       }
+    );
 
-      const nextPage = poll_flow[levelId];
-      if (!nextPage) return;
-
-      const nextLevel = nextPage.replace("poll", "p").replace(".html", "");
-      try{
-        await setDoc(
-          doc(db, "shows", showId),
-          {
-            currentPoll: nextLevel,
-            updatedAt: serverTimestamp()
-          },
-          { merge: true }
-        );
-      } catch (err) {
-        console.warn("Could not update show state:", err.message);
-      }
-      window.location.href = nextPage;
-    });
+    sessionStorage.setItem("parentPollOption", pollOption);
   }
+  
 
-  const rows = document.querySelectorAll(".option-row");
+  let selectedOption = null;
+  let hasSubmitted = false;
 
+  const rows = document.querySelectorAll(".option-row, .poll-item");
+  const submitButton = document.getElementById("submitButton");
+
+  // Disable submit initially
+  submitButton.disabled = true;
+
+  // When user selects an option
   rows.forEach(row => {
     row.addEventListener("click", () => {
 
-      // remove previous selection
+      if (hasSubmitted) return; // lock after submit
+
+      // Remove previous selection
       rows.forEach(r => r.classList.remove("selected"));
 
-      // mark selected
+      // Highlight selected
       row.classList.add("selected");
 
-      const option = row.dataset.option;
-      console.log("Selected:", option);
-
-      // submitVote(option);  <-- your Firebase function
+      selectedOption = row.dataset.option?.toLowerCase();
+      console.log("Selected:", selectedOption);
+      if (selectedOption) {
+        submitButton.disabled = false;
+      }
     });
   });
 
+  // When user clicks submit
+  submitButton.addEventListener("click", async () => {
+
+    if (!selectedOption || hasSubmitted) return;
+
+    await submitVote(selectedOption);
+
+    hasSubmitted = true;
+    submitButton.disabled = true;
+    submitButton.textContent = "Vote Submitted ";
+
+  });
 });

@@ -1,20 +1,4 @@
 
-.app-shell {
-  padding-top: var(--nav-height);
-  height: 100dvh;
-  display: flex;
-  justify-content: center;
-}
-
-.app-content {
-  height: calc(100dvh - var(--nav-height));
-  width: 100%;
-  max-width: 420px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
 .emoji-container {
 
   width: 100%;

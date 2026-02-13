@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Delius&family=Pacifico&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./Twinkle/Twinkle.css">
-
     <title>Mirror App</title>
     <style>
 
@@ -14,211 +12,400 @@
                 padding: 0;
                 width: 100%;
                 height: 100%;
-                overflow-x:hidden;
+                overflow: hidden;
+                position: fixed;
+                background: linear-gradient(180deg, 
+                    #1B0B36 0%,
+                    #2A1155 30%,
+                    #4B2179 60%,
+                    #9B6B9E 85%,
+                    #CC8FA7 100%
+                );
+            }
+
+        /* Update main container */
+        .main-container {
+            margin-top:20px;
+            width: 870px;
+            height: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: url('assets/chat-bg.jpg');
+            background-size: cover; 
+            background-position: center;
+            background-repeat: no-repeat;
+            overflow: hidden;
+            position: fixed; 
+            top: 50%;     
+            left: 50%;       
+            transform: translate(-50%, -50%); 
         }
 
-        body{
-                min-height: 100svh;
-                background-image: url("./assets/chat-bg.jpg");
-                background-size: cover; 
-                background-position: center bottom;
-                background-repeat: no-repeat;
-
+        .message-box {
+            position: relative;
+            margin-top: 130px;
+            border-radius: 24px;
+            width: 600px;
+            height: 500px;
+            padding: 5px;
+            background-image: url('../Mirror XR Mira iPad UI/NEW Resolution/iPad-IU-Chat-Box.png');
+            background-size: contain; 
+            background-repeat: no-repeat;
+            background-color: transparent;
+        }
+        .msg-text-box{
+          padding: 10px;
+          border:None;
+          font-size: 22px;
+          margin-top:18% ;
+          width:500px;
+          height:250px;
+          background-color: transparent;
+          overflow: hidden;
+          font-family: "Delius", serif;
+        }
+        .msg-text-box:focus {
+            border: none;
+            outline: none;
+            /* Optional: if you want to completely remove any focus styles */
+            box-shadow: none;
         }
 
+        .pebble-section {
+            display: flex;
+            align-items: center;
+            width:600px;
+            height:125px;
+            background:transparent;
+            border-radius: 50px;
+            font-size: 1.2rem;
+        }
+
+        .pebble-icon {
+            width: 340px;
+            height: 100px;
+        }
+        .kitty-icon{
+            width: 233px;
+            height: 200px;
+            margin-bottom: 80px;
+        }
+        .pebble-button{
+            background-color: transparent;
+            border:None;
+            
+        }
+        .pebble-button:focus {
+            outline: none;
+        }
+        .pebble-button:hover {
+            transform: scale(1.1);  /* Slightly larger on hover */
+            filter: brightness(1.1);  /* Slightly brighter on hover */
+        }
+
+        .pebble-button:active {
+            transform: scale(0.9);  /* Slight scale down when clicked */
+        }
+
+        .magical-items {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 1rem;
+            background: transparent;
+        }
+
+        .items-container {
+            display: flex;
+            justify-content: center;
+            gap: 6rem;
+           
+           
+        }
+
+        .item {
+            width: 120px;
+            height: 120px;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .item:hover {
+            transform: scale(1.05);
+        }
+
+        .item.hidden {
+            opacity: 0;
+            transform: scale(0);
+            width: 0;
+            margin: 0;
+        }
+        .item.selected {
+            position: relative;
+            left: 7%;
+            transform: translateX(-50%) scale(1.1);
+            transition: all 0.3s ease;
+        }
+
+        /* Container style when only one item is visible */
+        .items-container.single-item {
+            justify-content: center;
+            gap: 0;
+}
+        .item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .footer {
+            margin-top:-85px;
+            width:700px;
+            height:122px;
+            border-radius: 15px;
+            background-size: cover; 
+            background-position: center;
+            background-color: transparent;
+            background-image: url('../Mirror XR Mira iPad UI/NEW Resolution/iPad-IU-Pick-a-Magical-Item.png');
+        }
+
+        .items-container {
+            transition: gap 0.3s ease;
+        }
+
+        .items-container.single-item {
+            justify-content: center;
+        }
+
+        .emoji-container {
+        display: flex;
+        gap: 1rem;
+        background-color:transparent;
+        border-radius: 0.5rem;
+    }
+
+        .emoji-btn {
+            font-size: 3rem;
+            padding: 0.5rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            font-size: 70px;
+        }
+
+        .emoji-btn:hover {
+            transform: scale(1.2);
+        }
+        .emoji-btn:active {
+            transform: scale(0.95);
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+        }
+
+
+        /* Class for selected emoji */
+        .emoji-selected {
+            transform: scale(1.60);
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
-    <div class="app-shell">
-        <div class="app-content">
-            <div class="main-container">
-                <img src="./assets/logo.png" alt="Mirror XR Logo" class="logo">
+    <div class="main-container">
 
-                <div class="message-box">
-                    <textarea maxlength="100" placeholder="Type Message Here" class="msg-text-box"></textarea>
-                </div>
+        <div class="message-box">
+            <textarea maxlength="100" placeholder="Type Message Here" class="msg-text-box"></textarea>
+        </div>
 
-                <div class="twinkle-section">
-                    <button class="twinkle-button">
-                        <img src="../Mirror XR Mira iPad UI/NEW Resolution/iPad-IU-Twinkle-Send.png"  class="twinkle-icon" style="max-width:100%; height:auto;">
-                    </button>
+        <div class="pebble-section">
+            <button class="pebble-button">
+                <img src="../Mirror XR Mira iPad UI/NEW Resolution/iPad-IU-Twinkle-Send.png" 
+                     class="pebble-icon">
+            </button>
+            <img src="../Mirror XR Mira iPad UI/NEW Resolution/iPad-IU-Twinkle.png"  class="kitty-icon">
+        </div>
+        <div class="emoji-container">
+            <button class="emoji-btn">😄</button>
+            <button class="emoji-btn">😭</button>
+            <button class="emoji-btn">☺️</button>
+            <button class="emoji-btn">😕</button>
+            <button class="emoji-btn">🥰</button>
+        </div>
+
+        <div class="magical-items">
+           
+            <div class="items-container">
+                <div class="item" data-item="feather">
+                    <img src="UI/3.1.png" alt="feather">
                 </div>
-            </div>
-            <div class="footer-ui">
-                <div class="emoji-container">
-                    <button class="emoji-btn">😄</button>
-                    <button class="emoji-btn">😭</button>
-                    <button class="emoji-btn">☺️</button>
-                    <button class="emoji-btn">😕</button>
-                    <button class="emoji-btn">🥰</button>
+                <div class="item" data-item="mirror">
+                    <img src="UI/3.2.png" alt="mirror">
                 </div>
-                <!-- /*bottom panel*/ -->
-                <div class="magical-items"> 
-                
-                    <div class="items-container">
-                        <div class="item" data-item="feather">
-                            <img src="UI/3.1.png" alt="feather">
-                        </div>
-                        <div class="item" data-item="mirror">
-                            <img src="UI/3.2.png" alt="mirror">
-                        </div>
-                        <div class="item" data-item="book">
-                            <img src="UI/3.3.png" alt="book">
-                        </div>
-                    </div>
+                <div class="item" data-item="book">
+                    <img src="UI/3.3.png" alt="book">
                 </div>
             </div>
-            <script type="module">
-                import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-                import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js";
-                import { getFirestore, collection, addDoc, getDocs, writeBatch,Timestamp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-            
-
-                const firebaseConfig = {
-                    apiKey: "AIzaSyDiCIatzcDsnHdX_t-m15S1a8pNlrB2egs",
-                    authDomain: "mira-7360b.firebaseapp.com",
-                    projectId: "mira-7360b",
-                    storageBucket: "mira-7360b.appspot.com",
-                    messagingSenderId: "76074103771",
-                    appId: "1:76074103771:web:1a2d4ca7e8b5df27a82dfe",
-                    measurementId: "G-9YL8FHBDRX"
-                };
-
-                const app = initializeApp(firebaseConfig);
-                const storage = getStorage(app);
-                const db = getFirestore(app);
-                const CHAR_MESSAGE_COLLECTION = "chat_box_3";
-                const MAGICAL_ITEM_COLLECTION = "Mirror-XR-AF26-poll-magical-item";
-                const PAGE_TYPE = "twinkle";
-                const EMOJI_COLLECTION = "emoji";
-                
-                const sendButton = document.querySelector('.twinkle-button');
-                const textArea = document.querySelector('.msg-text-box');
-
-                sendButton.addEventListener('click', function() {
-                    const message = textArea.value.trim();
-                    if (message) {
-                        addChat(message);
-                        textArea.value = '';
-                    }
-                });
-                
-                
-                
-                
-                document.querySelectorAll('.item').forEach(item => {
-                    item.addEventListener('click', function() {
-                        // If item is already selected, do nothing
-                        if (this.classList.contains('selected')) {
-                            return;
-                        }
-
-                        const container = document.querySelector('.items-container');
-                        const imgElement = this.querySelector('img');
-                        const selectedItem = this.getAttribute('data-item');
-                        
-                        // Change image source based on which item was clicked
-                        switch(selectedItem) {
-                            case 'feather':
-                                imgElement.src = "UI/Colourful/C 3.1.png";
-                                break;
-                            case 'mirror':
-                                imgElement.src = "UI/Colourful/C 3.2.png";
-                                break;
-                            case 'book':
-                                imgElement.src = "UI/Colourful/C 3.3.png";
-                                break;
-                        }
-                        // Storing the selected item to Firebase;
-                        addSelectedItem(selectedItem);
-                        
-                        // Hide all other items
-                        document.querySelectorAll('.item').forEach(otherItem => {
-                            if (otherItem !== this) {
-                                otherItem.classList.add('hidden');
-                            }
-                        });
-
-                        // Add selected class to clicked item.
-                        this.classList.add('selected');
-                        
-                        // Add single-item class to container for centering
-                        container.classList.add('single-item');
-
-                        // Store selected item in session
-                        sessionStorage.setItem('selectedMagicalItem', selectedItem);
-                    });
-                });
-                document.querySelectorAll('.emoji-btn').forEach(button => {
-                    button.addEventListener('click', async function() {
-                        // // Remove selected class from all buttons
-                        // document.querySelectorAll('.emoji-btn').forEach(btn => {
-                        //     btn.classList.remove('emoji-selected');
-                        // });
-                        
-                        // // Add selected class to clicked button
-                        // this.classList.add('emoji-selected');
-                        
-                        // Get emoji index and content
-                        const emojiIndex = this.getAttribute('data-index');
-                        const emojiContent = this.textContent;
-
-                        try {
-                            // Create data object for Firestore
-                            const emojiData = {
-                                emoji: emojiContent,
-                                timestamp: Timestamp.now(),
-                                pageType: PAGE_TYPE
-                            };
-
-                            // Add document to Firestore
-                            const docRef = await addDoc(collection(db, EMOJI_COLLECTION), emojiData);
-                            console.log("Emoji recorded with ID: ", docRef.id);
-                        } catch (error) {
-                            console.error("Error adding emoji to Firestore: ", error);
-                        }
-                    });
-                });
-
-                
-
-                async function addChat(text) {
-                    try { 
-                            
-                            // Create a new document with auto-generated ID in the collection
-                            const docRef = await addDoc(collection(db, CHAR_MESSAGE_COLLECTION), {
-                                device: "ipad-3",
-                                message: text,
-                                timestamp:Timestamp.now()
-                            });
-
-                        } catch (e) {
-                            console.error("Error adding document: ", e);
-                            throw e; // Propagate error to caller
-                        }
-                    }
-
-                    async function addSelectedItem(item)
-                {
-                    try { 
-                            
-                            // Create a new document with auto-generated ID in the collection
-                            const docRef = await addDoc(collection(db, MAGICAL_ITEM_COLLECTION), {
-                                page_type:PAGE_TYPE,
-                                item:item,
-                                timestamp:Timestamp.now()
-                            });
-
-                        } catch (e) {
-                            console.error("Error adding document: ", e);
-                            throw e; // Propagate error to caller
-                        }
-                }    
-
-                // Check if there's a previously selected item on page load
-            
-            </script>
+        </div>
+        <div class="footer">
         </div>
     </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+        import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js";
+        import { getFirestore, collection, addDoc, getDocs, writeBatch,Timestamp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+    
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDiCIatzcDsnHdX_t-m15S1a8pNlrB2egs",
+            authDomain: "mira-7360b.firebaseapp.com",
+            projectId: "mira-7360b",
+            storageBucket: "mira-7360b.appspot.com",
+            messagingSenderId: "76074103771",
+            appId: "1:76074103771:web:1a2d4ca7e8b5df27a82dfe",
+            measurementId: "G-9YL8FHBDRX"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const storage = getStorage(app);
+        const db = getFirestore(app);
+        const CHAR_MESSAGE_COLLECTION = "chat_box_3";
+        const MAGICAL_ITEM_COLLECTION = "magical_item";
+        const PAGE_TYPE = "twinkle";
+        const EMOJI_COLLECTION = "emoji";
+        
+        const sendButton = document.querySelector('.pebble-button');
+        const textArea = document.querySelector('.msg-text-box');
+
+        sendButton.addEventListener('click', function() {
+            const message = textArea.value.trim();
+            if (message) {
+                addChat(message);
+                textArea.value = '';
+            }
+        });
+        
+        
+        
+        
+        document.querySelectorAll('.item').forEach(item => {
+            item.addEventListener('click', function() {
+                // If item is already selected, do nothing
+                if (this.classList.contains('selected')) {
+                    return;
+                }
+
+                const container = document.querySelector('.items-container');
+                const imgElement = this.querySelector('img');
+                const selectedItem = this.getAttribute('data-item');
+                
+                // Change image source based on which item was clicked
+                switch(selectedItem) {
+                    case 'feather':
+                        imgElement.src = "UI/Colourful/C 3.1.png";
+                        break;
+                    case 'mirror':
+                        imgElement.src = "UI/Colourful/C 3.2.png";
+                        break;
+                    case 'book':
+                        imgElement.src = "UI/Colourful/C 3.3.png";
+                        break;
+                }
+                // Storing the selected item to Firebase;
+                addSelectedItem(selectedItem);
+                
+                // Hide all other items
+                document.querySelectorAll('.item').forEach(otherItem => {
+                    if (otherItem !== this) {
+                        otherItem.classList.add('hidden');
+                    }
+                });
+
+                // Add selected class to clicked item.
+                this.classList.add('selected');
+                
+                // Add single-item class to container for centering
+                container.classList.add('single-item');
+
+                // Store selected item in session
+                sessionStorage.setItem('selectedMagicalItem', selectedItem);
+            });
+        });
+        document.querySelectorAll('.emoji-btn').forEach(button => {
+            button.addEventListener('click', async function() {
+                // // Remove selected class from all buttons
+                // document.querySelectorAll('.emoji-btn').forEach(btn => {
+                //     btn.classList.remove('emoji-selected');
+                // });
+                
+                // // Add selected class to clicked button
+                // this.classList.add('emoji-selected');
+                
+                // Get emoji index and content
+                const emojiIndex = this.getAttribute('data-index');
+                const emojiContent = this.textContent;
+
+                try {
+                    // Create data object for Firestore
+                    const emojiData = {
+                        emoji: emojiContent,
+                        timestamp: Timestamp.now(),
+                        pageType: PAGE_TYPE
+                    };
+
+                    // Add document to Firestore
+                    const docRef = await addDoc(collection(db, EMOJI_COLLECTION), emojiData);
+                    console.log("Emoji recorded with ID: ", docRef.id);
+                } catch (error) {
+                    console.error("Error adding emoji to Firestore: ", error);
+                }
+            });
+        });
+
+        
+
+        async function addChat(text) {
+            try { 
+                    
+                    // Create a new document with auto-generated ID in the collection
+                    const docRef = await addDoc(collection(db, CHAR_MESSAGE_COLLECTION), {
+                        device: "ipad-3",
+                        message: text,
+                        timestamp:Timestamp.now()
+                    });
+
+                } catch (e) {
+                    console.error("Error adding document: ", e);
+                    throw e; // Propagate error to caller
+                }
+            }
+
+            async function addSelectedItem(item)
+        {
+            try { 
+                    
+                    // Create a new document with auto-generated ID in the collection
+                    const docRef = await addDoc(collection(db, MAGICAL_ITEM_COLLECTION), {
+                        page_type:PAGE_TYPE,
+                        item:item,
+                        timestamp:Timestamp.now()
+                    });
+
+                } catch (e) {
+                    console.error("Error adding document: ", e);
+                    throw e; // Propagate error to caller
+                }
+        }    
+
+        // Check if there's a previously selected item on page load
+       
+    </script>
 </body>
 </html>
