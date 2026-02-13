@@ -1,4 +1,3 @@
-
 import { db } from "./firebase.js";
 import {onSnapshot,collection,doc, setDoc,addDoc,serverTimestamp,Timestamp} from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
@@ -7,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ID for live show session
   const showId   = sessionStorage.getItem("showId");
   //users unique ID
-  const userId   = sessionStorage.getItem("userId");
+  let userId   = sessionStorage.getItem("userId");
 
 
   if (!userId) {
@@ -55,6 +54,89 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
+  const showRef = doc(db, "shows", showId);
+  let pollUnlocked = false; 
+
+  // Create waiting overlay
+  const waitingOverlay = document.createElement("div");
+  waitingOverlay.style.position = "fixed";
+  waitingOverlay.style.top = 0;
+  waitingOverlay.style.left = 0;
+  waitingOverlay.style.width = "100%";
+  waitingOverlay.style.height = "100%";
+  waitingOverlay.style.background = "rgba(0,0,0,0.6)";
+  waitingOverlay.style.color = "white";
+  waitingOverlay.style.display = "flex";
+  waitingOverlay.style.alignItems = "center";
+  waitingOverlay.style.justifyContent = "center";
+  waitingOverlay.style.fontSize = "24px";
+  waitingOverlay.style.zIndex = "9999";
+  waitingOverlay.textContent = "Please wait for the next part of the story...";
+  waitingOverlay.style.display = "none";
+
+  document.body.appendChild(waitingOverlay);
+
+  let selectedOption = null;
+  let hasSubmitted = false;
+
+  const rows = document.querySelectorAll(".option-row, .poll-item");
+  const submitButton = document.getElementById("submitButton");
+  const nextButton = document.getElementById("nextButton");
+
+  if (nextButton) {
+    nextButton.disabled = true;
+  }
+ 
+  onSnapshot(showRef, (snapshot) => {
+    const data = snapshot.data();
+    if (!data) return;
+
+    const currentPollFromAdmin = data.currentPoll;
+
+    if (currentPollFromAdmin === levelId) {
+      // This poll is active
+      pollUnlocked = true;
+      waitingOverlay.style.display = "none";
+
+      if (submitButton && !hasSubmitted) {
+        submitButton.disabled = false;
+      }
+
+      // Next stays disabled while this poll is active
+      if (nextButton) {
+        nextButton.disabled = true;
+      }
+
+    } else {
+      // Admin moved to next poll
+      pollUnlocked = false;
+
+      // Lock submit
+      if (submitButton) {
+        submitButton.disabled = true;
+      }
+
+      // Unlock next so user can move forward
+      if (nextButton) {
+        nextButton.disabled = false;
+      }
+
+      waitingOverlay.style.display = "none";
+    }
+  });
+
+    if (nextButton) {
+    nextButton.addEventListener("click", () => {
+
+      const pollNumber = parseInt(levelId.replace("p", ""));
+      const nextPollNumber = pollNumber + 1;
+
+      if (nextPollNumber <= 4) {
+        window.location.href = `poll${nextPollNumber}.html`;
+      }
+    });
+  }
+  /*vote submission*/
 
   async function submitVote(pollOption) {
     await addDoc(
@@ -74,13 +156,6 @@ document.addEventListener("DOMContentLoaded", () => {
     sessionStorage.setItem("parentPollOption", pollOption);
   }
   
-
-  let selectedOption = null;
-  let hasSubmitted = false;
-
-  const rows = document.querySelectorAll(".option-row, .poll-item");
-  const submitButton = document.getElementById("submitButton");
-
   // Disable submit initially
   submitButton.disabled = true;
 
@@ -107,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // When user clicks submit
   submitButton.addEventListener("click", async () => {
 
-    if (!selectedOption || hasSubmitted) return;
+    if (!selectedOption || hasSubmitted ||!pollUnlocked) return;
 
     await submitVote(selectedOption);
 

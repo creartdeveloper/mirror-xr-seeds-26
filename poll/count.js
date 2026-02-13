@@ -27,15 +27,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  function switchPoll(newIndex) {
+  async function switchPoll(newIndex) {
+
     polls[currentIndex].classList.remove("active");
+
     currentIndex = newIndex;
+
     polls[currentIndex].classList.add("active");
 
     currentPollLevel = polls[currentIndex].dataset.level;
 
     startListenerForCurrentPoll();
+
+    if (!currentShowId) return;
+
+    await setDoc(
+      doc(db, "shows", currentShowId),
+      {
+        currentPoll: currentPollLevel
+      },
+      { merge: true }
+    );
   }
+
 
   /*load the show */
 
@@ -47,16 +61,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     currentShowId = input;
-    await setDoc(
-      doc(db, "shows", currentShowId),
-      {
-        currentPoll: polls[currentIndex].dataset.level,
-        mode: "voting",
-        updatedAt: serverTimestamp()
-      },
-      { merge: true }
-    );
-        document.querySelectorAll(".vote-count").forEach(el => {
+
+    document.querySelectorAll(".vote-count").forEach(el => {
       el.textContent = "0";
     });
 
@@ -67,12 +73,14 @@ document.addEventListener("DOMContentLoaded", () => {
     startListenerForCurrentPoll();
   });
 
-  /*firestore listener*/
+
+/* firestore listener */
 
   function startListenerForCurrentPoll() {
 
     if (!currentShowId) return;
 
+    // stop previous listener
     if (activeUnsubscribe) {
       activeUnsubscribe();
       activeUnsubscribe = null;
@@ -81,64 +89,68 @@ document.addEventListener("DOMContentLoaded", () => {
     const container = polls[currentIndex];
     const levelId = container.dataset.level;
 
-    const counters = {
-      a: container.querySelector(`#count-${levelId}-a`),
-      b: container.querySelector(`#count-${levelId}-b`),
-      c: container.querySelector(`#count-${levelId}-c`),
-      d: container.querySelector(`#count-${levelId}-d`)
-    };
+    // reset UI
+    const totals = { a: 0, b: 0, c: 0, d: 0 };
 
-    const bars = {
-      a: container.querySelector(`#bar-${levelId}-a`),
-      b: container.querySelector(`#bar-${levelId}-b`),
-      c: container.querySelector(`#bar-${levelId}-c`),
-      d: container.querySelector(`#bar-${levelId}-d`)
-    };
+    document.getElementById(`count-${levelId}-a`).textContent = 0;
+    document.getElementById(`count-${levelId}-b`).textContent = 0;
+    document.getElementById(`count-${levelId}-c`).textContent = 0;
+    document.getElementById(`count-${levelId}-d`).textContent = 0;
 
     const q = query(
       collection(db, COLLECTION_NAME),
       where("levelId", "==", levelId),
       where("showId", "==", currentShowId)
     );
+
     activeUnsubscribe = onSnapshot(q, snapshot => {
 
-      const totals = { a: 0, b: 0, c: 0, d: 0 };
+      snapshot.docChanges().forEach(change => {
 
-      snapshot.forEach(docSnap => {
-        const option = docSnap.data().pollOption?.toLowerCase();
-        if (totals[option] !== undefined) {
+        const option = change.doc.data().pollOption?.toLowerCase();
+
+        if (!totals[option] && totals[option] !== 0) return;
+
+        if (change.type === "added") {
           totals[option]++;
         }
+
+        if (change.type === "removed") {
+          totals[option]--;
+        }
+
       });
 
-      // Update counts
-      counters.a.textContent = totals.a;
-      counters.b.textContent = totals.b;
-      counters.c.textContent = totals.c;
-      counters.d.textContent = totals.d;
+      updateUI(totals, levelId);
 
-      // Update percentage bars
-      const totalVotes =
-        totals.a + totals.b + totals.c + totals.d;
-
-      if (totalVotes > 0) {
-        const percentA = (totals.a / EXPECTED_AUDIENCE) * 100;
-        const percentB = (totals.b / EXPECTED_AUDIENCE) * 100;
-        const percentC = (totals.c / EXPECTED_AUDIENCE) * 100;
-        const percentD = (totals.d / EXPECTED_AUDIENCE) * 100;
-
-        const barA = document.getElementById(`bar-${levelId}-a`);
-        const barB = document.getElementById(`bar-${levelId}-b`);
-        const barC = document.getElementById(`bar-${levelId}-c`);
-        const barD = document.getElementById(`bar-${levelId}-d`);
-
-        if (barA) barA.style.width = percentA + "%";
-        if (barB) barB.style.width = percentB + "%";
-        if (barC) barC.style.width = percentC + "%";
-        if (barD) barD.style.width = percentD + "%";
-      }
     });
   }
+
+
+  function updateUI(totals, levelId) {
+
+    const totalVotes =
+      totals.a + totals.b + totals.c + totals.d;
+
+    document.getElementById(`count-${levelId}-a`).textContent = totals.a;
+    document.getElementById(`count-${levelId}-b`).textContent = totals.b;
+    document.getElementById(`count-${levelId}-c`).textContent = totals.c;
+    document.getElementById(`count-${levelId}-d`).textContent = totals.d;
+
+    if (totalVotes > 0) {
+
+      const percentA = (totals.a / EXPECTED_AUDIENCE) * 100;
+      const percentB = (totals.b / EXPECTED_AUDIENCE) * 100;
+      const percentC = (totals.c / EXPECTED_AUDIENCE) * 100;
+      const percentD = (totals.d / EXPECTED_AUDIENCE) * 100;
+
+      document.getElementById(`bar-${levelId}-a`).style.width = percentA + "%";
+      document.getElementById(`bar-${levelId}-b`).style.width = percentB + "%";
+      document.getElementById(`bar-${levelId}-c`).style.width = percentC + "%";
+      document.getElementById(`bar-${levelId}-d`).style.width = percentD + "%";
+    }
+  }
+
 
   /*reset the show */
 
