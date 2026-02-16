@@ -120,6 +120,19 @@
     body.projection-mode {
         background: white;
     }
+
+    body.projection-mode #main-container {
+        max-width: 1200px;
+        margin: 80px auto;
+    }
+
+    body.projection-mode h2 {
+        font-size: 72px;
+    }
+
+    body.projection-mode .option-row {
+        padding: 40px 60px;
+    }
     .exit-btn {
     position: fixed;
     top: 20px;
@@ -154,12 +167,12 @@
 <button id="exitBtn" class="exit-btn">Exit Projection</button>
     <div id="adminControls">
         <div class="admin-showid">
+            <input type="number" id="audienceSizeInput" placeholder="Audience Size" min="1" style="width:120px;">
             <input type="text" id="adminShowIdInput" placeholder="Enter Show ID">
             <button id="loadShow">Load Show</button>
-            <button id="resetShow">Reset Show</button>
+            <button id="resetShow">Reset Show</button>      
             <button id="projectionToggle" class="projectionBtn">Projection Mode</button>
             <button id="advanceStory">Advance Story</button>
-
         </div>
     </div>
 
@@ -172,7 +185,7 @@
         <div class="option-row">
             <div class="bar-fill" id="bar-p1-a"></div>
             <div class="option-content">
-                <img src="./assets/P1/A.png" class="item-img">
+                <img src="./poll/assets/P1/A.png" class="item-img">
                 Feather
                 <span class="vote-count" id="count-p1-a">0</span>
             </div>
@@ -181,7 +194,7 @@
         <div class="option-row">
             <div class="bar-fill" id="bar-p1-b"></div>
             <div class="option-content">
-                <img src="./assets/P1/B.png" class="item-img">
+                <img src="./poll/assets/P1/B.png" class="item-img">
                 Option B
                 <span class="vote-count" id="count-p1-b">0</span>
             </div>
@@ -190,7 +203,7 @@
         <div class="option-row">
             <div class="bar-fill" id="bar-p1-c"></div>
             <div class="option-content">
-                <img src="./assets/P1/C.png" class="item-img">
+                <img src="./poll/assets/P1/C.png" class="item-img">
                 Option C
                 <span class="vote-count" id="count-p1-c">0</span>
             </div>
@@ -199,7 +212,7 @@
         <div class="option-row">
             <div class="bar-fill" id="bar-p1-d"></div>
             <div class="option-content">
-                <img src="./assets/P1/D.png" class="item-img">
+                <img src="./poll/assets/P1/D.png" class="item-img">
                 Option D
                 <span class="vote-count" id="count-p1-d">0</span>
             </div>
@@ -213,7 +226,7 @@
         <div class="option-row">
             <div class="bar-fill" id="bar-p2-a"></div>
             <div class="option-content">
-                <img src="./assets/P2/A1.png" class="item-img">
+                <img src="./poll/assets/P2/A1.png" class="item-img">
                     Option A
                 <span class="vote-count" id="count-p2-a">0</span>
             </div>
@@ -222,7 +235,7 @@
         <div class="option-row">
             <div class="bar-fill" id="bar-p2-b"></div>
             <div class="option-content">
-                <img src="./assets/P2/B1.png" class="item-img">
+                <img src="./poll/assets/P2/B1.png" class="item-img">
                 Option B
                 <span class="vote-count" id="count-p2-b">0</span>
             </div>
@@ -231,7 +244,7 @@
         <div class="option-row">
             <div class="bar-fill" id="bar-p2-c"></div>
             <div class="option-content">
-            <img src="./assets/P2/C1.png" class="item-img">
+            <img src="./poll/assets/P2/C1.png" class="item-img">
                 Option C
                 <span class="vote-count" id="count-p2-c">0</span>
             </div>
@@ -240,7 +253,7 @@
         <div class="option-row">
             <div class="bar-fill" id="bar-p2-d"></div>
             <div class="option-content">
-                <img src="./assets/P2/D1.png" class="item-img">
+                <img src="./poll/assets/P2/D1.png" class="item-img">
                 Option D
                 <span class="vote-count" id="count-p2-d">0</span>
             </div>
@@ -254,7 +267,7 @@
         <div class="option-row">
             <div class="bar-fill" id="bar-p3-a"></div>
             <div class="option-content">
-                <img src="./assets/P2/A1.png" class="item-img">
+                <img src="./poll/assets/P2/A1.png" class="item-img">
                 Option A
                 <span class="vote-count" id="count-p3-a">0</span>
             </div>
@@ -263,7 +276,7 @@
         <div class="option-row">
             <div class="bar-fill" id="bar-p3-b"></div>
             <div class="option-content">
-                <img src="./assets/P2/B1.png" class="item-img">
+                <img src="./poll/assets/P2/B1.png" class="item-img">
                 Option B
                 <span class="vote-count" id="count-p3-b">0</span>
             </div>
@@ -272,7 +285,7 @@
         <div class="option-row">
             <div class="bar-fill" id="bar-p3-c"></div>
             <div class="option-content">
-                <img src="./assets/P2/C1.png" class="item-img">
+                <img src="./poll/assets/P2/C1.png" class="item-img">
                 Option C
                 <span class="vote-count" id="count-p3-c">0</span>
             </div>
@@ -281,7 +294,7 @@
         <div class="option-row">
             <div class="bar-fill" id="bar-p3-d"></div>
             <div class="option-content">
-                <img src="./assets/P2/D1.png" class="item-img">
+                <img src="./poll/assets/P2/D1.png" class="item-img">
                 Option D
                 <span class="vote-count" id="count-p3-d">0</span>
             </div>
@@ -304,7 +317,7 @@
         <div class="option-row">
             <div class="bar-fill" id="bar-p4-b"></div>
             <div class="option-content">
-                <img src="./assets/P2/B1.png" class="item-img">
+                <img src="./poll/assets/P2/B1.png" class="item-img">
                 Option B
                 <span class="vote-count" id="count-p4-b">0</span>
             </div>
@@ -313,7 +326,7 @@
         <div class="option-row">
             <div class="bar-fill" id="bar-p4-c"></div>
             <div class="option-content">
-                <img src="./assets/P2/C1.png" class="item-img">
+                <img src="./poll/assets/P2/C1.png" class="item-img">
                 Option C
                 <span class="vote-count" id="count-p4-c">0</span>
             </div>
@@ -322,7 +335,7 @@
         <div class="option-row">
             <div class="bar-fill" id="bar-p4-d"></div>
             <div class="option-content">
-                <img src="./assets/P2/D1.png" class="item-img">
+                <img src="./poll/assets/P2/D1.png" class="item-img">
                 Option D
                 <span class="vote-count" id="count-p4-d">0</span>
             </div>

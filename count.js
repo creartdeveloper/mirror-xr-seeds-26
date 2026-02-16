@@ -1,11 +1,8 @@
-import { db } from "../poll/firebase.js";
+import { db } from "./firebase.js";
 import {
-  collection,
-  query,
-  where,
   onSnapshot,
-  getDocs,
-  deleteDoc,
+  getDoc,
+  updateDoc,
   doc,
   setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
@@ -15,86 +12,107 @@ document.addEventListener("DOMContentLoaded", () => {
   const COLLECTION_NAME = "Mirror-XR-AF26-poll-magical-item";
 
   let currentShowId = null;
-  let unsubscribeFunctions = [];
-  let currentPollIndex = 1;
+  let currentAudienceSize = 1;
+  let unsubscribe = null;
 
-  /* load show */
+  /* projector display */
+
+  const projectionBtn = document.getElementById("projectionToggle");
+  const exitBtn = document.getElementById("exitBtn");
+
+  projectionBtn.addEventListener("click", () => {
+    document.body.classList.add("projection-mode");
+  });
+
+  exitBtn.addEventListener("click", () => {
+    document.body.classList.remove("projection-mode");
+  });
+
+  /* load the new show */
 
   document.getElementById("loadShow").addEventListener("click", async () => {
 
-    const input = document.getElementById("adminShowIdInput").value.trim();
-    if (!input) {
+    console.log("LOAD SHOW CLICKED");
+
+    const showInput = document.getElementById("adminShowIdInput").value.trim();
+    const audienceInput = document.getElementById("audienceSizeInput").value;
+
+    if (!showInput) {
       alert("Enter a show ID first");
       return;
     }
 
-    currentShowId = input;
+    if (!audienceInput) {
+      alert("Enter audience size before loading show");
+      return;
+    }
 
-    // Ensure show doc exists
-    await setDoc(
-      doc(db, COLLECTION_NAME, "show_" + currentShowId),
-      { currentPoll: "p1" },
-      { merge: true }
-    );
+    currentShowId = showInput;
+    currentAudienceSize = parseInt(audienceInput);
 
-    currentPollIndex = 1;
+    const showRef = doc(db, COLLECTION_NAME, currentShowId);
 
-    startAllPollListeners();
-  });
+    /* Initialize show document */
+    await setDoc(showRef, {
+      currentPoll: "p1",
+      audienceSize: currentAudienceSize
+    }, { merge: true });
 
-  /* start listeners*/
+    /* Remove previous listener if exists */
+    if (unsubscribe) {
+      unsubscribe();
+    }
 
-  function startAllPollListeners() {
+    /* Attach new realtime listener */
+    unsubscribe = onSnapshot(showRef, snapshot => {
 
-    // stop old listeners
-    unsubscribeFunctions.forEach(unsub => unsub());
-    unsubscribeFunctions = [];
+      const data = snapshot.data();
+      if (!data) return;
 
-    const levels = ["p1", "p2", "p3", "p4"];
+      const counts = data.counts || {};
+      currentAudienceSize = data.audienceSize || 1;
 
-    levels.forEach(levelId => {
-
-      const q = query(
-        collection(db, COLLECTION_NAME),
-        where("levelId", "==", levelId),
-        where("showId", "==", currentShowId)
-      );
-
-      const unsubscribe = onSnapshot(q, snapshot => {
-
-        const totals = { a: 0, b: 0, c: 0, d: 0 };
-
-        snapshot.forEach(docSnap => {
-          const option = docSnap.data().pollOption?.toLowerCase();
-          if (totals[option] !== undefined) {
-            totals[option]++;
-          }
-        });
-
-        updateUI(totals, levelId);
-
+      ["p1","p2","p3","p4"].forEach(level => {
+        const totals = counts[level] || { a:0,b:0,c:0,d:0 };
+        updateUI(totals, level);
       });
 
-      unsubscribeFunctions.push(unsubscribe);
+      /* Auto-scroll to active poll */
+      if (data.currentPoll) {
+        const activeElement = document.querySelector(`[data-level="${data.currentPoll}"]`);
+        if (activeElement) {
+          activeElement.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+
     });
-  }
 
-  /*update ui*/
+  });
 
-  function updateUI(totals, levelId) {
+  /*update admin poll bar */
 
-    const totalVotes =
-      totals.a + totals.b + totals.c + totals.d;
+  function updateUI(totalsRaw, levelId) {
 
+    const totals = {
+      a: totalsRaw?.a || 0,
+      b: totalsRaw?.b || 0,
+      c: totalsRaw?.c || 0,
+      d: totalsRaw?.d || 0
+    };
+
+    const audienceSize = currentAudienceSize || 1;
+
+    /* Update vote counts */
     document.getElementById(`count-${levelId}-a`).textContent = totals.a;
     document.getElementById(`count-${levelId}-b`).textContent = totals.b;
     document.getElementById(`count-${levelId}-c`).textContent = totals.c;
     document.getElementById(`count-${levelId}-d`).textContent = totals.d;
 
-    const percentA = totalVotes ? (totals.a / totalVotes) * 100 : 0;
-    const percentB = totalVotes ? (totals.b / totalVotes) * 100 : 0;
-    const percentC = totalVotes ? (totals.c / totalVotes) * 100 : 0;
-    const percentD = totalVotes ? (totals.d / totalVotes) * 100 : 0;
+    /* Bar percentage relative to full audience */
+    const percentA = (totals.a / audienceSize) * 100;
+    const percentB = (totals.b / audienceSize) * 100;
+    const percentC = (totals.c / audienceSize) * 100;
+    const percentD = (totals.d / audienceSize) * 100;
 
     document.getElementById(`bar-${levelId}-a`).style.width = percentA + "%";
     document.getElementById(`bar-${levelId}-b`).style.width = percentB + "%";
@@ -102,57 +120,67 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById(`bar-${levelId}-d`).style.width = percentD + "%";
   }
 
-  /* reset show*/
+  /*reset show */
 
   document.getElementById("resetShow").addEventListener("click", async () => {
 
     if (!currentShowId) return;
 
-    const q = query(
-      collection(db, COLLECTION_NAME),
-      where("showId", "==", currentShowId)
-    );
+    const showRef = doc(db, COLLECTION_NAME, currentShowId);
 
-    const snapshot = await getDocs(q);
-
-    const deletePromises = [];
-    snapshot.forEach(docSnap => {
-      deletePromises.push(deleteDoc(doc(db, COLLECTION_NAME, docSnap.id)));
-    });
-
-    await Promise.all(deletePromises);
-
-    // reset to poll 1
-    await setDoc(
-      doc(db, COLLECTION_NAME, "show_" + currentShowId),
-      { currentPoll: "p1" },
-      { merge: true }
-    );
-
-    currentPollIndex = 1;
+    await setDoc(showRef, {
+      currentPoll: "p1",
+      counts: {},
+      votedUsers: {}
+    }, { merge: true });
 
     alert("Show reset complete");
   });
 
-  /* story advance*/
-
-  function calculateNextPollLogic() {
-    if (currentPollIndex >= 4) return "p4";
-    currentPollIndex++;
-    return "p" + currentPollIndex;
-  }
+  /* advance story button */
 
   document.getElementById("advanceStory").addEventListener("click", async () => {
 
     if (!currentShowId) return;
 
-    const nextPoll = calculateNextPollLogic();
+    const showRef = doc(db, COLLECTION_NAME, currentShowId);
+    const snapshot = await getDoc(showRef);
+    const data = snapshot.data();
 
-    await setDoc(
-      doc(db, COLLECTION_NAME, "show_" + currentShowId),
-      { currentPoll: nextPoll },
-      { merge: true }
-    );
+    if (!data) return;
+
+    const currentPoll = data.currentPoll;
+    const pollCounts = data.counts?.[currentPoll] || {};
+
+    const options = ["a","b","c","d"];
+
+    let max = -1;
+    let winners = [];
+
+    options.forEach(opt => {
+      const value = pollCounts[opt] || 0;
+      if (value > max) {
+        max = value;
+        winners = [opt];
+      } else if (value === max) {
+        winners.push(opt);
+      }
+    });
+
+    const winningOption =
+      winners[Math.floor(Math.random() * winners.length)];
+
+    let nextPoll;
+    if (currentPoll === "p1") nextPoll = "p2";
+    else if (currentPoll === "p2") nextPoll = "p3";
+    else if (currentPoll === "p3") nextPoll = "p4";
+    else nextPoll = "p4";
+
+    await updateDoc(showRef, {
+      currentPoll: nextPoll,
+      parentPollOption: winningOption
+    });
+
   });
 
 });

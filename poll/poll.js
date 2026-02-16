@@ -2,8 +2,9 @@ import { db } from "../firebase.js";
 import { 
   onSnapshot, 
   collection, 
-  doc, 
-  addDoc, 
+  doc,
+  updateDoc, 
+  increment,
   serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
@@ -11,7 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const COLLECTION_NAME = "Mirror-XR-AF26-poll-magical-item";
 
-  const showId = sessionStorage.getItem("showId");
+  // const showId = sessionStorage.getItem("showId");
+  const showId = "1200";
   let userId = sessionStorage.getItem("userId");
 
   if (!userId) {
@@ -20,12 +22,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (!showId) {
-    console.error("No showId found");
     window.location.href = "../show-id.html";
     return;
   }
 
-  // Restore username + avatar
   const username = sessionStorage.getItem("username");
   const avatar = sessionStorage.getItem("avatar");
 
@@ -35,92 +35,82 @@ document.addEventListener("DOMContentLoaded", () => {
   if (usernameSpan && username) usernameSpan.textContent = username;
   if (avatarImg && avatar) avatarImg.src = avatar;
 
-  let selectedOption = null;
   let hasSubmitted = false;
   let currentLevel = null;
 
-  const options = document.querySelectorAll(".poll-option");
+  const allOptions = document.querySelectorAll(".poll-option");
 
-  function getCurrentLevel() {
-    return currentLevel;
-  }
-
-  /*listen to admin control */
-
+  /* Listen to admin control document */
   const controlRef = doc(
     db,
-    COLLECTION_NAME,
-    "show_" + showId
+    COLLECTION_NAME, showId
   );
 
   onSnapshot(controlRef, (snapshot) => {
-
+    console.log("Control snapshot:", snapshot.data());
     const data = snapshot.data();
-    if (!data || !data.currentPoll) return;
-
-    const activeLevel = data.currentPoll;
-
-    currentLevel = activeLevel;
+    if (!data || !data.currentPoll) {
+      console.log("No currentPoll found");
+      return;
+    }
+    currentLevel = data.currentPoll;
+    console.log("Current level set to:", currentLevel);
 
     // Hide all polls
     document.querySelectorAll(".poll-container")
       .forEach(p => p.classList.remove("active"));
 
-    // Show only the active one
+    // Show active poll
     const pollToShow = document.querySelector(
-      `.poll-container[data-level="${activeLevel}"]`
+      `.poll-container[data-level="${currentLevel}"]`
     );
 
     if (pollToShow) {
       pollToShow.classList.add("active");
     }
+    // Reset state when poll changes
+    hasSubmitted = !!data.votedUsers?.[currentLevel]?.[userId];
 
-    // Reset vote state for new poll
-    hasSubmitted = false;
-    selectedOption = null;
-
-    options.forEach(o => o.classList.remove("selected"));
+    allOptions.forEach(o => o.classList.remove("selected"));
   });
 
-  /* vote submit  */
-
+  /*Submit vote */
   async function submitVote(option) {
 
-    const levelId = getCurrentLevel();
-    if (!levelId) return;
+    if (!currentLevel || hasSubmitted) return;
 
-    await addDoc(
-      collection(db, COLLECTION_NAME),
-      {
-        showId,
-        userId,
-        username,
-        avatar,
-        levelId,
-        pollOption: option,
-        timestamp: serverTimestamp()
-      }
-    );
+    try {
+      const showRef = doc(db, COLLECTION_NAME, showId);
 
-    hasSubmitted = true;
+      await updateDoc(showRef, {
+      [`counts.${currentLevel}.${option}`]: increment(1),
+      [`votedUsers.${currentLevel}.${userId}`]: true
+    });
+      hasSubmitted = true;
+
+    } catch (error) {
+      console.error("Vote error:", error);
+    }
   }
 
-  /* option click handler */
+  /* Click handling for 2-column rows */
+  allOptions.forEach(optionRow => {
 
-  options.forEach(optionBtn => {
-
-    optionBtn.addEventListener("click", async () => {
+    optionRow.addEventListener("click", async () => {
 
       if (hasSubmitted) return;
 
-      options.forEach(o => o.classList.remove("selected"));
-      optionBtn.classList.add("selected");
+      const option = optionRow.dataset.option;
+      if (!option) return;
 
-      selectedOption = optionBtn.dataset.option?.toLowerCase();
+      // Remove previous selection
+      allOptions.forEach(o => o.classList.remove("selected"));
 
-      if (selectedOption) {
-        await submitVote(selectedOption);
-      }
+      // Highlight clicked row
+      optionRow.classList.add("selected");
+      console.log("Clicked option:", option);
+
+      await submitVote(option.toLowerCase());
     });
 
   });
