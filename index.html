@@ -13,7 +13,7 @@
 
     <title>Mirror App</title>
 </head>
-<body>
+<body data-page ="landing">
     <nav class="nav-header">
         <div class="nav-logo">
             <img src="./poll/assets/logo/logo.png"  alt="Mirror XR Logo" class="logo">
@@ -27,12 +27,22 @@
         <div class="app-content">
             <section class="hero">
                 <img src ="https://cdn.prod.website-files.com/635bd94b8b533d5752353a36/67650a6949f5de488230389f_Mira-AI-Butterfly-Box-Pop-Up.gif" alt="Mira-AI" class="mira"/>
-                <a href="./show-id.html" class="sign-in-link">
-                    <button class="sign-in" type="button">Sign in </button>
-                </a>
+                <p class="landing-subtext">Enter your magic show code to begin </p>
+                <div class="show-id-wrapper">
+                    <div class="show-id">
+                        <input type="text" maxlength="1">
+                        <input type="text" maxlength="1">
+                        <input type="text" maxlength="1">
+                        <input type="text" maxlength="1">
+                    </div>
+                    <button class="sign-in" id="enterShowBtn">Enter</button>
+                </div>
             </section>
         </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+    <script type="module" src="./index.js"></script>
+    <script type="module" src="./globalNavigation.js"></script>
+
 </body>
 </html>

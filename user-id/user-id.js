@@ -53,8 +53,9 @@ pickr.on('change', (color) => {
     const selectedAvatar = document.querySelector('.selected-avatar');
 
     if (selectedAvatar) {
-        selectedAvatar.style.backgroundColor = selectedColor;
+        selectedAvatar.style.backgroundColor = selectedColor; 
     }
+    sessionStorage.setItem("avatarBgColor", selectedColor);
 });
 
   /*restore selected avatar*/
@@ -181,19 +182,19 @@ pickr.on('change', (color) => {
 
     // ensure username + avatar are final and saved
     const finalUsername = usernameInput.value.trim();
-    const finalAvatar =
-      sessionStorage.getItem("avatar") || selectedAvatarImg.src;
+    const finalAvatar = sessionStorage.getItem("avatar") || selectedAvatarImg.src;
 
+    const finalBgColor = sessionStorage.getItem("avatarBgColor") || selectedAvatarBox.style.backgroundColor;
     sessionStorage.setItem("username", finalUsername);
     sessionStorage.setItem("avatar", finalAvatar);
+    sessionStorage.setItem("avatarBgColor", finalBgColor);
 
     // unique user id
     if (!sessionStorage.getItem("userId")) {
-      const userId = crypto.randomUUID();
-      sessionStorage.setItem("userId", userId);
+        sessionStorage.setItem("userId", crypto.randomUUID());
     }
 
-    window.location.replace("../poll/poll1.html");
+    console.log("User setup saved.");
   });
 /*button state*/
   function updateNextButtonState() {

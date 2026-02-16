@@ -1,4 +1,4 @@
-import { db } from "./firebase.js";
+import { db } from "../firebase.js";
 import {onSnapshot,collection,doc, setDoc,addDoc,serverTimestamp,Timestamp} from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
 
@@ -44,17 +44,22 @@ document.addEventListener("DOMContentLoaded", () => {
   // link polls 1 -4
   const parentPollOption = sessionStorage.getItem("parentPollOption") || null;
 
-  // the poll type defined on each poll page
-  const body = document.querySelector("body");
-  const levelId = body?.dataset?.level; // p1 / p2 / p3/ p4
-
   if(!userId || !levelId) {
     console.error("Missing userId or levelId.Redirecting to profile.");
     window.location.href ="../user-id/user-id.html";
     return;
   }
 
-  const showRef = doc(db, "shows", showId);
+  const showRef = doc(db, "shows", "show_" + showId);
+
+  onSnapshot(showRef, (snap) => {
+    const data = snap.data();
+    if (!data) return;
+
+    const activePoll = data.currentPoll;
+
+    showOnlyThatPoll(activePoll);
+  });
   let pollUnlocked = false; 
 
   // Create waiting overlay
@@ -79,66 +84,44 @@ document.addEventListener("DOMContentLoaded", () => {
   let selectedOption = null;
   let hasSubmitted = false;
 
-  const rows = document.querySelectorAll(".option-row, .poll-item");
+  const rows = document.querySelectorAll(".poll-item");
   const submitButton = document.getElementById("submitButton");
-  const nextButton = document.getElementById("nextButton");
-
-  if (nextButton) {
-    nextButton.disabled = true;
-  }
  
+  function getCurrentLevel() {
+    const activePoll = document.querySelector(".poll-container.active");
+    return activePoll?.dataset.level;
+  }
+
+  const showRef = doc(db, "Mirror-XR-AF26-poll-magical-item", "show_" + showId);
+
   onSnapshot(showRef, (snapshot) => {
     const data = snapshot.data();
     if (!data) return;
 
-    const currentPollFromAdmin = data.currentPoll;
+    const activeLevel = data.currentPoll;
 
-    if (currentPollFromAdmin === levelId) {
-      // This poll is active
-      pollUnlocked = true;
-      waitingOverlay.style.display = "none";
+    // Hide all polls
+    document.querySelectorAll(".poll-container")
+      .forEach(p => p.classList.remove("active"));
 
-      if (submitButton && !hasSubmitted) {
-        submitButton.disabled = false;
-      }
+    // Show only active poll
+    const pollToShow = document.querySelector(
+      `.poll-container[data-level="${activeLevel}"]`
+    );
 
-      // Next stays disabled while this poll is active
-      if (nextButton) {
-        nextButton.disabled = true;
-      }
-
-    } else {
-      // Admin moved to next poll
-      pollUnlocked = false;
-
-      // Lock submit
-      if (submitButton) {
-        submitButton.disabled = true;
-      }
-
-      // Unlock next so user can move forward
-      if (nextButton) {
-        nextButton.disabled = false;
-      }
-
-      waitingOverlay.style.display = "none";
+    if (pollToShow) {
+      pollToShow.classList.add("active");
     }
+
   });
 
-    if (nextButton) {
-    nextButton.addEventListener("click", () => {
-
-      const pollNumber = parseInt(levelId.replace("p", ""));
-      const nextPollNumber = pollNumber + 1;
-
-      if (nextPollNumber <= 4) {
-        window.location.href = `poll${nextPollNumber}.html`;
-      }
-    });
-  }
   /*vote submission*/
 
   async function submitVote(pollOption) {
+
+    const levelId = getCurrentLevel();
+    if (!levelId) return;
+
     await addDoc(
       collection(db, "Mirror-XR-AF26-poll-magical-item"),
       {
