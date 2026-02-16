@@ -1,68 +1,78 @@
 import { db } from "../firebase.js";
-import {onSnapshot,collection,doc, setDoc,addDoc,serverTimestamp,Timestamp} from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-
+import { 
+  onSnapshot,
+  collection,
+  doc,
+  addDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  // ID for live show session
-  const showId   = sessionStorage.getItem("showId");
-  //users unique ID
-  let userId   = sessionStorage.getItem("userId");
 
+  const showId = sessionStorage.getItem("showId");
+  let userId = sessionStorage.getItem("userId");
 
   if (!userId) {
     userId = crypto.randomUUID();
     sessionStorage.setItem("userId", userId);
   }
 
-  if (!showId) {
-    console.error("Missing showId");
-    window.location.href = "../show-id.html";
-    return;
-  }
+  // if (!showId) {
+  //   console.error("Missing showId");
+  //   window.location.href = "../show-id.html";
+  //   return;
+  // }
 
-  //users selected username and avatar
+  /* Restore user info */
+
   const username = sessionStorage.getItem("username");
-  const avatar   = sessionStorage.getItem("avatar");
-  // Restore username
+  const avatar = sessionStorage.getItem("avatar");
+
   const usernameSpan = document.getElementById("chatUsername");
   if (usernameSpan && username) {
     usernameSpan.textContent = username;
   }
 
-  // Restore avatar image
   const avatarImg = document.getElementById("chatAvatarImg");
   if (avatarImg && avatar) {
     avatarImg.src = avatar;
   }
 
-  // Restore avatar background color
   const savedColor = sessionStorage.getItem("avatarColor");
-  if (savedColor && avatarImg && avatarImg.parentElement) {
+  if (savedColor && avatarImg?.parentElement) {
     avatarImg.parentElement.style.backgroundColor = savedColor;
   }
 
-  // link polls 1 -4
   const parentPollOption = sessionStorage.getItem("parentPollOption") || null;
 
-  if(!userId || !levelId) {
-    console.error("Missing userId or levelId.Redirecting to profile.");
-    window.location.href ="../user-id/user-id.html";
-    return;
-  }
+  /* ==============================
+     ACTIVE POLL CONTROL (FROM SHOWS COLLECTION)
+     ============================== */
 
   const showRef = doc(db, "shows", "show_" + showId);
 
   onSnapshot(showRef, (snap) => {
+    if (!snap.exists()) return;
+
     const data = snap.data();
-    if (!data) return;
+    const activeLevel = data.currentPoll;
 
-    const activePoll = data.currentPoll;
+    document.querySelectorAll(".poll-container")
+      .forEach(p => p.classList.remove("active"));
 
-    showOnlyThatPoll(activePoll);
+    const pollToShow = document.querySelector(
+      `.poll-container[data-level="${activeLevel}"]`
+    );
+
+    if (pollToShow) {
+      pollToShow.classList.add("active");
+    }
   });
-  let pollUnlocked = false; 
 
-  // Create waiting overlay
+  /* ==============================
+     WAITING OVERLAY (KEPT)
+     ============================== */
+
   const waitingOverlay = document.createElement("div");
   waitingOverlay.style.position = "fixed";
   waitingOverlay.style.top = 0;
@@ -81,41 +91,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.body.appendChild(waitingOverlay);
 
+  /* ==============================
+     SELECTION + SUBMIT
+     ============================== */
+
   let selectedOption = null;
   let hasSubmitted = false;
 
-  const rows = document.querySelectorAll(".poll-item");
+  const rows = document.querySelectorAll(".poll-option");
   const submitButton = document.getElementById("submitButton");
- 
+
   function getCurrentLevel() {
     const activePoll = document.querySelector(".poll-container.active");
     return activePoll?.dataset.level;
   }
-
-  const showRef = doc(db, "Mirror-XR-AF26-poll-magical-item", "show_" + showId);
-
-  onSnapshot(showRef, (snapshot) => {
-    const data = snapshot.data();
-    if (!data) return;
-
-    const activeLevel = data.currentPoll;
-
-    // Hide all polls
-    document.querySelectorAll(".poll-container")
-      .forEach(p => p.classList.remove("active"));
-
-    // Show only active poll
-    const pollToShow = document.querySelector(
-      `.poll-container[data-level="${activeLevel}"]`
-    );
-
-    if (pollToShow) {
-      pollToShow.classList.add("active");
-    }
-
-  });
-
-  /*vote submission*/
 
   async function submitVote(pollOption) {
 
@@ -138,40 +127,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
     sessionStorage.setItem("parentPollOption", pollOption);
   }
-  
-  // Disable submit initially
-  submitButton.disabled = true;
 
-  // When user selects an option
+  if (submitButton) submitButton.disabled = true;
+
   rows.forEach(row => {
     row.addEventListener("click", () => {
 
-      if (hasSubmitted) return; // lock after submit
+      if (hasSubmitted) return;
 
-      // Remove previous selection
       rows.forEach(r => r.classList.remove("selected"));
-
-      // Highlight selected
       row.classList.add("selected");
 
       selectedOption = row.dataset.option?.toLowerCase();
-      console.log("Selected:", selectedOption);
-      if (selectedOption) {
-        submitButton.disabled = false;
-      }
+
+      if (submitButton) submitButton.disabled = !selectedOption;
     });
   });
 
-  // When user clicks submit
-  submitButton.addEventListener("click", async () => {
+  if (submitButton) {
+    submitButton.addEventListener("click", async () => {
 
-    if (!selectedOption || hasSubmitted ||!pollUnlocked) return;
+      if (!selectedOption || hasSubmitted) return;
 
-    await submitVote(selectedOption);
+      await submitVote(selectedOption);
 
-    hasSubmitted = true;
-    submitButton.disabled = true;
-    submitButton.textContent = "Vote Submitted ";
+      hasSubmitted = true;
+      submitButton.disabled = true;
+      submitButton.textContent = "Vote Submitted";
+    });
+  }
 
-  });
 });

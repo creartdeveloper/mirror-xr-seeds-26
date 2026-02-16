@@ -1,30 +1,51 @@
-import { db } from "../poll/firebase.js";
-import { collection, addDoc, Timestamp } 
-from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  Timestamp 
+} from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
-const MAIN_COLLECTION = "Mirror-XR-AF26-poll-magical-item"; //create firestore document inside this
-const showId = sessionStorage.getItem("showId");
+const firebaseConfig = {
+  apiKey: "AIzaSyDiCIatzcDsnHdX_t-m15S1a8pNlrB2egs",
+  authDomain: "mira-7360b.firebaseapp.com",
+  projectId: "mira-7360b",
+  storageBucket: "mira-7360b.appspot.com",
+  messagingSenderId: "76074103771",
+  appId: "1:76074103771:web:1a2d4ca7e8b5df27a82dfe"
+};
 
-const sendButton = document.querySelector('.pebble-button');
-const textArea = document.querySelector('.msg-text-box');
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-sendButton.addEventListener('click', async () => {
+const CHAT_COLLECTION = "af26_chat"; // projector mapping
 
-    const message = textArea.value.trim();
-    if (!message || !showId) return;
+//unique device ID per audience member
+let userId = sessionStorage.getItem("userId");
 
-    try {
-        await addDoc(collection(db, MAIN_COLLECTION), {
-            //collection 
-            type: "chatMessage",
-            showId: showId,
-            message: message,
-            timestamp: Timestamp.now()
-        });
+if (!userId) {
+  userId = crypto.randomUUID();
+  sessionStorage.setItem("userId", userId);
+}
 
-        textArea.value = '';
+const sendBtn = document.querySelector(".send-button");
+const textInput = document.querySelector(".chat-input");
 
-    } catch (error) {
-        console.error("Error sending message:", error);
-    }
-});
+sendBtn.addEventListener("click", sendMessage);
+
+async function sendMessage() {
+  const message = textInput.value.trim();
+  if (!message) return;
+
+  try {
+    await addDoc(collection(db, CHAT_COLLECTION), {
+      device: userId,             
+      message: message,
+      timestamp: Timestamp.now()
+    });
+
+    textInput.value = "";
+  } catch (error) {
+    console.error("Error sending message:", error);
+  }
+}

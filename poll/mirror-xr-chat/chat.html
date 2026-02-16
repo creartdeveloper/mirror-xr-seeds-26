@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Delius&family=Pacifico&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../../style.css">
     <title>Mirror App</title>
 </head>
 <body data-page="chat">
     <nav class="nav-header">
         <div class="nav-logo">
-            <img src="./assets/logo/logo.png"  alt="Mirror XR Logo" class="logo">
+            <img src="../assets/logo/logo.png"  alt="Mirror XR Logo" class="logo">
         </div>
     </nav>
     <main class="app-shell">
@@ -38,158 +38,6 @@
     <script type="module" src="./chat.js"></script>
     <script type="module" src="../globalNavigation.js"></script>
 
-    <!-- <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-        import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js";
-        import { getFirestore, collection, addDoc, getDocs, writeBatch,Timestamp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-    
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDiCIatzcDsnHdX_t-m15S1a8pNlrB2egs",
-            authDomain: "mira-7360b.firebaseapp.com",
-            projectId: "mira-7360b",
-            storageBucket: "mira-7360b.appspot.com",
-            messagingSenderId: "76074103771",
-            appId: "1:76074103771:web:1a2d4ca7e8b5df27a82dfe",
-            measurementId: "G-9YL8FHBDRX"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const storage = getStorage(app);
-        const db = getFirestore(app);
-        const CHAR_MESSAGE_COLLECTION = "chat_box_2";
-        const MAGICAL_ITEM_COLLECTION = "magical_item";
-        const PAGE_TYPE = "pebble";
-        const EMOJI_COLLECTION = "emoji";
-        
-        const sendButton = document.querySelector('.pebble-button');
-        const textArea = document.querySelector('.msg-text-box');
-
-        sendButton.addEventListener('click', function() {
-            const message = textArea.value.trim();
-            if (message) {
-                addChat(message);
-                textArea.value = '';
-            }
-        });
-        
-        
-        
-        
-        document.querySelectorAll('.item').forEach(item => {
-            item.addEventListener('click', function() {
-                // If item is already selected, do nothing
-                if (this.classList.contains('selected')) {
-                    return;
-                }
-
-                const container = document.querySelector('.items-container');
-                const imgElement = this.querySelector('img');
-                const selectedItem = this.getAttribute('data-item');
-                
-                // Change image source based on which item was clicked
-                switch(selectedItem) {
-                    case 'jar':
-                        imgElement.src = "UI/Colourful/C 4.1.png";
-                        break;
-                    case 'hourglass':
-                        imgElement.src = "UI/Colourful/C 4.2.png";
-                        break;
-                    case 'harp':
-                        imgElement.src = "assets/Harp-Selected.png";
-                        break;
-                }
-                // Storing the selected item to Firebase;
-                addSelectedItem(selectedItem);
-                
-                // Hide all other items
-                document.querySelectorAll('.item').forEach(otherItem => {
-                    if (otherItem !== this) {
-                        otherItem.classList.add('hidden');
-                    }
-                });
-
-                // Add selected class to clicked item.
-                this.classList.add('selected');
-                
-                // Add single-item class to container for centering
-                container.classList.add('single-item');
-
-                // Store selected item in session
-                sessionStorage.setItem('selectedMagicalItem', selectedItem);
-            });
-        });
-
-        document.querySelectorAll('.emoji-btn').forEach(button => {
-            button.addEventListener('click', async function() {
-                // // Remove selected class from all buttons
-                // document.querySelectorAll('.emoji-btn').forEach(btn => {
-                //     btn.classList.remove('emoji-selected');
-                // });
-                
-                // // Add selected class to clicked button
-                // this.classList.add('emoji-selected');
-                
-                // Get emoji index and content
-                const emojiIndex = this.getAttribute('data-index');
-                const emojiContent = this.textContent;
-
-                try {
-                    // Create data object for Firestore
-                    const emojiData = {
-                        emoji: emojiContent,
-                        timestamp: Timestamp.now(),
-                        pageType: PAGE_TYPE
-                    };
-
-                    // Add document to Firestore
-                    const docRef = await addDoc(collection(db, EMOJI_COLLECTION), emojiData);
-                    console.log("Emoji recorded with ID: ", docRef.id);
-                } catch (error) {
-                    console.error("Error adding emoji to Firestore: ", error);
-                }
-            });
-        });
-
-        
-
-        
-
-        async function addChat(text) {
-            try { 
-                    
-                    // Create a new document with auto-generated ID in the collection
-                    const docRef = await addDoc(collection(db, CHAR_MESSAGE_COLLECTION), {
-                        device: "ipad-1",
-                        message: text,
-                        timestamp:Timestamp.now()
-                    });
-
-                } catch (e) {
-                    console.error("Error adding document: ", e);
-                    throw e; // Propagate error to caller
-                }
-            }
-            async function addSelectedItem(item)
-        {
-            try { 
-                    
-                    // Create a new document with auto-generated ID in the collection
-                    const docRef = await addDoc(collection(db, MAGICAL_ITEM_COLLECTION), {
-                        page_type:PAGE_TYPE,
-                        item:item,
-                        timestamp:Timestamp.now()
-                    });
-
-                } catch (e) {
-                    console.error("Error adding document: ", e);
-                    throw e; // Propagate error to caller
-                }
-        }
-
-        // Check if there's a previously selected item on page load
-
-    </script>
-            -->
 </body>
 </html>

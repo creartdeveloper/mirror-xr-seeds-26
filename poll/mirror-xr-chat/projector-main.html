@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mirror XR AF26 Projector</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Delius&display=swap" rel="stylesheet">
+
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, #1b0b36 0%, #0f0620 100%);
+    font-family: "Delius", cursive;
+}
+
+#main-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* floating message style */
+.floating-message {
+    position: absolute;
+    min-width: 200px;
+    max-width: 350px;
+    padding: 18px 22px;
+    border-radius: 28px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    animation: floatUp 10s ease forwards;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-200px); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<div id="main-container"></div>
+
+<script type="module">
+import { db } from "../../firebase.js";
+import { collection, query, orderBy, onSnapshot } 
+from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+
+const CHAT_COLLECTION = "chat_butterfly";
+const mainContainer = document.getElementById("main-container");
+
+let butterflies = [];
+const maxButterflies = 10;
+let shownMessages = new Set();
+
+/* random position */
+function getRandomPosition() {
+    const x = Math.random() * (window.innerWidth - 300);
+    const y = Math.random() * (window.innerHeight - 200);
+    return { x, y };
+}
+
+/* simple sanitiser */
+function sanitizeInput(input) {
+    const element = document.createElement('div');
+    element.innerText = input || "";
+    return element.innerHTML;
+}
+
+/* create floating bubble */
+function createButterflyText(text, id) {
+
+    const container = document.createElement('div');
+    container.className = 'floating-message';
+    container.id = id;
+
+    container.innerHTML = text.length > 50
+        ? text.substring(0, 50) + "..."
+        : text;
+
+    const position = getRandomPosition();
+    container.style.left = position.x + 'px';
+    container.style.top = position.y + 'px';
+
+    mainContainer.appendChild(container);
+
+    if (butterflies.push(container) > maxButterflies) {
+        const oldest = butterflies.shift();
+        oldest.remove();
+    }
+}
+
+/* real-time listener */
+function listenForMessages() {
+
+    const q = query(
+        collection(db, CHAR_BUTTERFLY_COLLECTION),
+        orderBy("timestamp", "desc")
+    );
+
+    onSnapshot(q, (snapshot) => {
+        snapshot.docChanges().forEach(change => {
+
+            if (change.type === "added") {
+
+                const data = change.doc.data();
+                const id = change.doc.id;
+                const message = sanitizeInput(data.keyword || data.content || "");
+
+                if (!shownMessages.has(id) && message) {
+                    shownMessages.add(id);
+                    createButterflyText(message, id);
+                }
+            }
+        });
+    });
+}
+
+
+listenForMessages();
+</script>
+
+</body>
+</html>
