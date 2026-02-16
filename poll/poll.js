@@ -1,10 +1,10 @@
 import { db } from "../firebase.js";
 import { 
-  onSnapshot,
-  collection,
-  doc,
-  addDoc,
-  serverTimestamp
+  onSnapshot, 
+  collection, 
+  doc, 
+  addDoc, 
+  serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -17,44 +17,41 @@ document.addEventListener("DOMContentLoaded", () => {
     sessionStorage.setItem("userId", userId);
   }
 
-  // if (!showId) {
-  //   console.error("Missing showId");
-  //   window.location.href = "../show-id.html";
-  //   return;
-  // }
-
-  /* Restore user info */
+  if (!showId) {
+    window.location.href = "../show-id.html";
+    return;
+  }
 
   const username = sessionStorage.getItem("username");
   const avatar = sessionStorage.getItem("avatar");
 
   const usernameSpan = document.getElementById("chatUsername");
-  if (usernameSpan && username) {
-    usernameSpan.textContent = username;
-  }
-
   const avatarImg = document.getElementById("chatAvatarImg");
-  if (avatarImg && avatar) {
-    avatarImg.src = avatar;
+
+  if (usernameSpan) usernameSpan.textContent = username;
+  if (avatarImg && avatar) avatarImg.src = avatar;
+
+  let selectedOption = null;
+  let hasSubmitted = false;
+
+  const rows = document.querySelectorAll(".poll-option");
+
+  function getCurrentLevel() {
+    const active = document.querySelector(".poll-container.active");
+    return active?.dataset.level;
   }
 
-  const savedColor = sessionStorage.getItem("avatarColor");
-  if (savedColor && avatarImg?.parentElement) {
-    avatarImg.parentElement.style.backgroundColor = savedColor;
-  }
+  // listen to control document
+  const controlRef = doc(
+    db,
+    "Mirror-XR-AF26-poll-magical-item",
+    "show_" + showId
+  );
 
-  const parentPollOption = sessionStorage.getItem("parentPollOption") || null;
+  onSnapshot(controlRef, (snapshot) => {
+    const data = snapshot.data();
+    if (!data) return;
 
-  /* ==============================
-     ACTIVE POLL CONTROL (FROM SHOWS COLLECTION)
-     ============================== */
-
-  const showRef = doc(db, "shows", "show_" + showId);
-
-  onSnapshot(showRef, (snap) => {
-    if (!snap.exists()) return;
-
-    const data = snap.data();
     const activeLevel = data.currentPoll;
 
     document.querySelectorAll(".poll-container")
@@ -66,47 +63,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (pollToShow) {
       pollToShow.classList.add("active");
+      hasSubmitted = false;   // reset submission when new poll opens
+      selectedOption = null;
     }
   });
 
-  /* ==============================
-     WAITING OVERLAY (KEPT)
-     ============================== */
-
-  const waitingOverlay = document.createElement("div");
-  waitingOverlay.style.position = "fixed";
-  waitingOverlay.style.top = 0;
-  waitingOverlay.style.left = 0;
-  waitingOverlay.style.width = "100%";
-  waitingOverlay.style.height = "100%";
-  waitingOverlay.style.background = "rgba(0,0,0,0.6)";
-  waitingOverlay.style.color = "white";
-  waitingOverlay.style.display = "flex";
-  waitingOverlay.style.alignItems = "center";
-  waitingOverlay.style.justifyContent = "center";
-  waitingOverlay.style.fontSize = "24px";
-  waitingOverlay.style.zIndex = "9999";
-  waitingOverlay.textContent = "Please wait for the next part of the story...";
-  waitingOverlay.style.display = "none";
-
-  document.body.appendChild(waitingOverlay);
-
-  /* ==============================
-     SELECTION + SUBMIT
-     ============================== */
-
-  let selectedOption = null;
-  let hasSubmitted = false;
-
-  const rows = document.querySelectorAll(".poll-option");
-  const submitButton = document.getElementById("submitButton");
-
-  function getCurrentLevel() {
-    const activePoll = document.querySelector(".poll-container.active");
-    return activePoll?.dataset.level;
-  }
-
-  async function submitVote(pollOption) {
+  // vote submission
+  async function submitVote(option) {
 
     const levelId = getCurrentLevel();
     if (!levelId) return;
@@ -119,19 +82,17 @@ document.addEventListener("DOMContentLoaded", () => {
         username,
         avatar,
         levelId,
-        pollOption,
-        parentPollOption,
+        pollOption: option,
         timestamp: serverTimestamp()
       }
     );
 
-    sessionStorage.setItem("parentPollOption", pollOption);
+    hasSubmitted = true;
   }
 
-  if (submitButton) submitButton.disabled = true;
-
+  // option click
   rows.forEach(row => {
-    row.addEventListener("click", () => {
+    row.addEventListener("click", async () => {
 
       if (hasSubmitted) return;
 
@@ -140,21 +101,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       selectedOption = row.dataset.option?.toLowerCase();
 
-      if (submitButton) submitButton.disabled = !selectedOption;
+      if (selectedOption) {
+        await submitVote(selectedOption);
+      }
     });
   });
-
-  if (submitButton) {
-    submitButton.addEventListener("click", async () => {
-
-      if (!selectedOption || hasSubmitted) return;
-
-      await submitVote(selectedOption);
-
-      hasSubmitted = true;
-      submitButton.disabled = true;
-      submitButton.textContent = "Vote Submitted";
-    });
-  }
 
 });

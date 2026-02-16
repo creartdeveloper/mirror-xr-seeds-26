@@ -180,22 +180,23 @@ pickr.on('change', (color) => {
 /*next button*/
   nextButton.addEventListener("click", () => {
 
-    // ensure username + avatar are final and saved
     const finalUsername = usernameInput.value.trim();
     const finalAvatar = sessionStorage.getItem("avatar") || selectedAvatarImg.src;
-
     const finalBgColor = sessionStorage.getItem("avatarBgColor") || selectedAvatarBox.style.backgroundColor;
+
     sessionStorage.setItem("username", finalUsername);
     sessionStorage.setItem("avatar", finalAvatar);
     sessionStorage.setItem("avatarBgColor", finalBgColor);
 
-    // unique user id
     if (!sessionStorage.getItem("userId")) {
         sessionStorage.setItem("userId", crypto.randomUUID());
     }
 
     console.log("User setup saved.");
+    window.location.href = "../poll/mirror-xr-chat/chat.html";
+
   });
+
 /*button state*/
   function updateNextButtonState() {
     // read username from sessionstorage and if username is null -> "" and trim (remove spaces from start and end)
