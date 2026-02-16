@@ -9,6 +9,8 @@ import {
 
 document.addEventListener("DOMContentLoaded", () => {
 
+  const COLLECTION_NAME = "Mirror-XR-AF26-poll-magical-item";
+
   const showId = sessionStorage.getItem("showId");
   let userId = sessionStorage.getItem("userId");
 
@@ -18,64 +20,77 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (!showId) {
+    console.error("No showId found");
     window.location.href = "../show-id.html";
     return;
   }
 
+  // Restore username + avatar
   const username = sessionStorage.getItem("username");
   const avatar = sessionStorage.getItem("avatar");
 
   const usernameSpan = document.getElementById("chatUsername");
   const avatarImg = document.getElementById("chatAvatarImg");
 
-  if (usernameSpan) usernameSpan.textContent = username;
+  if (usernameSpan && username) usernameSpan.textContent = username;
   if (avatarImg && avatar) avatarImg.src = avatar;
 
   let selectedOption = null;
   let hasSubmitted = false;
+  let currentLevel = null;
 
-  const rows = document.querySelectorAll(".poll-option");
+  const options = document.querySelectorAll(".poll-option");
 
   function getCurrentLevel() {
-    const active = document.querySelector(".poll-container.active");
-    return active?.dataset.level;
+    return currentLevel;
   }
 
-  // listen to control document
+  /*listen to admin control */
+
   const controlRef = doc(
     db,
-    "Mirror-XR-AF26-poll-magical-item",
+    COLLECTION_NAME,
     "show_" + showId
   );
 
   onSnapshot(controlRef, (snapshot) => {
+
     const data = snapshot.data();
-    if (!data) return;
+    if (!data || !data.currentPoll) return;
 
     const activeLevel = data.currentPoll;
 
+    currentLevel = activeLevel;
+
+    // Hide all polls
     document.querySelectorAll(".poll-container")
       .forEach(p => p.classList.remove("active"));
 
+    // Show only the active one
     const pollToShow = document.querySelector(
       `.poll-container[data-level="${activeLevel}"]`
     );
 
     if (pollToShow) {
       pollToShow.classList.add("active");
-      hasSubmitted = false;   // reset submission when new poll opens
-      selectedOption = null;
     }
+
+    // Reset vote state for new poll
+    hasSubmitted = false;
+    selectedOption = null;
+
+    options.forEach(o => o.classList.remove("selected"));
   });
 
-  // vote submission
+  /* vote submit  */
+
   async function submitVote(option) {
 
     const levelId = getCurrentLevel();
     if (!levelId) return;
 
     await addDoc(
-      collection(db, "Mirror-XR-AF26-poll-magical-item"),
+      collection(db, COLLECTION_NAME),
       {
         showId,
         userId,
@@ -90,21 +105,24 @@ document.addEventListener("DOMContentLoaded", () => {
     hasSubmitted = true;
   }
 
-  // option click
-  rows.forEach(row => {
-    row.addEventListener("click", async () => {
+  /* option click handler */
+
+  options.forEach(optionBtn => {
+
+    optionBtn.addEventListener("click", async () => {
 
       if (hasSubmitted) return;
 
-      rows.forEach(r => r.classList.remove("selected"));
-      row.classList.add("selected");
+      options.forEach(o => o.classList.remove("selected"));
+      optionBtn.classList.add("selected");
 
-      selectedOption = row.dataset.option?.toLowerCase();
+      selectedOption = optionBtn.dataset.option?.toLowerCase();
 
       if (selectedOption) {
         await submitVote(selectedOption);
       }
     });
+
   });
 
 });

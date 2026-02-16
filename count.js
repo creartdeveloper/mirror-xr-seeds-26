@@ -13,9 +13,14 @@ import {
 document.addEventListener("DOMContentLoaded", () => {
 
   const COLLECTION_NAME = "Mirror-XR-AF26-poll-magical-item";
-  let currentShowId = null;
 
-  document.getElementById("loadShow").addEventListener("click", () => {
+  let currentShowId = null;
+  let unsubscribeFunctions = [];
+  let currentPollIndex = 1;
+
+  /* load show */
+
+  document.getElementById("loadShow").addEventListener("click", async () => {
 
     const input = document.getElementById("adminShowIdInput").value.trim();
     if (!input) {
@@ -25,15 +30,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     currentShowId = input;
 
-    startAllPollListeners();
+    // Ensure show doc exists
+    await setDoc(
+      doc(db, COLLECTION_NAME, "show_" + currentShowId),
+      { currentPoll: "p1" },
+      { merge: true }
+    );
 
+    currentPollIndex = 1;
+
+    startAllPollListeners();
   });
-  let unsubscribeFunctions = [];
+
+  /* start listeners*/
+
   function startAllPollListeners() {
 
-      // stop old listeners first
+    // stop old listeners
     unsubscribeFunctions.forEach(unsub => unsub());
     unsubscribeFunctions = [];
+
     const levels = ["p1", "p2", "p3", "p4"];
 
     levels.forEach(levelId => {
@@ -60,9 +76,10 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       unsubscribeFunctions.push(unsubscribe);
-
     });
   }
+
+  /*update ui*/
 
   function updateUI(totals, levelId) {
 
@@ -85,6 +102,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById(`bar-${levelId}-d`).style.width = percentD + "%";
   }
 
+  /* reset show*/
+
   document.getElementById("resetShow").addEventListener("click", async () => {
 
     if (!currentShowId) return;
@@ -103,21 +122,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
     await Promise.all(deletePromises);
 
+    // reset to poll 1
+    await setDoc(
+      doc(db, COLLECTION_NAME, "show_" + currentShowId),
+      { currentPoll: "p1" },
+      { merge: true }
+    );
+
+    currentPollIndex = 1;
+
     alert("Show reset complete");
   });
 
+  /* story advance*/
+
+  function calculateNextPollLogic() {
+    if (currentPollIndex >= 4) return "p4";
+    currentPollIndex++;
+    return "p" + currentPollIndex;
+  }
+
   document.getElementById("advanceStory").addEventListener("click", async () => {
+
+    if (!currentShowId) return;
 
     const nextPoll = calculateNextPollLogic();
 
     await setDoc(
-      doc(db, "shows", "show_" + currentShowId),
-      {
-        currentPoll: nextPoll
-      },
+      doc(db, COLLECTION_NAME, "show_" + currentShowId),
+      { currentPoll: nextPoll },
       { merge: true }
     );
-
   });
 
 });

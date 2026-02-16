@@ -5,7 +5,7 @@
 }
 
 .poll-container.active {
-  display: flex;
+  display: block;
   flex-direction: column;
   align-items: center;
 }
