@@ -68,20 +68,21 @@ nav{
 }
 
 .app-shell {
-  min-height: 100dvh;
-  padding-top: var(--nav-height);
+  height: calc(100dvh - var(--nav-height));
+  margin-top: var(--nav-height);  
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
   padding-left: 16px;
   padding-right: 16px;
+  overflow: hidden;
 }
 
 
 .app-content {
   width: 100%;
-  max-width: 480px;
+  max-width: 400px;
   margin: 0 auto;
   padding: 1.5rem 0;
   display: flex;

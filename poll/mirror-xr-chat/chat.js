@@ -1,95 +1,123 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-import { getFirestore, collection, addDoc, Timestamp } 
-from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+import { initializeApp } from 
+"https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
 
-const firebaseConfig = {
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  Timestamp,
+  doc,
+  onSnapshot
+} from 
+"https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* Firebase Config */
+  const firebaseConfig = {
     apiKey: "AIza...",
     authDomain: "mira-7360b.firebaseapp.com",
     projectId: "mira-7360b",
     storageBucket: "mira-7360b.appspot.com",
     messagingSenderId: "76074103771",
     appId: "1:76074103771:web:1a2d4ca7e8b5df27a82dfe"
-};
+  };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-const CHAT_MESSAGE_COLLECTION = "chat_message_collection";
-const EMOJI_COLLECTION = "emoji";
+  /* Session Data */
+  const showId = sessionStorage.getItem("showId");
+  const username = sessionStorage.getItem("username") || "";
+  const avatar = sessionStorage.getItem("avatar") || "";
+  const avatarBgColor = sessionStorage.getItem("avatarBgColor") || "";
 
-const sendButton = document.querySelector('.send-button');
-const textArea = document.querySelector('.msg-text-box');
-
-const showId = sessionStorage.getItem("showId");
-const username = sessionStorage.getItem("username") || "";
-
-/*if show not set */
-if (!showId) {
-    console.error("No showId set.");
+  if (!showId) {
     alert("Show not initialized.");
-}
+    return;
+  }
 
-/*Send Chat */
-sendButton.addEventListener('click', function() {
+  /* Redirect Listener */
+  const showRef = doc(
+    db,
+    "Mirror-XR-AF26-poll-magical-item",
+    showId
+  );
+
+  onSnapshot(showRef, (docSnap) => {
+    if (!docSnap.exists()) return;
+
+    const data = docSnap.data();
+
+    if (!data.currentPage) return;
+
+    if (data.currentPage === "userid") {
+      window.location.href = "../../user-id/user-id.html";
+    }
+
+    if (data.currentPage === "poll") {
+      window.location.href = "../poll.html";  
+    }
+  });
+  /* Display Avatar + Username */
+  const usernameDisplay = document.getElementById("chatUsername");
+  const avatarImg = document.getElementById("chatAvatarImg");
+  const avatarWrapper = document.querySelector(".avatar-wrapper");
+
+  if (usernameDisplay) usernameDisplay.textContent = username;
+  if (avatarImg) avatarImg.src = avatar;
+  if (avatarWrapper) avatarWrapper.style.backgroundColor = avatarBgColor;
+
+  /* Chat Logic */
+  const CHAT_MESSAGE_COLLECTION = "chat_message_collection";
+  const EMOJI_COLLECTION = "emoji";
+
+  const sendButton = document.querySelector(".send-button");
+  const textArea = document.querySelector(".msg-text-box");
+
+  sendButton.addEventListener("click", () => {
     const message = textArea.value.trim();
 
     if (!message) return;
-
     if (!validateMessage(message)) return;
 
     addChat(message);
-    textArea.value = '';
-});
+    textArea.value = "";
+  });
 
-/*Send Emoji */
-document.querySelectorAll('.emoji-button').forEach(button => {
-    button.addEventListener('click', async function() {
+  document.querySelectorAll(".emoji-button").forEach(button => {
+    button.addEventListener("click", async () => {
+      const emojiContent = button.textContent;
 
-        const emojiContent = this.textContent;
-
-        try {
-            await addDoc(collection(db, EMOJI_COLLECTION), {
-                emoji: emojiContent,
-                showId: showId,
-                timestamp: Timestamp.now()
-            });
-        } catch (error) {
-            console.error("Error adding emoji:", error);
-        }
+      await addDoc(collection(db, EMOJI_COLLECTION), {
+        emoji: emojiContent,
+        showId: showId,
+        timestamp: Timestamp.now()
+      });
     });
-});
+  });
 
-/*Add Chat To Firestore */
-async function addChat(text) {
-    try {
-        await addDoc(collection(db, CHAT_MESSAGE_COLLECTION), {
-            showId: showId,
-            username: username,
-            chat: text,
-            timestamp: Timestamp.now()
-        });
-    } catch (e) {
-        console.error("Error adding document:", e);
-    }
-}
+  async function addChat(text) {
+    await addDoc(collection(db, CHAT_MESSAGE_COLLECTION), {
+      showId: showId,
+      username: username,
+      avatar: avatar,
+      avatarBgColor: avatarBgColor,
+      chat: text,
+      timestamp: Timestamp.now()
+    });
+  }
 
-/*Validation */
-function validateMessage(text) {
+  function validateMessage(text) {
     const words = text.trim().split(/\s+/);
 
     if (words.length > 5) {
-        alert("Max 5 words allowed.");
-        return false;
-    }
-
-    const badWords = ["badword1", "badword2"];
-
-    for (let word of words) {
-        if (badWords.includes(word.toLowerCase())) {
-            alert("Inappropriate language.");
-            return false;
-        }
+      alert("Max 5 words allowed.");
+      return false;
     }
 
     return true;
-}
+  }
+
+});

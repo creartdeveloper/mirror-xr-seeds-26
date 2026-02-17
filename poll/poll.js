@@ -2,20 +2,22 @@ import { db } from "../firebase.js";
 import { 
   onSnapshot, 
   collection, 
+  addDoc,
   doc,
   updateDoc, 
   increment,
-  serverTimestamp 
+  serverTimestamp,
+  Timestamp 
 } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
   const COLLECTION_NAME = "Mirror-XR-AF26-poll-magical-item";
   const EMOJI_COLLECTION = "emoji";
-  const PAGE_TYPE = "chat";
+  const PAGE_TYPE = "poll";
 
   // const showId = sessionStorage.getItem("showId");
-  const showId = "1200";
+  const showId = sessionStorage.getItem("showId");
   let userId = sessionStorage.getItem("userId");
 
   if (!userId) {
@@ -30,10 +32,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const username = sessionStorage.getItem("username");
   const avatar = sessionStorage.getItem("avatar");
-
+  const avatarBgColor = sessionStorage.getItem("avatarBgColor");
   const usernameSpan = document.getElementById("chatUsername");
   const avatarImg = document.getElementById("chatAvatarImg");
 
+  const avatarWrapper = document.querySelector(".avatar-wrapper");
+
+  if (avatarWrapper && avatarBgColor) {
+    avatarWrapper.style.backgroundColor = avatarBgColor;
+  }
   if (usernameSpan && username) usernameSpan.textContent = username;
   if (avatarImg && avatar) avatarImg.src = avatar;
 
@@ -49,20 +56,29 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   onSnapshot(controlRef, (snapshot) => {
-    console.log("Control snapshot:", snapshot.data());
+
     const data = snapshot.data();
-    if (!data || !data.currentPoll) {
-      console.log("No currentPoll found");
+    if (!data) return;
+
+    /* page redirection logic */
+    if (data.currentPage === "chat") {
+      window.location.href = "../mirror-xr-chat/chat.html";
       return;
     }
-    currentLevel = data.currentPoll;
-    console.log("Current level set to:", currentLevel);
 
-    // Hide all polls
+    if (data.currentPage === "userid") {
+      window.location.href = "../../user-id/user-id.html";
+      return;
+    }
+
+    if (data.currentPage !== "poll") return;
+
+    /* EXISTING POLL LOGIC */
+    currentLevel = data.currentPoll;
+
     document.querySelectorAll(".poll-container")
       .forEach(p => p.classList.remove("active"));
 
-    // Show active poll
     const pollToShow = document.querySelector(
       `.poll-container[data-level="${currentLevel}"]`
     );
@@ -70,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (pollToShow) {
       pollToShow.classList.add("active");
     }
-    // Reset state when poll changes
+
     hasSubmitted = !!data.votedUsers?.[currentLevel]?.[userId];
 
     allOptions.forEach(o => o.classList.remove("selected"));
@@ -117,36 +133,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
   });
 
-});
+  document.querySelectorAll('.emoji-button').forEach(button => {
+      button.addEventListener('click', async function() {
+          // // Remove selected class from all buttons
+          // document.querySelectorAll('.emoji-btn').forEach(btn => {
+          //     btn.classList.remove('emoji-selected');
+          // });
+          
+          // // Add selected class to clicked button
+          // this.classList.add('emoji-selected');
+          
+          // Get emoji index and content
+          const emojiIndex = this.getAttribute('data-index');
+          const emojiContent = this.textContent;
 
+          try {
+              // Create data object for Firestore
+              const emojiData = {
+                  showId: showId,
+                  emoji: emojiContent,
+                  timestamp: Timestamp.now(),
+                  pageType: PAGE_TYPE
+              };
 
-document.querySelectorAll('.emoji-button').forEach(button => {
-    button.addEventListener('click', async function() {
-        // // Remove selected class from all buttons
-        // document.querySelectorAll('.emoji-btn').forEach(btn => {
-        //     btn.classList.remove('emoji-selected');
-        // });
-        
-        // // Add selected class to clicked button
-        // this.classList.add('emoji-selected');
-        
-        // Get emoji index and content
-        const emojiIndex = this.getAttribute('data-index');
-        const emojiContent = this.textContent;
-
-        try {
-            // Create data object for Firestore
-            const emojiData = {
-                emoji: emojiContent,
-                timestamp: Timestamp.now(),
-                pageType: PAGE_TYPE
-            };
-
-            // Add document to Firestore
-            const docRef = await addDoc(collection(db, EMOJI_COLLECTION), emojiData);
-            console.log("Emoji recorded with ID: ", docRef.id);
-        } catch (error) {
-            console.error("Error adding emoji to Firestore: ", error);
-        }
-    });
+              // Add document to Firestore
+              const docRef = await addDoc(collection(db, EMOJI_COLLECTION), emojiData);
+              console.log("Emoji recorded with ID: ", docRef.id);
+          } catch (error) {
+              console.error("Error adding emoji to Firestore: ", error);
+          }
+      });
+  });
 });

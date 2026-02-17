@@ -1,5 +1,32 @@
+import { doc, onSnapshot } from 
+"https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+import { db } from "../firebase.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+  
+  const showId = sessionStorage.getItem("showId");
+
+  if (showId) {
+
+    const showRef = doc(
+      db,
+      "Mirror-XR-AF26-poll-magical-item",
+      showId  
+    );
+
+    onSnapshot(showRef, (docSnap) => {
+
+      if (!docSnap.exists()) return;
+
+      const data = docSnap.data();
+
+      if (data.currentPage === "chat") {
+        window.location.href = "../poll/mirror-xr-chat/chat.html";
+      }
+
+    });
+
+  }
   // console.log("Profile page JS loaded");
 
 /*DOM elements*/
@@ -192,8 +219,8 @@ pickr.on('change', (color) => {
         sessionStorage.setItem("userId", crypto.randomUUID());
     }
 
-    console.log("User setup saved.");
-    window.location.href = "../poll/mirror-xr-chat/chat.html";
+    console.log("User setup saved. Waiting for admin to start show.");
+
 
   });
 

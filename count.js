@@ -8,7 +8,6 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-
   const COLLECTION_NAME = "Mirror-XR-AF26-poll-magical-item";
 
   let currentShowId = null;
@@ -28,11 +27,9 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.remove("projection-mode");
   });
 
-  /* load the new show */
+  /* load show */
 
   document.getElementById("loadShow").addEventListener("click", async () => {
-
-    console.log("LOAD SHOW CLICKED");
 
     const showInput = document.getElementById("adminShowIdInput").value.trim();
     const audienceInput = document.getElementById("audienceSizeInput").value;
@@ -55,15 +52,12 @@ document.addEventListener("DOMContentLoaded", () => {
     /* Initialize show document */
     await setDoc(showRef, {
       currentPoll: "p1",
+      currentPage: "userid",   //default page
       audienceSize: currentAudienceSize
     }, { merge: true });
 
-    /* Remove previous listener if exists */
-    if (unsubscribe) {
-      unsubscribe();
-    }
+    if (unsubscribe) unsubscribe();
 
-    /* Attach new realtime listener */
     unsubscribe = onSnapshot(showRef, snapshot => {
 
       const data = snapshot.data();
@@ -77,7 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
         updateUI(totals, level);
       });
 
-      /* Auto-scroll to active poll */
       if (data.currentPoll) {
         const activeElement = document.querySelector(`[data-level="${data.currentPoll}"]`);
         if (activeElement) {
@@ -89,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   });
 
-  /*update admin poll bar */
+  /*update ui */
 
   function updateUI(totalsRaw, levelId) {
 
@@ -100,27 +93,13 @@ document.addEventListener("DOMContentLoaded", () => {
       d: totalsRaw?.d || 0
     };
 
-  //   const audienceSize = currentAudienceSize || 1;
-
-  //   /* Update vote counts */
     document.getElementById(`count-${levelId}-a`).textContent = totals.a;
     document.getElementById(`count-${levelId}-b`).textContent = totals.b;
     document.getElementById(`count-${levelId}-c`).textContent = totals.c;
     document.getElementById(`count-${levelId}-d`).textContent = totals.d;
-
-    /* Bar percentage relative to full audience */
-    // const percentA = (totals.a / audienceSize) * 100;
-    // const percentB = (totals.b / audienceSize) * 100;
-    // const percentC = (totals.c / audienceSize) * 100;
-    // const percentD = (totals.d / audienceSize) * 100;
-
-    // document.getElementById(`bar-${levelId}-a`).style.width = percentA + "%";
-    // document.getElementById(`bar-${levelId}-b`).style.width = percentB + "%";
-    // document.getElementById(`bar-${levelId}-c`).style.width = percentC + "%";
-    // document.getElementById(`bar-${levelId}-d`).style.width = percentD + "%";
   }
 
-  /*reset show */
+  /*eeset show */
 
   document.getElementById("resetShow").addEventListener("click", async () => {
 
@@ -130,6 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     await setDoc(showRef, {
       currentPoll: "p1",
+      currentPage: "userid",
       counts: {},
       votedUsers: {}
     }, { merge: true });
@@ -137,7 +117,85 @@ document.addEventListener("DOMContentLoaded", () => {
     alert("Show reset complete");
   });
 
-  /* advance story button */
+  /* go from chat page to poll page*/
+
+    const goToPollBtn = document.getElementById("goToPoll");
+    if (goToPollBtn) {
+      goToPollBtn.addEventListener("click", async () => {
+
+        if (!currentShowId) {
+          alert("Load show first");
+          return;
+        }
+
+        const showRef = doc(db, COLLECTION_NAME, currentShowId);
+
+        await updateDoc(showRef, {
+          currentPage: "poll",
+          currentPoll: "p1"
+        });
+
+        console.log("Users moved to Poll Page");
+      });
+    }
+
+/*go from poll page back to chat page*/
+    const goToChatBtn = document.getElementById("goToChat");
+    if (goToChatBtn) {
+      goToChatBtn.addEventListener("click", async () => {
+
+        if (!currentShowId) return;
+
+        const showRef = doc(db, COLLECTION_NAME, currentShowId);
+
+        await updateDoc(showRef, {
+          currentPage: "chat"
+        });
+
+        console.log("Users moved to Chat Page");
+      });
+    }
+
+  /* start chat page control */
+
+  const startChatBtn = document.getElementById("startChat");
+  if (startChatBtn) {
+    startChatBtn.addEventListener("click", async () => {
+
+      if (!currentShowId) {
+        alert("Load show first");
+        return;
+      }
+
+      const showRef = doc(db, COLLECTION_NAME, currentShowId);
+
+      await updateDoc(showRef, {
+        currentPage: "chat"
+      });
+
+      console.log("Users moved to chat");
+    });
+  }
+
+  /* back to user setup */
+
+  const goToUserIdBtn = document.getElementById("goToUserId");
+  if (goToUserIdBtn) {
+    goToUserIdBtn.addEventListener("click", async () => {
+
+      if (!currentShowId) return;
+
+      const showRef = doc(db, COLLECTION_NAME, currentShowId);
+
+      await updateDoc(showRef, {
+        currentPage: "userid"
+      });
+
+      console.log("Users moved to user setup");
+    });
+  }
+
+  /*advance to next poll */
 
   document.getElementById("advanceStory").addEventListener("click", async () => {
 
