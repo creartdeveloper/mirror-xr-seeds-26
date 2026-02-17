@@ -11,6 +11,8 @@ import {
 document.addEventListener("DOMContentLoaded", () => {
 
   const COLLECTION_NAME = "Mirror-XR-AF26-poll-magical-item";
+  const EMOJI_COLLECTION = "emoji";
+  const PAGE_TYPE = "chat";
 
   // const showId = sessionStorage.getItem("showId");
   const showId = "1200";
@@ -115,4 +117,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
   });
 
+});
+
+
+document.querySelectorAll('.emoji-button').forEach(button => {
+    button.addEventListener('click', async function() {
+        // // Remove selected class from all buttons
+        // document.querySelectorAll('.emoji-btn').forEach(btn => {
+        //     btn.classList.remove('emoji-selected');
+        // });
+        
+        // // Add selected class to clicked button
+        // this.classList.add('emoji-selected');
+        
+        // Get emoji index and content
+        const emojiIndex = this.getAttribute('data-index');
+        const emojiContent = this.textContent;
+
+        try {
+            // Create data object for Firestore
+            const emojiData = {
+                emoji: emojiContent,
+                timestamp: Timestamp.now(),
+                pageType: PAGE_TYPE
+            };
+
+            // Add document to Firestore
+            const docRef = await addDoc(collection(db, EMOJI_COLLECTION), emojiData);
+            console.log("Emoji recorded with ID: ", docRef.id);
+        } catch (error) {
+            console.error("Error adding emoji to Firestore: ", error);
+        }
+    });
 });

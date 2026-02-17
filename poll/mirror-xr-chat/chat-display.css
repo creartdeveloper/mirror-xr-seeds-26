@@ -1,0 +1,50 @@
+body {
+    background: #00FF00;
+    margin: 0;
+    padding: 0; /* Remove padding */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.chat-container {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    width: 100vw;
+    height: 100vh;
+    background: transparent;
+    gap: 20px;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+
+.text-display {
+    height: 120px;
+    width: 160px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+    background-image: url("../assets/poll-components/text-box.png");
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+
+.text-content {
+    width: 90%;
+    height: 80%;
+    font-size: 14px;
+    color: black;
+    text-align: center;
+    font-family: "Delius", serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

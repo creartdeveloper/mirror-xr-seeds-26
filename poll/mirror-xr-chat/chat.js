@@ -1,62 +1,95 @@
-import { db } from "../firebase.js";
-import { 
-  collection, 
-  addDoc, 
-  Timestamp,
-  doc,
-  onSnapshot
-} from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+import { getFirestore, collection, addDoc, Timestamp } 
+from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
-const CHAT_COLLECTION = "af26_chat";
+const firebaseConfig = {
+    apiKey: "AIza...",
+    authDomain: "mira-7360b.firebaseapp.com",
+    projectId: "mira-7360b",
+    storageBucket: "mira-7360b.appspot.com",
+    messagingSenderId: "76074103771",
+    appId: "1:76074103771:web:1a2d4ca7e8b5df27a82dfe"
+};
 
-// Unique device ID
-let userId = sessionStorage.getItem("userId");
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-if (!userId) {
-  userId = crypto.randomUUID();
-  sessionStorage.setItem("userId", userId);
-}
+const CHAT_MESSAGE_COLLECTION = "chat_message_collection";
+const EMOJI_COLLECTION = "emoji";
 
-const sendBtn = document.querySelector(".send-button");
-const textInput = document.querySelector(".msg-text-box");
+const sendButton = document.querySelector('.send-button');
+const textArea = document.querySelector('.msg-text-box');
 
-sendBtn.addEventListener("click", sendMessage);
-
-async function sendMessage() {
-  const message = textInput.value.trim();
-  if (!message) return;
-
-  try {
-    await addDoc(collection(db, CHAT_COLLECTION), {
-      device: userId,
-      message: message,
-      timestamp: Timestamp.now()
-    });
-
-    textInput.value = "";
-
-  } catch (error) {
-    console.error("Error sending message:", error);
-  }
-}
-
-//Admin controls page switch
 const showId = sessionStorage.getItem("showId");
+const username = sessionStorage.getItem("username") || "";
 
-if (showId) {
+/*if show not set */
+if (!showId) {
+    console.error("No showId set.");
+    alert("Show not initialized.");
+}
 
-  const showRef = doc(db, "Mirror-XR-AF26-poll-magical-item", "show_" + showId);
+/*Send Chat */
+sendButton.addEventListener('click', function() {
+    const message = textArea.value.trim();
 
-  onSnapshot(showRef, (snap) => {
+    if (!message) return;
 
-    if (!snap.exists()) return;
+    if (!validateMessage(message)) return;
 
-    const data = snap.data();
-    const targetPage = data.currentPage;
+    addChat(message);
+    textArea.value = '';
+});
 
-    if (targetPage === "poll") {
-      window.location.href = "../poll/poll.html";
+/*Send Emoji */
+document.querySelectorAll('.emoji-button').forEach(button => {
+    button.addEventListener('click', async function() {
+
+        const emojiContent = this.textContent;
+
+        try {
+            await addDoc(collection(db, EMOJI_COLLECTION), {
+                emoji: emojiContent,
+                showId: showId,
+                timestamp: Timestamp.now()
+            });
+        } catch (error) {
+            console.error("Error adding emoji:", error);
+        }
+    });
+});
+
+/*Add Chat To Firestore */
+async function addChat(text) {
+    try {
+        await addDoc(collection(db, CHAT_MESSAGE_COLLECTION), {
+            showId: showId,
+            username: username,
+            chat: text,
+            timestamp: Timestamp.now()
+        });
+    } catch (e) {
+        console.error("Error adding document:", e);
+    }
+}
+
+/*Validation */
+function validateMessage(text) {
+    const words = text.trim().split(/\s+/);
+
+    if (words.length > 5) {
+        alert("Max 5 words allowed.");
+        return false;
     }
 
-  });
+    const badWords = ["badword1", "badword2"];
+
+    for (let word of words) {
+        if (badWords.includes(word.toLowerCase())) {
+            alert("Inappropriate language.");
+            return false;
+        }
+    }
+
+    return true;
 }

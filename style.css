@@ -17,7 +17,8 @@ html, body {
 
 body {
   font-family: "Poppins", sans-serif;
-  background-image: url("./poll/assets/background/chat-bg.jpg");
+  background-image: url("./poll/assets/background/Mirror-XR-OBS.png");
+  /* background-image: url("./poll/assets/background/chat-bg.jpg"); */
   background-size: cover;
   background-position: center bottom;
   background-repeat: no-repeat;
@@ -226,6 +227,7 @@ nav{
   aspect-ratio: 4 / 3;
   max-height: 50vh;
   background-image: url("./poll/assets/poll-components/text-box.png");
+  
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;

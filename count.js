@@ -100,24 +100,24 @@ document.addEventListener("DOMContentLoaded", () => {
       d: totalsRaw?.d || 0
     };
 
-    const audienceSize = currentAudienceSize || 1;
+  //   const audienceSize = currentAudienceSize || 1;
 
-    /* Update vote counts */
+  //   /* Update vote counts */
     document.getElementById(`count-${levelId}-a`).textContent = totals.a;
     document.getElementById(`count-${levelId}-b`).textContent = totals.b;
     document.getElementById(`count-${levelId}-c`).textContent = totals.c;
     document.getElementById(`count-${levelId}-d`).textContent = totals.d;
 
     /* Bar percentage relative to full audience */
-    const percentA = (totals.a / audienceSize) * 100;
-    const percentB = (totals.b / audienceSize) * 100;
-    const percentC = (totals.c / audienceSize) * 100;
-    const percentD = (totals.d / audienceSize) * 100;
+    // const percentA = (totals.a / audienceSize) * 100;
+    // const percentB = (totals.b / audienceSize) * 100;
+    // const percentC = (totals.c / audienceSize) * 100;
+    // const percentD = (totals.d / audienceSize) * 100;
 
-    document.getElementById(`bar-${levelId}-a`).style.width = percentA + "%";
-    document.getElementById(`bar-${levelId}-b`).style.width = percentB + "%";
-    document.getElementById(`bar-${levelId}-c`).style.width = percentC + "%";
-    document.getElementById(`bar-${levelId}-d`).style.width = percentD + "%";
+    // document.getElementById(`bar-${levelId}-a`).style.width = percentA + "%";
+    // document.getElementById(`bar-${levelId}-b`).style.width = percentB + "%";
+    // document.getElementById(`bar-${levelId}-c`).style.width = percentC + "%";
+    // document.getElementById(`bar-${levelId}-d`).style.width = percentD + "%";
   }
 
   /*reset show */

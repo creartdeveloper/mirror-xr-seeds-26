@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Delius&family=Pacifico&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="./chat.css">
     <title>Mirror App</title>
 </head>
 <body data-page="chat">
@@ -15,15 +15,17 @@
     </nav>
     <main class="app-shell">
         <div class="app-content">
+            <div id="chatMessages" class="chat-messages"></div>
             <div class="message-box">
                 <div class="chat-input-wrapper">
                     <textarea maxlength="100" placeholder="Type message here" class="msg-text-box"></textarea>
-                        <button class="send-button"> Send</button>
                 </div>
-                <div class="chat-avatar">
-                    <span id="chatUsername"></span>
-                    <img id="chatAvatarImg" alt="selected avatar"/>
-                </div>
+            </div>
+
+            <button class="send-button"> Send</button>
+            <div class="chat-avatar">
+                <span id="chatUsername"></span>
+                <img id="chatAvatarImg" alt="selected avatar"/>
             </div>
             <div class="emoji-container">
                 <button class="emoji-button">😄</button>
@@ -32,12 +34,13 @@
                 <button class="emoji-button">😕</button>
                 <button class="emoji-button">🥰</button>
             </div>
-        <div class="footer">
         </div>
-    </div>
-    <script type="module" src="./chat.js"></script>
-    <script type="module" src="../globalNavigation.js"></script>
-
-
+    </main>
+    
+<div class="footer">
+</div>
+</div>
+<script type="module" src="./chat.js"></script>
+<script type="module" src="../globalNavigation.js"></script>
 </body>
 </html>
