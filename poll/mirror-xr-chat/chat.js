@@ -49,17 +49,27 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!docSnap.exists()) return;
 
     const data = docSnap.data();
+    if (!data || !data.currentPage) return;
 
-    if (!data.currentPage) return;
-
-    if (data.currentPage === "userid") {
-      window.location.href = "../../user-id/user-id.html";
-    }
-
+    // If admin moves to poll → go to poll page
     if (data.currentPage === "poll") {
-      window.location.href = "../poll.html";  
+      if (!window.location.pathname.includes("poll.html")) {
+        window.location.href = "../poll.html";
+      }
+      return;
     }
+
+    // If admin moves to userid → go to user setup
+    if (data.currentPage === "userid") {
+      if (!window.location.pathname.includes("user-id.html")) {
+        window.location.href = "../../user-id/user-id.html";
+      }
+      return;
+    }
+
+    // If currentPage is "chat" → DO NOTHING
   });
+
   /* Display Avatar + Username */
   const usernameDisplay = document.getElementById("chatUsername");
   const avatarImg = document.getElementById("chatAvatarImg");
