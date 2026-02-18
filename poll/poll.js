@@ -6,7 +6,6 @@ import {
   doc,
   updateDoc, 
   increment,
-  serverTimestamp,
   Timestamp 
 } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
@@ -47,8 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let hasSubmitted = false;
   let currentLevel = null;
 
-  const allOptions = document.querySelectorAll(".poll-option");
-
   /* Listen to admin control document */
   const controlRef = doc(
     db,
@@ -88,49 +85,50 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     hasSubmitted = !!data.votedUsers?.[currentLevel]?.[userId];
-
-    allOptions.forEach(o => o.classList.remove("selected"));
+    document.querySelectorAll(".poll-option")
+      .forEach(o => o.classList.remove("selected"));
   });
 
   /*Submit vote */
   async function submitVote(option) {
 
     if (!currentLevel || hasSubmitted) return;
+    hasSubmitted = true; 
 
     try {
       const showRef = doc(db, COLLECTION_NAME, showId);
 
       await updateDoc(showRef, {
-      [`counts.${currentLevel}.${option}`]: increment(1),
-      [`votedUsers.${currentLevel}.${userId}`]: true
-    });
-      hasSubmitted = true;
+        [`counts.${currentLevel}.${option}`]: increment(1),
+        [`votedUsers.${currentLevel}.${userId}`]: true
+      });
 
     } catch (error) {
       console.error("Vote error:", error);
+      hasSubmitted = false;
     }
   }
 
   /* Click handling for 2-column rows */
-  allOptions.forEach(optionRow => {
 
-    optionRow.addEventListener("click", async () => {
+  document.addEventListener("click", async (e) => {
+    const optionEl = e.target.closest(".poll-option");
+    if (!optionEl) return;
+    if (hasSubmitted) return;
 
-      if (hasSubmitted) return;
+    const option = optionEl.dataset.option;
+    if (!option) return;
 
-      const option = optionRow.dataset.option;
-      if (!option) return;
+    // Only allow clicking inside active poll
+    const container = optionEl.closest(".poll-container");
+    if (!container || container.dataset.level !== currentLevel) return;
 
-      // Remove previous selection
-      allOptions.forEach(o => o.classList.remove("selected"));
+    document.querySelectorAll(".poll-option")
+      .forEach(o => o.classList.remove("selected"));
 
-      // Highlight clicked row
-      optionRow.classList.add("selected");
-      console.log("Clicked option:", option);
+    optionEl.classList.add("selected");
 
-      await submitVote(option.toLowerCase());
-    });
-
+    await submitVote(option.toLowerCase());
   });
 
   document.querySelectorAll('.emoji-button').forEach(button => {
@@ -144,7 +142,6 @@ document.addEventListener("DOMContentLoaded", () => {
           // this.classList.add('emoji-selected');
           
           // Get emoji index and content
-          const emojiIndex = this.getAttribute('data-index');
           const emojiContent = this.textContent;
 
           try {
@@ -155,10 +152,9 @@ document.addEventListener("DOMContentLoaded", () => {
                   timestamp: Timestamp.now(),
                   pageType: PAGE_TYPE
               };
-
+              
+              await addDoc(collection(db, EMOJI_COLLECTION), emojiData);
               // Add document to Firestore
-              const docRef = await addDoc(collection(db, EMOJI_COLLECTION), emojiData);
-              console.log("Emoji recorded with ID: ", docRef.id);
           } catch (error) {
               console.error("Error adding emoji to Firestore: ", error);
           }
