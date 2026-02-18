@@ -112,7 +112,6 @@ nav{
 .mira {
   width: clamp(180px, 45vw, 280px);
   height: auto;
-  animation: float 4s ease-in-out infinite;
 }
 
 @keyframes float {
