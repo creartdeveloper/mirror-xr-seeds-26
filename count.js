@@ -8,11 +8,19 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+
   const COLLECTION_NAME = "Mirror-XR-AF26-poll-magical-item";
+
 
   let currentShowId = null;
   let currentAudienceSize = 1;
   let unsubscribe = null;
+  const ITEM_TO_SET = {
+    a: "Tea",
+    b: "Kintsugi",
+    c: "Jar",
+    d: "Pen"
+  };
 
   /* projector display */
 
@@ -225,20 +233,51 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    const winningOption =
-      winners[Math.floor(Math.random() * winners.length)];
+    let winningOption;
 
-    let nextPoll;
-    if (currentPoll === "p1") nextPoll = "p2";
-    else if (currentPoll === "p2") nextPoll = "p3";
-    else if (currentPoll === "p3") nextPoll = "p4";
-    else nextPoll = "p4";
+    if (winners.length === 0) {
+      // No votes → random fallback
+      const options = ["a","b","c","d"];
+      winningOption = options[Math.floor(Math.random() * options.length)];
+    } else {
+      winningOption = winners[Math.floor(Math.random() * winners.length)];
+    }
 
-    await updateDoc(showRef, {
-      currentPoll: nextPoll,
-      parentPollOption: winningOption
-    });
+    let updateData = {};
 
+    if (currentPoll === "p1") {
+
+      const selectedSet = ITEM_TO_SET[winningOption];
+
+      updateData = {
+        currentPoll: "p2",
+        selectedSet: selectedSet,
+        parentPollOption: winningOption
+      };
+
+    } else if (currentPoll === "p2") {
+
+      updateData = {
+        currentPoll: "p3",
+        parentPollOption: winningOption
+      };
+
+    } else if (currentPoll === "p3") {
+
+      updateData = {
+        currentPoll: "p4",
+        parentPollOption: winningOption
+      };
+
+    } else {
+
+      updateData = {
+        currentPoll: "p2"
+      };
+
+    }
+
+    await updateDoc(showRef, updateData);
   });
 
 });

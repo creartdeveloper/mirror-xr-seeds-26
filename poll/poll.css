@@ -107,6 +107,8 @@ body {
 .option-text {
   font-size: clamp(14px, 1.2vw, 18px);
   font-weight: 500;
+  color: white;          /* ADD THIS */
+  line-height: 1.4;
 }
 
 /*magical item label */
@@ -121,10 +123,10 @@ body {
 
 /*selected state */
 
-.poll-option.selected {
+/* .poll-option.selected {
   outline: 3px solid #FFD700;
   transform: scale(1.05);
-}
+} */
 
 .poll-option.voted {
   opacity: 0.6;

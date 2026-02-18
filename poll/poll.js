@@ -51,6 +51,37 @@ document.addEventListener("DOMContentLoaded", () => {
     db,
     COLLECTION_NAME, showId
   );
+  const QUESTION_SETS = {
+
+    Tea: [
+      "Mira, my thoughts keep looping even when I want to relax. How do I make my brain slow down?",
+      "Mira, is it okay if being quiet is how I feel calm, even if other people don’t get it?",
+      "Mira, if mindfulness is like having tea, what happens if I get distracted or mess it up?",
+      "Mira, how is mindfulness not just pretending problems aren’t there?"
+    ],
+
+    Kintsugi: [
+      "Mira, I can’t stop thinking about my mistakes. How do I stop hating myself for them?",
+      "Mira, what if I don’t want people to see the parts of me that feel broken?",
+      "Mira, if cracks make things more beautiful, does that mean everyone has them, even you?",
+      "Mira, is turning pain into something good actually real, or just something people say?"
+    ],
+
+    Jar: [
+      "Mira, how do I stop my emotions from piling up in my head all day?",
+      "Mira, what if I don’t know how to explain my feelings out loud?",
+      "Mira, if I put my feelings in a jar, how do I know when it’s okay to open it again?",
+      "Mira, isn’t putting emotions in a jar just avoiding them?"
+    ],
+
+    Pen: [
+      "Mira, will writing things down actually stop my thoughts from spiralling?",
+      "Mira, what if writing feels easier than talking. Does that still count?",
+      "Mira, if the pen was magical, what would it help me say first?",
+      "Mira, how can writing help if my situation stays the same?"
+    ]
+  };
+
 
   onSnapshot(controlRef, (snapshot) => {
 
@@ -72,6 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* EXISTING POLL LOGIC */
     currentLevel = data.currentPoll;
+    const selectedSet = data.selectedSet;
 
     document.querySelectorAll(".poll-container")
       .forEach(p => p.classList.remove("active"));
@@ -84,9 +116,20 @@ document.addEventListener("DOMContentLoaded", () => {
       pollToShow.classList.add("active");
     }
 
+    if (selectedSet && ["p2","p3","p4"].includes(currentLevel)) {
+      renderQuestions(selectedSet, currentLevel);
+    }
+
     hasSubmitted = !!data.votedUsers?.[currentLevel]?.[userId];
-    document.querySelectorAll(".poll-option")
-      .forEach(o => o.classList.remove("selected"));
+    document.querySelectorAll(".poll-option").forEach(option => {
+      option.classList.remove("selected");
+
+      const img = option.querySelector("img");
+      if (img && img.dataset.default) {
+        img.src = img.dataset.default;
+      }
+    });
+
   });
 
   /*Submit vote */
@@ -114,22 +157,54 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("click", async (e) => {
     const optionEl = e.target.closest(".poll-option");
     if (!optionEl) return;
-    if (hasSubmitted) return;
+
+    const container = optionEl.closest(".poll-container");
+    if (!container || container.dataset.level !== currentLevel) return;
 
     const option = optionEl.dataset.option;
     if (!option) return;
 
-    // Only allow clicking inside active poll
-    const container = optionEl.closest(".poll-container");
-    if (!container || container.dataset.level !== currentLevel) return;
+    // Reset all images to default FIRST
+    document.querySelectorAll(".poll-option img").forEach(img => {
+      if (img.dataset.default) {
+        img.src = img.dataset.default;
+      }
+    });
 
-    document.querySelectorAll(".poll-option")
-      .forEach(o => o.classList.remove("selected"));
+    // Change clicked image to selected version
+    const img = optionEl.querySelector("img");
+    if (img && img.dataset.selected) {
+      img.src = img.dataset.selected;
+    }
 
     optionEl.classList.add("selected");
 
+    if (hasSubmitted) return;
+
     await submitVote(option.toLowerCase());
   });
+
+
+  function renderQuestions(setName, level) {
+
+    const questions = QUESTION_SETS[setName];
+    if (!questions) return;
+
+    const activePoll = document.querySelector(
+      `.poll-container[data-level="${level}"]`
+    );
+
+    if (!activePoll) return;
+
+    const optionEls = activePoll.querySelectorAll(".poll-option");
+
+    optionEls.forEach((el, index) => {
+      const textEl = el.querySelector(".option-text");
+      if (textEl) {
+        textEl.textContent = questions[index];
+      }
+    });
+  }
 
   document.querySelectorAll('.emoji-button').forEach(button => {
       button.addEventListener('click', async function() {
