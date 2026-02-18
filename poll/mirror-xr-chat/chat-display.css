@@ -1,50 +1,55 @@
+/* Green screen background */
 body {
     background: #00FF00;
     margin: 0;
-    padding: 0; /* Remove padding */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
+    padding: 0;
     overflow: hidden;
 }
 
+/* Container that fills entire screen */
 .chat-container {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(8, 1fr);
+    position: relative;
     width: 100vw;
     height: 100vh;
     background: transparent;
-    gap: 20px;
-    padding: 40px;
-    box-sizing: border-box;
 }
 
+/* Floating speech bubble */
+.floating-message {
+    position: absolute;
 
-.text-display {
-    height: 120px;
-    width: 160px;
-    background-size: cover;
-    background-position: center;
-    border-radius: 12px;
+    /* Center positioning */
+    transform: translate(-50%, -50%) scale(0.9);
+
+    /* IMPORTANT: prevent cropping */
     background-image: url("../assets/poll-components/text-box.png");
+    background-size: 100% 100%;  /* instead of cover */
+    background-repeat: no-repeat;
+    background-position: center;
+
+    width: 260px;           /* slightly wider */
+    min-height: 130px;      /* allow more vertical space */
+    padding: 35px 30px;     /* breathing space inside bubble */
+    box-sizing: border-box;
+
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
+
+    font-family: "Delius", serif;
+    font-size: 18px;
+    color: #333;
+
     opacity: 0;
-    transition: opacity 0.5s ease;
+
+    transition: 
+        opacity 0.8s ease,
+        transform 0.8s ease;
 }
 
-
-.text-content {
-    width: 90%;
-    height: 80%;
-    font-size: 14px;
-    color: black;
-    text-align: center;
-    font-family: "Delius", serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* Fade + scale in */
+.floating-message.visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
 }

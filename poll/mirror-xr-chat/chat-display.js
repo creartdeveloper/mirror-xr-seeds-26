@@ -18,81 +18,77 @@ const db = getFirestore(app);
 const params = new URLSearchParams(window.location.search);
 const showId = params.get("showId");
 
+console.log("projection showId:", showId);
+
 if (!showId) {
     console.error("No showId in URL.");
 }
 
-/* settings */
-const GRID_SIZE = 8;          // 8x8 = 64
-const MAX_ACTIVE = 25;
+/* settings */ 
+const MAX_ACTIVE = 15;
 const DISPLAY_DURATION = 20000;
 
-let activeCount = 0;
-let gridSlots = [];
+let activeMessages = [];
 
-/* Create 8x8 Grid */
-function createGrid() {
-    const container = document.querySelector('.chat-container');
-
-    for (let row = 1; row <= GRID_SIZE; row++) {
-        for (let col = 1; col <= GRID_SIZE; col++) {
-
-            // Skip center 4 cells for Mira
-            if ((row === 4 || row === 5) && (col === 4 || col === 5)) {
-                continue;
-            }
-
-            const div = document.createElement('div');
-            div.className = 'text-display';
-            div.style.opacity = "0";
-
-            const content = document.createElement('div');
-            content.className = 'text-content';
-
-            div.appendChild(content);
-            container.appendChild(div);
-
-            gridSlots.push(div);
-        }
-    }
-}
+/* predefined positions around center */
+const positions = [
+    { top: "15%", left: "50%" },
+    { top: "30%", left: "80%" },
+    { top: "50%", left: "90%" },
+    { top: "75%", left: "75%" },
+    { top: "85%", left: "50%" },
+    { top: "75%", left: "25%" },
+    { top: "50%", left: "10%" },
+    { top: "30%", left: "20%" }
+];
 
 /*Show Message */
 function showMessage(text) {
 
-    if (activeCount >= MAX_ACTIVE) return;
+    if (activeMessages.length >= MAX_ACTIVE) return;
 
-    // find free slot
-    const freeSlot = gridSlots.find(slot => slot.style.opacity === "0");
-    if (!freeSlot) return;
+    const container = document.querySelector('.chat-container');
 
-    const content = freeSlot.querySelector('.text-content');
+    const div = document.createElement('div');
+    div.className = 'floating-message';
+    div.textContent = text;
 
-    content.textContent = text;
-    freeSlot.style.opacity = "1";
+    // pick random position
+    const randomPos = positions[Math.floor(Math.random() * positions.length)];
+    div.style.top = randomPos.top;
+    div.style.left = randomPos.left;
 
-    activeCount++;
+    container.appendChild(div);
+    activeMessages.push(div);
+
+    // trigger fade-in
+    requestAnimationFrame(() => {
+        div.classList.add("visible");
+    });
 
     setTimeout(() => {
-        freeSlot.style.opacity = "0";
-        activeCount--;
+        div.classList.remove("visible");
+        setTimeout(() => {
+            div.remove();
+            activeMessages = activeMessages.filter(m => m !== div);
+        }, 800); // match fade-out time
     }, DISPLAY_DURATION);
 }
 
-/* init */
-createGrid();
 
 /* real time listener (filtered by show) */
 const q = query(
     collection(db, "chat_message_collection"),
-    where("showId", "==", showId),
-    orderBy("timestamp", "asc")
+    where("showId", "==", showId)
 );
 
 onSnapshot(q, (snapshot) => {
+    console.log("Snapshot size:", snapshot.size);
+
     snapshot.docChanges().forEach(change => {
         if (change.type === "added") {
             const data = change.doc.data();
+            console.log("New message:", data.chat);
             showMessage(data.chat);
         }
     });
