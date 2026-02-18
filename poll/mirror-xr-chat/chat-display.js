@@ -16,7 +16,7 @@ const db = getFirestore(app);
 
 /* Get showId from URL */
 const params = new URLSearchParams(window.location.search);
-const showId = params.get("showId");
+const showId = sessionStorage.getItem("showId");
 
 console.log("projection showId:", showId);
 
