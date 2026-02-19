@@ -1,0 +1,30 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #00FF00; /* GREEN SCREEN */
+  overflow: hidden;
+}
+
+.emoji-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.floating-emoji {
+  position: absolute;
+  font-size: 60px;
+  animation: floatUp 4s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-200px) scale(1.3);
+  }
+}
