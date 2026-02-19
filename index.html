@@ -116,9 +116,13 @@
         /*hero section*/
 
         .hero {
-            position: relative;
+            position: absolute;
+            bottom: 18%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: clamp(260px, 24vw, 340px);
+            z-index: 2;
         }
-
         .hero::before {
             content: "";
             position: absolute;
@@ -129,8 +133,11 @@
             z-index: -1;
         }
         .mira {
-            width: clamp(180px, 45vw, 280px);
-            height: auto;
+            position: absolute;
+            bottom: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: clamp(260px, 24vw, 340px);
         }
 
         @keyframes float {
@@ -146,11 +153,13 @@
             font-size: 1rem;
             justify-content: center;
         }
-
         .chat-bubble {
-            width: clamp(220px, 40vw, 350px);
-            height: auto;
-
+            position: absolute;
+            bottom: 46%;
+            left: 38%;
+            width: clamp(80px, 7vw, 110px);
+            animation: gentleFloat 4s ease-in-out infinite;
+            z-index: 3;
         }
 
         @keyframes gentleFloat {
@@ -248,8 +257,14 @@
             inset 0 -2px 0 rgba(0,0,0,0.25),
             0 6px 14px rgba(0,0,0,0.25);
         }
-
-        /*responsiveness benchmarks*/
+        .page-text {
+            position: absolute;
+            bottom: 28%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: clamp(500px, 70vw, 900px);
+        }
+                /*responsiveness benchmarks*/
         @media (min-width: 1920px) { /*projector*/
             .app-content {
                 max-width: 560px;
@@ -333,10 +348,12 @@
                 <img src ="./poll/assets/background/Mirror-X-OBS-Mira.png" 
                     alt="Mira-AI" 
                     class="mira"/>
-
-                <img src="./poll/assets/background/Mirror-XR-Show-Page-Text.png"
+                <img src="./poll/assets/background/Mirror-XR-OBS-Chat.png"
                     alt="Chat Bubble"
                     class="chat-bubble"/>
+                <img src="./poll/assets/background/Mirror-XR-Show-Page-Text.png"
+                    alt="Page Text"
+                    class="page-text"/>
 
                 <div class="show-id-wrapper">
                     <div class="show-id">

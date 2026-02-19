@@ -32,7 +32,7 @@ if (!showId) {
 
 /* settings */ 
 const MAX_ACTIVE = 15;
-const DISPLAY_DURATION = 20000;
+const DISPLAY_DURATION = 100000;
 
 let activeMessages = [];
 
