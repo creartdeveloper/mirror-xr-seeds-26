@@ -1,4 +1,4 @@
-// poll_options.js
+// poll_options.js - NO MORE NEEDED 
 
 export const POLL_OPTIONS = {
 
@@ -10,11 +10,33 @@ export const POLL_OPTIONS = {
   },
 
   p2: {
+    A:{
+      title: "Tea-Time - Mindfulness", 
 
-    A: ["A1", "A2", "A3", "A4"],
-    B: ["B1", "B2", "B3", "B4"],
-    C: ["C1", "C2", "C3", "C4"],
-    D: ["D1", "D2", "D3", "D4"]
+      options: [
+        {
+          id:"A1", 
+          archetype:"Overthinker", 
+          text: "Mira, my thoughts keep looping even when I want to relax. How do I make my brain slow down? "
+        },
+        {
+          id:"A2",
+          archetype:"Shy",
+          text:""
+        },
+        {
+          id:"A3",
+          archetype:"Playful",
+          text:""
+        }
+
+      ]
+    }
+
+    // A: ["A1", "A2", "A3", "A4"],
+    // B: ["B1", "B2", "B3", "B4"],
+    // C: ["C1", "C2", "C3", "C4"],
+    // D: ["D1", "D2", "D3", "D4"]
   },
 
 
