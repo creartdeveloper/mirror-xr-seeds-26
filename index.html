@@ -116,12 +116,9 @@
         /*hero section*/
 
         .hero {
-            position: absolute;
-            bottom: 18%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: clamp(260px, 24vw, 340px);
-            z-index: 2;
+            position: relative;
+            width: 100%;
+            height: 100vh;
         }
         .hero::before {
             content: "";
@@ -132,12 +129,18 @@
             filter: blur(80px);
             z-index: -1;
         }
-        .mira {
+
+        /* Mira wrapper anchors everything */
+        .mira-wrapper {
             position: absolute;
-            bottom: 8%;
+            bottom: 42%;   
             left: 50%;
             transform: translateX(-50%);
-            width: clamp(260px, 24vw, 340px);
+            z-index: 2;
+        }
+        .mira {
+            width: clamp(300px, 28vw, 420px);
+            display: block;
         }
 
         @keyframes float {
@@ -155,12 +158,13 @@
         }
         .chat-bubble {
             position: absolute;
-            bottom: 46%;
-            left: 38%;
-            width: clamp(80px, 7vw, 110px);
+            top: 16%;
+            left: -10%;
+            width: clamp(95px, 8vw, 150px);
+            transform: rotate(-4deg);
             animation: gentleFloat 4s ease-in-out infinite;
-            z-index: 3;
         }
+
 
         @keyframes gentleFloat {
             0% { transform: translateY(0px); }
@@ -171,11 +175,11 @@
 
         /*show-id-wrapper*/
         .show-id-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            margin-top: 2rem;
+            position: absolute;
+            bottom: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 4;
         }
         .show-id {
             display: flex;
@@ -259,10 +263,11 @@
         }
         .page-text {
             position: absolute;
-            bottom: 28%;
+            bottom: 33%;
             left: 50%;
             transform: translateX(-50%);
-            width: clamp(500px, 70vw, 900px);
+            width: clamp(320px, 38vw, 600px);
+            z-index: 3;
         }
                 /*responsiveness benchmarks*/
         @media (min-width: 1920px) { /*projector*/
@@ -345,12 +350,15 @@
     <main class="app-shell">
         <div class="app-content">
             <section class="hero">
-                <img src ="./poll/assets/background/Mirror-X-OBS-Mira.png" 
-                    alt="Mira-AI" 
-                    class="mira"/>
-                <img src="./poll/assets/background/Mirror-XR-OBS-Chat.png"
-                    alt="Chat Bubble"
-                    class="chat-bubble"/>
+                <div class="mira-wrapper">
+                    <img src="./poll/assets/background/Mirror-X-OBS-Mira.png"
+                        alt="Mira-AI"
+                        class="mira"/>
+
+                    <img src="./poll/assets/background/Mirror-XR-OBS-Chat.png"
+                        alt="Chat Bubble"
+                        class="chat-bubble"/>
+                </div>
                 <img src="./poll/assets/background/Mirror-XR-Show-Page-Text.png"
                     alt="Page Text"
                     class="page-text"/>
