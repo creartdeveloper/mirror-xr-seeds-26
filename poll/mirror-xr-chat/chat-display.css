@@ -38,41 +38,42 @@ body {
 }
 
 .chat-container {
-    position: relative;
+    position: absolute;
     width: 100vw;
     height: 100vh;
+    pointer-events: none;
 }
 
 /* CHAT BUBBLE */
 .floating-message {
     position: absolute;
+    width: 280px;
+    min-height: 100px;
+    padding: 24px 30px;
 
-    max-width: 320px;
-    width: 300px;
-
-    padding: 28px 36px;
     background-image: url("../assets/background/text-box.png");
-    background-size: contain;
+    background-size: 100% 100%;
     background-repeat: no-repeat;
-    background-position: center;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
     text-align: center;
-    font-size: 16px;
+    font-size: 18px;
+    line-height: 1.4;
     color: #222;
 
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
 
     opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.4s ease;
+    transform: scale(0.95);
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .floating-message.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1);
 }

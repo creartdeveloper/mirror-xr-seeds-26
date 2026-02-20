@@ -16,15 +16,19 @@ const db = getFirestore(app);
 
 /* Get showId from URL */
 const params = new URLSearchParams(window.location.search);
-const showIdParam = params.get("showId");
+const showId = params.get("showId"); // or Number() if Firestore stores number
 
-const showId = showIdParam ? Number(showIdParam) : null;
-
-console.log("projection showId:", showId);
+console.log("Projection showId:", showId);
 
 if (!showId) {
-    console.error("Invalid showId in URL");
+    console.error("No showId provided");
 }
+
+/* settings */ 
+const MAX_ACTIVE = 15;
+const DISPLAY_DURATION = 100000;
+let activeMessages = [];
+
 if (showId) {
 
     const q = query(
@@ -33,6 +37,7 @@ if (showId) {
     );
 
     onSnapshot(q, (snapshot) => {
+
         console.log("Snapshot size:", snapshot.size);
 
         snapshot.docChanges().forEach(change => {
@@ -41,87 +46,74 @@ if (showId) {
                 showMessage(data.chat);
             }
         });
-    });
 
+    });
 }
 
-/* settings */ 
-const MAX_ACTIVE = 15;
-const DISPLAY_DURATION = 100000;
 
-let activeMessages = [];
+let leftStack = [];
+let rightStack = [];
 
-/* predefined positions around center */
-const positions = [
-    // LEFT COLUMN
-    { top: "10%", left: "8%" },
-    { top: "25%", left: "8%" },
-    { top: "40%", left: "8%" },
-    { top: "55%", left: "8%" },
-    { top: "70%", left: "8%" },
-    { top: "85%", left: "8%" },
+const MAX_PER_COLUMN = 6;
+const START_Y = 8;      // top start %
+const VERTICAL_GAP = 14; // spacing between bubbles
+const BOTTOM_LIMIT = 65; // do not go below this %
 
-    // RIGHT COLUMN
-    { top: "10%", left: "72%" },
-    { top: "25%", left: "72%" },
-    { top: "40%", left: "72%" },
-    { top: "55%", left: "72%" },
-    { top: "70%", left: "72%" },
-    { top: "85%", left: "72%" }
-];
-
-/*Show Message */
 function showMessage(text) {
 
-    if (activeMessages.length >= MAX_ACTIVE) return;
-
     const container = document.querySelector('.chat-container');
+    if (!container) return;
+
+    // Decide column (shorter one first)
+    const useLeft = leftStack.length <= rightStack.length;
+
+    if (useLeft && leftStack.length >= MAX_PER_COLUMN) return;
+    if (!useLeft && rightStack.length >= MAX_PER_COLUMN) return;
 
     const div = document.createElement('div');
     div.className = 'floating-message';
-    div.textContent = text;
+    div.innerText = text;
 
-    // pick random position
-    const index = activeMessages.length % positions.length;
-    const randomPos = positions[index];
-    div.style.top = randomPos.top;
-    div.style.left = randomPos.left;
+    // Determine vertical position
+    const stack = useLeft ? leftStack : rightStack;
+    const topPosition = START_Y + (stack.length * VERTICAL_GAP);
+
+    if (topPosition > BOTTOM_LIMIT) return;
+
+    // Horizontal positioning
+    if (useLeft) {
+        div.style.left = "6%";
+    } else {
+        div.style.left = "74%";
+    }
+
+    div.style.top = topPosition + "%";
 
     container.appendChild(div);
-    activeMessages.push(div);
 
-    // trigger fade-in
     requestAnimationFrame(() => {
         div.classList.add("visible");
     });
+
+    stack.push(div);
 
     setTimeout(() => {
         div.classList.remove("visible");
         setTimeout(() => {
             div.remove();
-            activeMessages = activeMessages.filter(m => m !== div);
-        }, 800); // match fade-out time
+            stack.shift();
+            repositionStacks();
+        }, 400);
     }, DISPLAY_DURATION);
 }
 
+function repositionStacks() {
 
-/* real time listener (filtered by show) */
-    if (showId !== null) {
+    leftStack.forEach((bubble, index) => {
+        bubble.style.top = (START_Y + (index * VERTICAL_GAP)) + "%";
+    });
 
-        const q = query(
-            collection(db, "chat_message_collection"),
-            where("showId", "==", showId)
-        );
-    
-    onSnapshot(q, (snapshot) => {
-        console.log("Snapshot size:", snapshot.size);
-
-        snapshot.docChanges().forEach(change => {
-            if (change.type === "added") {
-                const data = change.doc.data();
-                console.log("New message:", data.chat);
-                showMessage(data.chat);
-            }
-        });
-    }); 
-};
+    rightStack.forEach((bubble, index) => {
+        bubble.style.top = (START_Y + (index * VERTICAL_GAP)) + "%";
+    });
+}
