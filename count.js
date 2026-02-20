@@ -269,6 +269,20 @@ document.addEventListener("DOMContentLoaded", () => {
     updatePage("userid");
   });
 
+  document.getElementById("openFringeBtn")?.addEventListener("click", async () => {
+
+    if (!currentShowId) {
+      alert("Load show first");
+      return;
+    }
+
+    const showRef = doc(db, COLLECTION_NAME, currentShowId);
+
+    await updateDoc(showRef, {
+      currentPage: "fringe"
+    });
+
+});
 
 });
 

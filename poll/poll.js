@@ -226,6 +226,10 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    if (data.currentPage === "fringe") {
+      window.location.href = "https://www.creartdigitalmedia.com.au/fringe-2026";
+      return;
+    }
     if (data.currentPage !== "poll") return;
 
     currentLevel = data.currentPoll;

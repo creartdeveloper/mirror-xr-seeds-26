@@ -54,14 +54,13 @@ if (showId) {
 
 /* GRID CONFIG */
 
-const TOTAL_COLUMNS = 6;
+const TOTAL_COLUMNS = 3;
 const TOTAL_ROWS = 8;
 
-const ALLOWED_COLUMNS = [1, 2, 5, 6];
+const ALLOWED_COLUMNS = [1, 3];   // left and right only
 const ALLOWED_ROWS = [2, 3, 4, 5, 6];
 
 const occupiedSlots = new Set();
-
 function showMessage(text) {
 
     const container = document.querySelector('.chat-container');
@@ -69,7 +68,7 @@ function showMessage(text) {
 
     let slot = null;
 
-    // Find first available grid slot
+    // Find first available slot
     for (let row of ALLOWED_ROWS) {
         for (let col of ALLOWED_COLUMNS) {
 
@@ -83,18 +82,17 @@ function showMessage(text) {
         if (slot) break;
     }
 
-    if (!slot) return; // Grid full
+    if (!slot) return; // grid full
 
     const div = document.createElement('div');
     div.className = 'floating-message';
     div.innerText = text;
 
-    /* ---- Spacing Control ---- */
-
     const columnWidth = 100 / TOTAL_COLUMNS;
     const rowHeight = 100 / TOTAL_ROWS;
 
-    const horizontalPadding = 0.30; // increase for more spacing
+    // spacing inside each grid cell
+    const horizontalPadding = 0.25;
     const verticalPadding = 0.35;
 
     const left =
@@ -116,13 +114,10 @@ function showMessage(text) {
     });
 
     setTimeout(() => {
-
         div.classList.remove("visible");
-
         setTimeout(() => {
             div.remove();
             occupiedSlots.delete(slot.key);
         }, 400);
-
     }, DISPLAY_DURATION);
 }
