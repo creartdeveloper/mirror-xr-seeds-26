@@ -54,14 +54,8 @@ if (showId) {
 
 /* GRID CONFIG */
 
-const TOTAL_COLUMNS = 3;
+const TOTAL_COLUMNS = 6;
 const TOTAL_ROWS = 8;
-
-/*
-    Allowed:
-    Columns: 1,2,5,6
-    Rows: 2,3,4,5,6
-*/
 
 const ALLOWED_COLUMNS = [1, 2, 5, 6];
 const ALLOWED_ROWS = [2, 3, 4, 5, 6];
@@ -75,10 +69,12 @@ function showMessage(text) {
 
     let slot = null;
 
-    // Find first free slot
+    // Find first available grid slot
     for (let row of ALLOWED_ROWS) {
         for (let col of ALLOWED_COLUMNS) {
+
             const key = `${row}-${col}`;
+
             if (!occupiedSlots.has(key)) {
                 slot = { row, col, key };
                 break;
@@ -87,17 +83,27 @@ function showMessage(text) {
         if (slot) break;
     }
 
-    if (!slot) return; // grid full
+    if (!slot) return; // Grid full
 
     const div = document.createElement('div');
     div.className = 'floating-message';
     div.innerText = text;
 
+    /* ---- Spacing Control ---- */
+
     const columnWidth = 100 / TOTAL_COLUMNS;
     const rowHeight = 100 / TOTAL_ROWS;
 
-    const left = (slot.col - 1) * columnWidth + (columnWidth * 0.15);
-    const top = (slot.row - 1) * rowHeight + (rowHeight * 0.2);
+    const horizontalPadding = 0.30; // increase for more spacing
+    const verticalPadding = 0.35;
+
+    const left =
+        (slot.col - 1) * columnWidth +
+        (columnWidth * horizontalPadding);
+
+    const top =
+        (slot.row - 1) * rowHeight +
+        (rowHeight * verticalPadding);
 
     div.style.left = left + "%";
     div.style.top = top + "%";
@@ -110,10 +116,13 @@ function showMessage(text) {
     });
 
     setTimeout(() => {
+
         div.classList.remove("visible");
+
         setTimeout(() => {
             div.remove();
             occupiedSlots.delete(slot.key);
         }, 400);
+
     }, DISPLAY_DURATION);
 }
