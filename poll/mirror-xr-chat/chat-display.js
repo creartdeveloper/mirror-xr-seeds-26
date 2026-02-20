@@ -26,7 +26,7 @@ if (!showId) {
 
 /* settings */ 
 
-const DISPLAY_DURATION = 100000;
+const DISPLAY_DURATION = 30000;
 
 
 if (showId) {
@@ -54,7 +54,7 @@ if (showId) {
 
 /* GRID CONFIG */
 
-const TOTAL_COLUMNS = 6;
+const TOTAL_COLUMNS = 3;
 const TOTAL_ROWS = 8;
 
 /*
