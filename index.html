@@ -98,8 +98,12 @@
 
         .hero {
             position: relative;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .hero::before {
@@ -113,15 +117,9 @@
         }
 
         /* Mira wrapper anchors everything */
-        .mira-wrapper {
-            position: absolute;
-            bottom: 36%;   /*dont change this*/ 
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 5;
-        }
+
         .mira {
-            width: clamp(260px, 22vw, 420px);
+            width: clamp(240px, 22vw, 420px);
             display: block;
         }
 
@@ -238,95 +236,29 @@
             inset 0 -2px 0 rgba(0,0,0,0.25),
             0 6px 14px rgba(0,0,0,0.25);
         }
-        .page-text {
-            position: absolute;
-            bottom: 20%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: clamp(240px, 28vw, 520px);
-            z-index: 3;
-        }
-
-
-        .pin-section {
-            position: absolute;
-            bottom: 26%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: clamp(260px, 32vw, 650px);
-            text-align: center;
-            z-index: 4;
-        }
-
         .pin-box-bg {
             width: 100%;
             display: block;
         }
-
-        /*responsiveness benchmarks*/
-        @media (min-width: 1920px) { /*projector*/
-            .app-content {
-                max-width: 560px;
-            }
-
-            .mira {
-                width: 320px;
-            }
+        .mira-wrapper {
+            position: relative;
+            margin-top: 6vh;
+            margin-bottom: 2vh;
+            text-align: center;
         }
 
-        @media (max-width: 1440px) { /*desktop*/
-            .app-content {
-                max-width: 520px;
-            }
-
-            .mira {
-                width: 300px;
-            }
+        .pin-section {
+            position: relative;
+            margin-top: -4vh; /* pulls box slightly up under Mira */
+            width: clamp(260px, 32vw, 650px);
+            text-align: center;
         }
 
-
-        @media (max-width: 1280px) { /*laptop*/
-            .app-content {
-                max-width: 480px;
-            }
-
-            .mira {
-                width: 360px;
-            }
+        .page-text {
+            position: relative;
+            margin-top: 3vh;
+            width: clamp(240px, 28vw, 520px);
         }
-
-        @media (max-width: 969px) { /*tablet/small laptop*/
-            .app-content {
-                max-width: 420px;
-            }
-
-            .mira {
-                width: 240px;
-            }
-
-            .show-id input {
-                max-width: 60px;
-            }
-        }
-
-
-        @media (max-width: 320px) { /*phones*/
-            .app-content {
-                padding: 1rem 0.8rem;
-            }
-
-            .show-id {
-                gap: 8px;
-            }
-
-            .show-id input {
-                max-width: 50px;
-            }
-
-            .mira {
-                width: 180px;
-            }
-        }   
     </style>
     <title>Mirror App</title>
 
