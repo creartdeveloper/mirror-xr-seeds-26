@@ -16,18 +16,33 @@ const db = getFirestore(app);
 
 /* Get showId from URL */
 const params = new URLSearchParams(window.location.search);
-const showId = params.get("showId");
+const showIdParam = params.get("showId");
+
+const showId = showIdParam ? Number(showIdParam) : null;
 
 console.log("projection showId:", showId);
 
 if (!showId) {
-    console.error("No showId provided in URL.");
+    console.error("Invalid showId in URL");
 }
+if (showId) {
 
-console.log("projection showId:", showId);
+    const q = query(
+        collection(db, "chat_message_collection"),
+        where("showId", "==", showId)
+    );
 
-if (!showId) {
-    console.error("No showId in URL.");
+    onSnapshot(q, (snapshot) => {
+        console.log("Snapshot size:", snapshot.size);
+
+        snapshot.docChanges().forEach(change => {
+            if (change.type === "added") {
+                const data = change.doc.data();
+                showMessage(data.chat);
+            }
+        });
+    });
+
 }
 
 /* settings */ 
@@ -38,14 +53,21 @@ let activeMessages = [];
 
 /* predefined positions around center */
 const positions = [
-    { top: "15%", left: "50%" },
-    { top: "30%", left: "80%" },
-    { top: "50%", left: "90%" },
-    { top: "75%", left: "75%" },
-    { top: "85%", left: "50%" },
-    { top: "75%", left: "25%" },
-    { top: "50%", left: "10%" },
-    { top: "30%", left: "20%" }
+    // LEFT COLUMN
+    { top: "10%", left: "8%" },
+    { top: "25%", left: "8%" },
+    { top: "40%", left: "8%" },
+    { top: "55%", left: "8%" },
+    { top: "70%", left: "8%" },
+    { top: "85%", left: "8%" },
+
+    // RIGHT COLUMN
+    { top: "10%", left: "72%" },
+    { top: "25%", left: "72%" },
+    { top: "40%", left: "72%" },
+    { top: "55%", left: "72%" },
+    { top: "70%", left: "72%" },
+    { top: "85%", left: "72%" }
 ];
 
 /*Show Message */
@@ -60,7 +82,8 @@ function showMessage(text) {
     div.textContent = text;
 
     // pick random position
-    const randomPos = positions[Math.floor(Math.random() * positions.length)];
+    const index = activeMessages.length % positions.length;
+    const randomPos = positions[index];
     div.style.top = randomPos.top;
     div.style.left = randomPos.left;
 
@@ -83,19 +106,22 @@ function showMessage(text) {
 
 
 /* real time listener (filtered by show) */
-const q = query(
-    collection(db, "chat_message_collection"),
-    where("showId", "==", showId)
-);
+    if (showId !== null) {
 
-onSnapshot(q, (snapshot) => {
-    console.log("Snapshot size:", snapshot.size);
+        const q = query(
+            collection(db, "chat_message_collection"),
+            where("showId", "==", showId)
+        );
+    
+    onSnapshot(q, (snapshot) => {
+        console.log("Snapshot size:", snapshot.size);
 
-    snapshot.docChanges().forEach(change => {
-        if (change.type === "added") {
-            const data = change.doc.data();
-            console.log("New message:", data.chat);
-            showMessage(data.chat);
-        }
-    });
-});
+        snapshot.docChanges().forEach(change => {
+            if (change.type === "added") {
+                const data = change.doc.data();
+                console.log("New message:", data.chat);
+                showMessage(data.chat);
+            }
+        });
+    }); 
+};

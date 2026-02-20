@@ -79,47 +79,29 @@
         }
 
         .app-shell {
-            min-height: 100dvh;
+            min-height: 100vh;
             padding-top: var(--nav-height);
             display: flex;
             justify-content: center;
             align-items: center;
             width: 100%;
-            padding-left: 16px;
-            padding-right: 16px;
+            padding: 0;
         }
-
-        .app-shell {
-            min-height: 100dvh;
-            padding-top: var(--nav-height);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            padding-left: 16px;
-            padding-right: 16px;
-        }
-
-
         .app-content {
             width: 100%;
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 1.5rem 0;
+            height: 100vh;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            gap: 1.2rem;
-            text-align: center;
         }
-
         /*hero section*/
 
         .hero {
             position: relative;
-            width: 100%;
+            width: 100vw;
             height: 100vh;
         }
+
         .hero::before {
             content: "";
             position: absolute;
@@ -133,13 +115,13 @@
         /* Mira wrapper anchors everything */
         .mira-wrapper {
             position: absolute;
-            bottom: 42%;   
+            bottom: 36%;   /*dont change this*/ 
             left: 50%;
             transform: translateX(-50%);
-            z-index: 2;
+            z-index: 5;
         }
         .mira {
-            width: clamp(300px, 28vw, 420px);
+            width: clamp(260px, 22vw, 420px);
             display: block;
         }
 
@@ -158,8 +140,8 @@
         }
         .chat-bubble {
             position: absolute;
-            top: 16%;
-            left: -10%;
+            top: -8%;
+            left: -22%;
             width: clamp(95px, 8vw, 150px);
             transform: rotate(-4deg);
             animation: gentleFloat 4s ease-in-out infinite;
@@ -176,33 +158,28 @@
         /*show-id-wrapper*/
         .show-id-wrapper {
             position: absolute;
-            bottom: 25%;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            z-index: 4;
+            transform: translate(-50%, -50%);
         }
+
         .show-id {
             display: flex;
-            gap: 12px;
-            width: 100%;
+            gap: 18px;
             justify-content: center;
         }
 
         .show-id input {
-            flex: 1;
-            max-width: 70px;
-            aspect-ratio: 1 / 1;
-            font-size: clamp(1.2rem, 4vw, 2rem);
-            height: 70px;
-            text-align: center;
-            border-radius: 16px;
+            width: clamp(45px, 4.5vw, 65px);
+            height: clamp(45px, 4.5vw, 65px);
+            font-size: clamp(1rem, 1.8vw, 1.5rem);
+            font-size: clamp(1.2rem, 2vw, 2rem);
+            border-radius: 14px;
             border: none;
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(12px);
+            background: rgba(255,255,255,0.2);
             color: white;
+            text-align: center;
             font-weight: bold;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-            transition: all 0.2s ease;
         }
         .enter-btn {
             padding: 0.8rem 2rem;
@@ -263,13 +240,30 @@
         }
         .page-text {
             position: absolute;
-            bottom: 33%;
+            bottom: 20%;
             left: 50%;
             transform: translateX(-50%);
-            width: clamp(320px, 38vw, 600px);
+            width: clamp(240px, 28vw, 520px);
             z-index: 3;
         }
-                /*responsiveness benchmarks*/
+
+
+        .pin-section {
+            position: absolute;
+            bottom: 26%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: clamp(260px, 32vw, 650px);
+            text-align: center;
+            z-index: 4;
+        }
+
+        .pin-box-bg {
+            width: 100%;
+            display: block;
+        }
+
+        /*responsiveness benchmarks*/
         @media (min-width: 1920px) { /*projector*/
             .app-content {
                 max-width: 560px;
@@ -297,7 +291,7 @@
             }
 
             .mira {
-                width: 280px;
+                width: 360px;
             }
         }
 
@@ -349,7 +343,40 @@
     </nav>
     <main class="app-shell">
         <div class="app-content">
-            <section class="hero">
+        <section class="hero">
+            <div class="mira-wrapper">
+                <img src="./poll/assets/background/Mirror-X-OBS-Mira.png"
+                    alt="Mira-AI"
+                    class="mira"/>
+
+                <img src="./poll/assets/background/Mirror-XR-OBS-Chat.png"
+                    alt="Chat Bubble"
+                    class="chat-bubble"/>
+            </div>
+
+    <!-- PIN SECTION -->
+            <div class="pin-section">
+                <img src="./poll/assets/background/Mirror-XR-Show-Page-Box.png"
+                    alt="Pin Box"
+                    class="pin-box-bg"/>
+
+                <div class="show-id-wrapper">
+                    <div class="show-id">
+                        <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="one-time-code">
+                        <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1">
+                        <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1">
+                        <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1">
+                    </div>
+                </div>
+            </div>
+    <!-- TEXT BELOW -->
+            <img src="./poll/assets/background/Mirror-XR-Show-Page-Text.png"
+                alt="Page Text"
+                class="page-text"/>
+        </section>
+
+            <!-- <section class="hero">
+
                 <div class="mira-wrapper">
                     <img src="./poll/assets/background/Mirror-X-OBS-Mira.png"
                         alt="Mira-AI"
@@ -359,9 +386,10 @@
                         alt="Chat Bubble"
                         class="chat-bubble"/>
                 </div>
-                <img src="./poll/assets/background/Mirror-XR-Show-Page-Text.png"
-                    alt="Page Text"
-                    class="page-text"/>
+
+                <img src="./poll/assets/background/Mirror-XR-Show-Page-Box.png" alt="Pin Box" class="pin-box-bg"/>
+
+
 
                 <div class="show-id-wrapper">
                     <div class="show-id">
@@ -370,7 +398,7 @@
                         <input type="text" maxlength="1">
                         <input type="text" maxlength="1">
                     </div>
-                    <!-- <button class="sign-in" id="enterShowBtn">Enter</button> -->
+                    <button class="sign-in" id="enterShowBtn">Enter</button> -->
                 </div>
             </section>
         </div>
