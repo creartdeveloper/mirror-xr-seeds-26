@@ -25,9 +25,9 @@ if (!showId) {
 }
 
 /* settings */ 
-const MAX_ACTIVE = 15;
+
 const DISPLAY_DURATION = 100000;
-let activeMessages = [];
+
 
 if (showId) {
 
@@ -43,77 +43,77 @@ if (showId) {
         snapshot.docChanges().forEach(change => {
             if (change.type === "added") {
                 const data = change.doc.data();
-                showMessage(data.chat);
+                if (data.chat && data.chat.trim() !== "") {
+                    showMessage(data.chat);
+                }
             }
         });
 
     });
 }
 
+/* GRID CONFIG */
 
-let leftStack = [];
-let rightStack = [];
+const TOTAL_COLUMNS = 6;
+const TOTAL_ROWS = 8;
 
-const MAX_PER_COLUMN = 6;
-const START_Y = 8;      // top start %
-const VERTICAL_GAP = 14; // spacing between bubbles
-const BOTTOM_LIMIT = 65; // do not go below this %
+/*
+    Allowed:
+    Columns: 1,2,5,6
+    Rows: 2,3,4,5,6
+*/
+
+const ALLOWED_COLUMNS = [1, 2, 5, 6];
+const ALLOWED_ROWS = [2, 3, 4, 5, 6];
+
+const occupiedSlots = new Set();
 
 function showMessage(text) {
 
     const container = document.querySelector('.chat-container');
     if (!container) return;
 
-    // Decide column (shorter one first)
-    const useLeft = leftStack.length <= rightStack.length;
+    let slot = null;
 
-    if (useLeft && leftStack.length >= MAX_PER_COLUMN) return;
-    if (!useLeft && rightStack.length >= MAX_PER_COLUMN) return;
+    // Find first free slot
+    for (let row of ALLOWED_ROWS) {
+        for (let col of ALLOWED_COLUMNS) {
+            const key = `${row}-${col}`;
+            if (!occupiedSlots.has(key)) {
+                slot = { row, col, key };
+                break;
+            }
+        }
+        if (slot) break;
+    }
+
+    if (!slot) return; // grid full
 
     const div = document.createElement('div');
     div.className = 'floating-message';
     div.innerText = text;
 
-    // Determine vertical position
-    const stack = useLeft ? leftStack : rightStack;
-    const topPosition = START_Y + (stack.length * VERTICAL_GAP);
+    const columnWidth = 100 / TOTAL_COLUMNS;
+    const rowHeight = 100 / TOTAL_ROWS;
 
-    if (topPosition > BOTTOM_LIMIT) return;
+    const left = (slot.col - 1) * columnWidth + (columnWidth * 0.15);
+    const top = (slot.row - 1) * rowHeight + (rowHeight * 0.2);
 
-    // Horizontal positioning
-    if (useLeft) {
-        div.style.left = "6%";
-    } else {
-        div.style.left = "74%";
-    }
-
-    div.style.top = topPosition + "%";
+    div.style.left = left + "%";
+    div.style.top = top + "%";
 
     container.appendChild(div);
+    occupiedSlots.add(slot.key);
 
     requestAnimationFrame(() => {
         div.classList.add("visible");
     });
 
-    stack.push(div);
-
     setTimeout(() => {
         div.classList.remove("visible");
         setTimeout(() => {
             div.remove();
-            stack.shift();
-            repositionStacks();
+            occupiedSlots.delete(slot.key);
         }, 400);
     }, DISPLAY_DURATION);
-}
-
-function repositionStacks() {
-
-    leftStack.forEach((bubble, index) => {
-        bubble.style.top = (START_Y + (index * VERTICAL_GAP)) + "%";
-    });
-
-    rightStack.forEach((bubble, index) => {
-        bubble.style.top = (START_Y + (index * VERTICAL_GAP)) + "%";
-    });
 }
