@@ -47,6 +47,7 @@ body {
 /* CHAT BUBBLE */
 .floating-message {
     position: absolute;
+    opacity:0;
     width: 200px;
     height: 100px;           
     padding: 20px;
@@ -77,8 +78,20 @@ body {
 }
 
 .floating-message.visible {
-    opacity: 1;
+    opacity: 1 !important;
     transform: scale(1);
+}
+.clear-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 8px 14px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  z-index: 9999;
 }
 
 .bubble-content {

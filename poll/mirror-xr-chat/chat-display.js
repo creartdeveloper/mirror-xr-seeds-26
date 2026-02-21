@@ -209,3 +209,13 @@ function showEmoji(emoji) {
     setTimeout(() => div.remove(), 500);
   }, 4000);
 }
+
+const clearBtn = document.getElementById("clearMessagesBtn");
+
+if (clearBtn) {
+  clearBtn.addEventListener("click", () => {
+    document.querySelectorAll(".floating-message").forEach(el => el.remove());
+    document.querySelectorAll(".floating-emoji").forEach(el => el.remove());
+    occupiedSlots.clear();
+  });
+}
