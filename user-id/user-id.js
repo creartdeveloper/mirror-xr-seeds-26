@@ -1,4 +1,4 @@
-import { doc, onSnapshot } from 
+import { doc, onSnapshot, setDoc } from 
 "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 import { db } from "../firebase.js";
 
@@ -204,23 +204,33 @@ pickr.on('change', (color) => {
     usernameInput.value = usernameInput.value.replace(/[^a-zA-Z0-9]/g, "");
     updateNextButtonState();
   });
-/*next button*/
-  nextButton.addEventListener("click", () => {
+
+/* next button */
+  nextButton.addEventListener("click", async () => {
 
     const finalUsername = usernameInput.value.trim();
-    const finalAvatar = sessionStorage.getItem("avatar") || selectedAvatarImg.src;
-    const finalBgColor = sessionStorage.getItem("avatarBgColor") || selectedAvatarBox.style.backgroundColor;
+    const finalAvatar = sessionStorage.getItem("avatar");
+    const finalBgColor = sessionStorage.getItem("avatarBgColor");
 
-    sessionStorage.setItem("username", finalUsername);
-    sessionStorage.setItem("avatar", finalAvatar);
-    sessionStorage.setItem("avatarBgColor", finalBgColor);
+    const userId = sessionStorage.getItem("userId") || crypto.randomUUID();
+    sessionStorage.setItem("userId", userId);
 
-    if (!sessionStorage.getItem("userId")) {
-        sessionStorage.setItem("userId", crypto.randomUUID());
+    if (!showId) {
+      console.error("No showId found");
+      return;
     }
 
-    console.log("User setup saved. Waiting for admin to start show.");
-    window.location.href = "./user-id-display.html";
+    await setDoc(
+      doc(db, "Mirror-XR-AF26-poll-magical-item", showId, "users", userId),
+      {
+        username: finalUsername,
+        avatar: finalAvatar,
+        bgColor: finalBgColor,
+        timestamp: Date.now()
+      }
+    );
+
+    console.log("User profile sent to display.");
 
   });
 

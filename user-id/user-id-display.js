@@ -1,22 +1,44 @@
+import { db } from "../firebase.js";
+import { 
+  collection, 
+  query, 
+  orderBy, 
+  onSnapshot 
+} from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+
 document.addEventListener("DOMContentLoaded", () => {
 
-    const username = sessionStorage.getItem("username");
-    const avatar = sessionStorage.getItem("avatar");
-    const bgColor = sessionStorage.getItem("avatarBgColor");
+  const showId = sessionStorage.getItem("showId");
 
-    const avatarImg = document.getElementById("previewAvatar");
-    const usernameText = document.getElementById("previewUsername");
+  if (!showId) {
+    console.error("No showId found on projector.");
+    return;
+  }
 
-    if (username) {
-        usernameText.textContent = username;
-    }
+  const avatarImg = document.getElementById("previewAvatar");
+  const usernameText = document.getElementById("previewUsername");
 
-    if (avatar) {
-        avatarImg.src = avatar;
-    }
+  const q = query(
+    collection(db, "Mirror-XR-AF26-poll-magical-item", showId, "users"),
+    orderBy("timestamp", "desc")
+  );
 
-    if (bgColor) {
-        document.body.style.background = bgColor;
-    }
+  onSnapshot(q, (snapshot) => {
+
+    snapshot.docChanges().forEach((change) => {
+
+      if (change.type === "added") {
+
+        const data = change.doc.data();
+
+        if (avatarImg) avatarImg.src = data.avatar;
+        if (usernameText) usernameText.textContent = data.username;
+        if (data.bgColor) document.body.style.background = data.bgColor;
+
+      }
+
+    });
+
+  });
 
 });
