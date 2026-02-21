@@ -60,7 +60,7 @@ body {
 
     overflow: hidden;          
     word-break: break-word;
-    white-space: normal;
+    overflow-wrap: break-word;
     white-space: normal;
 
     background-image: url("../assets/background/text-box.png");
@@ -78,4 +78,44 @@ body {
 .floating-message.visible {
     opacity: 1;
     transform: scale(1);
+}
+
+.bubble-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+
+.user-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.avatar-wrapper {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-wrapper img {
+    width: 20px;
+    height: 20px;
+}
+
+.username {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.chat-text {
+    font-size: 14px;
+    text-align: center;
+    word-break: break-word;
 }
