@@ -22,39 +22,46 @@ document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("usersContainer");
 
   const q = query(
-    collection(db, "Mirror-XR-AF26-poll-magical-item", showId, "users"),
+    collection(db, "Mirror-XR-AF26-poll-magical-item",  showId ,"users"),
     orderBy("timestamp", "asc")
   );
 
     onSnapshot(q, (snapshot) => {
 
-        container.innerHTML = "";
+        snapshot.docChanges().forEach((change) => {
 
-        snapshot.forEach((doc) => {
+            const data = change.doc.data();
+            const id = change.doc.id;
 
-            const data = doc.data();
+            if (change.type === "added") {
 
-            const card = document.createElement("div");
-            card.classList.add("user-card");
+                const card = document.createElement("div");
+                card.classList.add("user-card");
+                card.id = "user-" + id;
 
-            const avatarWrapper = document.createElement("div");
-            avatarWrapper.classList.add("user-avatar-wrapper");
-            avatarWrapper.style.backgroundColor = data.bgColor || "#ffffff";
+                const avatarWrapper = document.createElement("div");
+                avatarWrapper.classList.add("user-avatar-wrapper");
+                avatarWrapper.style.backgroundColor = data.bgColor || "#ffffff";
 
-            const img = document.createElement("img");
-            img.src = data.avatar;
+                const img = document.createElement("img");
+                img.src = data.avatar;
 
-            const name = document.createElement("p");
-            name.textContent = data.username;
+                const name = document.createElement("p");
+                name.textContent = data.username;
 
-            avatarWrapper.appendChild(img);
-            card.appendChild(avatarWrapper);
-            card.appendChild(name);
+                avatarWrapper.appendChild(img);
+                card.appendChild(avatarWrapper);
+                card.appendChild(name);
 
-            container.appendChild(card);
+                container.appendChild(card);
+            }
+
+            if (change.type === "removed") {
+                const existing = document.getElementById("user-" + id);
+                if (existing) existing.remove();
+            }
 
         });
 
     });
-
 });

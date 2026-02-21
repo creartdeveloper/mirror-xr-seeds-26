@@ -33,7 +33,31 @@ html, body{
   overflow: hidden;
 }
 
+.waiting-overlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(180deg, #5f5bff, #9f79ff);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 9999;
+}
 
+.waiting-content {
+    color: white;
+    font-family: "Poppins", sans-serif;
+}
+
+.waiting-content h2 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.waiting-content p {
+    font-size: 18px;
+    opacity: 0.9;
+}
 
 
 .profile-container::before {
@@ -234,7 +258,7 @@ html, body{
   border: none;
 
   font-weight: 600;
-  font-size: 14px;
+  font-size: 10px;
 
   cursor: pointer;
 
