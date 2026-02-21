@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const username = sessionStorage.getItem("username");
     const avatar = sessionStorage.getItem("avatar");
-    const bgColor = sessionStorage.getItem("backgroundColor");
+    const bgColor = sessionStorage.getItem("avatarBgColor");
 
     const avatarImg = document.getElementById("previewAvatar");
     const usernameText = document.getElementById("previewUsername");

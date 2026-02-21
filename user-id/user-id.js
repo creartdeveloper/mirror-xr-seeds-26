@@ -220,7 +220,7 @@ pickr.on('change', (color) => {
     }
 
     console.log("User setup saved. Waiting for admin to start show.");
-
+    window.location.href = "./user-id-display.html";
 
   });
 
