@@ -9,8 +9,11 @@ import {
 document.addEventListener("DOMContentLoaded", () => {
 
   const params = new URLSearchParams(window.location.search);
-  const showId = params.get("showId");
+  const showId = params.get("showId") || params.get("showid");
 
+
+  console.log("URL:", window.location.href);
+  console.log("Extracted showId:", showId);
   if (!showId) {
     console.error("No showId found in URL.");
     return;
@@ -25,33 +28,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
     onSnapshot(q, (snapshot) => {
 
-    snapshot.docChanges().forEach((change) => {
+        container.innerHTML = "";
 
-        if (change.type === "added") {
+        snapshot.forEach((doc) => {
 
-        const data = change.doc.data();
+            const data = doc.data();
 
-        const card = document.createElement("div");
-        card.classList.add("user-card");
+            const card = document.createElement("div");
+            card.classList.add("user-card");
 
-        const avatarWrapper = document.createElement("div");
-        avatarWrapper.classList.add("user-avatar-wrapper");
-        avatarWrapper.style.backgroundColor = data.bgColor || "#ffffff";
+            const avatarWrapper = document.createElement("div");
+            avatarWrapper.classList.add("user-avatar-wrapper");
+            avatarWrapper.style.backgroundColor = data.bgColor || "#ffffff";
 
-        const img = document.createElement("img");
-        img.src = data.avatar;
+            const img = document.createElement("img");
+            img.src = data.avatar;
 
-        const name = document.createElement("p");
-        name.textContent = data.username;
+            const name = document.createElement("p");
+            name.textContent = data.username;
 
-        avatarWrapper.appendChild(img);
-        card.appendChild(avatarWrapper);
-        card.appendChild(name);
+            avatarWrapper.appendChild(img);
+            card.appendChild(avatarWrapper);
+            card.appendChild(name);
 
-        container.appendChild(card);
-        }
+            container.appendChild(card);
 
-    });
+        });
 
     });
 

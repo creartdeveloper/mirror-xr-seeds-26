@@ -20,9 +20,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const data = docSnap.data();
 
-      if (data.currentPage === "chat") {
+    if (data.currentPage === "chat") {
+
+      const currentPath = window.location.pathname;
+
+      if (!currentPath.includes("chat.html")) {
         window.location.href = "../poll/mirror-xr-chat/chat.html";
       }
+
+    }
 
     });
 

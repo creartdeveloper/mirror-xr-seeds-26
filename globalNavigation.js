@@ -9,11 +9,14 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!showId) return;
 
   const currentPage = document.body.dataset.page;
-  const showRef = doc(db, "Mirror-XR-AF26-poll-magical-item","show_" + showId);
+  const showRef = doc(db, "Mirror-XR-AF26-poll-magical-item",showId);
 
   onSnapshot(showRef, (docSnap) => {
 
     if (!docSnap.exists()) return;
+
+    const pageType = document.body.dataset.page;
+    if (pageType === "profile") return;
 
     const data = docSnap.data();
 
