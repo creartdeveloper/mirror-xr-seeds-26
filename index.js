@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   const inputs = document.querySelectorAll('.show-id input');
-  const CURRENT_SHOW_ID = "2310"; // change per show
+  const CURRENT_SHOW_ID = "3256"; // change per show
 
   inputs.forEach((input, index) => {
 
