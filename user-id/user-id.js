@@ -226,7 +226,9 @@ pickr.on('change', (color) => {
       return;
     }
 
-    nextButton.innerText = "Connecting...";
+    // SHOW OVERLAY IMMEDIATELY
+    document.getElementById("waitingOverlay").style.display = "flex";
+
     nextButton.disabled = true;
 
     await setDoc(
@@ -239,10 +241,7 @@ pickr.on('change', (color) => {
       }
     );
 
-    console.log("User profile sent to display.");
-
   });
-
 /*button state*/
   function updateNextButtonState() {
     // read username from sessionstorage and if username is null -> "" and trim (remove spaces from start and end)
