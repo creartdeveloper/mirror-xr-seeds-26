@@ -148,7 +148,18 @@ document.addEventListener("DOMContentLoaded", () => {
       poll3Winner: null,
     }, { merge: true });
 
-    alert("Show reset complete");
+    const chatQuery = query(
+      collection(db, "chat_message_collection"),
+      where("showId", "==", currentShowId)
+    );
+
+    const snapshot = await getDocs(chatQuery);
+
+    snapshot.forEach(async (docSnap) => {
+      await deleteDoc(docSnap.ref);
+    });
+
+    alert("Show reset + chat cleared.");
   });
 
   async function updatePage(page, poll = null) {

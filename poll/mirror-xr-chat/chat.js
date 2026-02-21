@@ -122,8 +122,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function validateMessage(text) {
     const words = text.trim().split(/\s+/);
 
-    if (words.length > 5) {
-      alert("Max 5 words allowed.");
+    if (words.length > 20) {
+      alert("Max 20 words allowed.");
       return false;
     }
 

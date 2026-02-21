@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = docSnap.data();
 
     const targetPage = data.currentPage;
+    if (targetPage === "fringe") return;
     if (!targetPage) return;
 
     const currentPage = document.body.dataset.page;
