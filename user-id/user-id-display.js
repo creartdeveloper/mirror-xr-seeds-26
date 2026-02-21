@@ -8,10 +8,11 @@ import {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const showId = sessionStorage.getItem("showId");
+  const params = new URLSearchParams(window.location.search);
+  const showId = params.get("showId");
 
   if (!showId) {
-    console.error("No showId found on projector.");
+    console.error("No showId found in URL.");
     return;
   }
 
