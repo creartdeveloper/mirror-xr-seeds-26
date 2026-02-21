@@ -47,8 +47,8 @@ body {
 /* CHAT BUBBLE */
 .floating-message {
     position: absolute;
-    width: 240px;
-    height: 120px;           
+    width: 200px;
+    height: 100px;           
     padding: 20px;
 
     display: flex;
