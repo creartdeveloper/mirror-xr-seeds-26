@@ -28,32 +28,126 @@ if (!showId) {
 
 const DISPLAY_DURATION = 30000;
 
+let bannedWords = [];
 
-if (showId) {
+await loadBadWords();
 
+async function loadBadWords() {
+  try {
+    const snapshot = await getDocs(collection(db, "bad_words"));
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      if (data.words && Array.isArray(data.words)) {
+        bannedWords = data.words.map(word => word.toLowerCase());
+      }
+    });
+
+    console.log("Loaded bad words:", bannedWords.length);
+  } catch (error) {
+    console.error("Error loading bad words:", error);
+  }
+}
+
+
+function isValidMessage(text) {
+  if (!text) return false;
+
+  const trimmed = text.trim();
+
+  if (trimmed.length < 2) return false;
+  if (trimmed.length > 120) return false;
+
+  // Repeated character spam
+  if (/^(.)\1+$/.test(trimmed)) return false;
+
+  // Block links
+  if (/http|www/i.test(trimmed)) return false;
+
+  return true;
+}
+
+function containsHarmfulContent(text) {
+  if (!text) return true;
+
+  const lower = text.toLowerCase();
+
+  for (let word of bannedWords) {
+    if (lower.includes(word)) {
+      return true;
+    }
+  }
+
+  // Additional threat patterns
+  const harmfulPatterns = [
+    /(kill|stab|shoot|bomb|attack)/i,
+    /go\s*die/i,
+    /i\s*(will|'ll)?\s*(hurt|kill)/i,
+    /(kill|cut|hang)\s*(myself)/i,
+    /i\s*want\s*to\s*die/i,
+    /i\s*hate\s+\w+/i
+  ];
+
+  return harmfulPatterns.some(pattern => pattern.test(lower));
+}
+
+init();
+
+async function init() {
+  await loadBadWords();
+    
+    if (!showId) return;
     const q = query(
         collection(db, "chat_message_collection"),
         where("showId", "==", showId)
     );
 
-    onSnapshot(q, (snapshot) => {
+    onSnapshot(chatQuery, (snapshot) => {
 
-        console.log("Snapshot size:", snapshot.size);
+        snapshot.docChanges().forEach(async (change) => {
 
-        snapshot.docChanges().forEach( async change => {
-            if (change.type === "added") {
-                const data = change.doc.data();
-                if (data.chat && data.chat.trim() !== "") {
-                    showMessage(data.chat);
-                    await deleteDoc(change.doc.ref);
-                }
+        if (change.type === "added") {
+
+            const data = change.doc.data();
+            const message = data.chat?.trim();
+
+            if (
+            isValidMessage(message) &&
+            !containsHarmfulContent(message)
+            ) {
+            showMessage(message);
+            } else {
+            console.log("Blocked message:", message);
             }
-        });
+
+            // Always remove after processing
+            await deleteDoc(change.doc.ref);
+        }
+
     });
-}
+
+  });
+
+
+
+    //     onSnapshot(q, (snapshot) => {
+
+    //         console.log("Snapshot size:", snapshot.size);
+
+    //         snapshot.docChanges().forEach( async change => {
+    //             if (change.type === "added") {
+    //                 const data = change.doc.data();
+    //                 if (data.chat && data.chat.trim() !== "") {
+    //                     showMessage(data.chat);
+    //                     await deleteDoc(change.doc.ref);
+    //                 }
+    //             }
+    //         });
+    //     });
+    // }
 /*emoji*/
 
-if (showId) {
+    // if (showId) {
 
     const emojiQuery = query(
         collection(db, "emoji"),
@@ -71,11 +165,11 @@ if (showId) {
                 if (data.emoji) {
 
                     showEmoji(data.emoji);
-
-                   
-                    await deleteDoc(change.doc.ref);
                 }
+                    
+                await deleteDoc(change.doc.ref);
             }
+        
 
         });
 
@@ -91,6 +185,9 @@ const ALLOWED_COLUMNS = [2 , 6];   // left and right only
 const ALLOWED_ROWS = [2, 3, 4, 5, 6];
 
 const occupiedSlots = new Set();
+
+
+
 
 function showMessage(text) {
 
