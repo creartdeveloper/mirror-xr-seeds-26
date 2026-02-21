@@ -16,30 +16,43 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  const avatarImg = document.getElementById("previewAvatar");
-  const usernameText = document.getElementById("previewUsername");
+  const container = document.getElementById("usersContainer");
 
   const q = query(
     collection(db, "Mirror-XR-AF26-poll-magical-item", showId, "users"),
-    orderBy("timestamp", "desc")
+    orderBy("timestamp", "asc")
   );
 
-  onSnapshot(q, (snapshot) => {
+    onSnapshot(q, (snapshot) => {
 
     snapshot.docChanges().forEach((change) => {
 
-      if (change.type === "added") {
+        if (change.type === "added") {
 
         const data = change.doc.data();
 
-        if (avatarImg) avatarImg.src = data.avatar;
-        if (usernameText) usernameText.textContent = data.username;
-        if (data.bgColor) document.body.style.background = data.bgColor;
+        const card = document.createElement("div");
+        card.classList.add("user-card");
 
-      }
+        const avatarWrapper = document.createElement("div");
+        avatarWrapper.classList.add("user-avatar-wrapper");
+        avatarWrapper.style.backgroundColor = data.bgColor || "#ffffff";
+
+        const img = document.createElement("img");
+        img.src = data.avatar;
+
+        const name = document.createElement("p");
+        name.textContent = data.username;
+
+        avatarWrapper.appendChild(img);
+        card.appendChild(avatarWrapper);
+        card.appendChild(name);
+
+        container.appendChild(card);
+        }
 
     });
 
-  });
+    });
 
 });
