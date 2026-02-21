@@ -5,12 +5,7 @@ import {
   orderBy, 
   onSnapshot 
 } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-import { validateShow } from "../show-guard.js";
 
-const params = new URLSearchParams(window.location.search);
-const showId = params.get("showId");
-
-await validateShow(showId);
 document.addEventListener("DOMContentLoaded", () => {
 
   const params = new URLSearchParams(window.location.search);
