@@ -226,6 +226,9 @@ pickr.on('change', (color) => {
       return;
     }
 
+    nextButton.innerText = "Connecting...";
+    nextButton.disabled = true;
+
     await setDoc(
       doc(db, "Mirror-XR-AF26-poll-magical-item", showId, "users", userId),
       {
