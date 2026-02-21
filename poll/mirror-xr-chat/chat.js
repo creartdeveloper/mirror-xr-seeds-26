@@ -7,12 +7,13 @@ import {
   addDoc, 
   Timestamp,
   doc,
-  onSnapshot
+  onSnapshot, 
+  getDocs
 } from 
 "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
 
   /* Firebase Config */
   const firebaseConfig = {
@@ -33,9 +34,81 @@ document.addEventListener("DOMContentLoaded", () => {
   const avatar = sessionStorage.getItem("avatar") || "";
   const avatarBgColor = sessionStorage.getItem("avatarBgColor") || "";
 
-  if (!showId) {
-    alert("Show not initialized.");
-    return;
+  let bannedWords = [];
+
+  async function loadBadWords() {
+    try {
+      const snapshot = await getDocs(collection(db, "bad_words"));
+
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        if (data.words && Array.isArray(data.words)) {
+          bannedWords = data.words.map(w => w.toLowerCase());
+        }
+      });
+
+      console.log("Bad words loaded:", bannedWords.length);
+
+    } catch (error) {
+      console.error("Failed to load bad words:", error);
+    }
+  }
+
+  await loadBadWords();
+
+  function containsHarmfulContent(text) {
+    const lower = text.toLowerCase();
+
+    for (let word of bannedWords) {
+      if (lower.includes(word)) return true;
+    }
+
+    const harmfulPatterns = [
+      /(kill|stab|shoot|bomb|attack)/i,
+      /go\s*die/i,
+      /i\s*(will|'ll)?\s*(hurt|kill)/i,
+      /(kill|cut|hang)\s*(myself)/i,
+      /i\s*want\s*to\s*die/i,
+      /i\s*hate\s+\w+/i
+    ];
+
+    return harmfulPatterns.some(pattern => pattern.test(lower));
+  }
+
+    function validateMessage(text) {
+
+    const trimmed = text.trim();
+
+    if (trimmed.length < 2 || trimmed.length > 120) {
+      alert("Invalid message length.");
+      return false;
+    }
+
+    const words = trimmed.split(/\s+/);
+    if (words.length > 20) {
+      alert("Max 20 words allowed.");
+      return false;
+    }
+
+    // Repeated character spam
+    if (/^(.)\1+$/.test(trimmed)) {
+      alert("Spam not allowed.");
+      return false;
+    }
+
+    // Block links
+    if (/http|www/i.test(trimmed)) {
+      alert("Links not allowed.");
+      return false;
+    }
+
+    // Block harmful content
+    if (containsHarmfulContent(trimmed)) {
+      alert("Inappropriate content not allowed.");
+      return false;
+    }
+
+    return true;
   }
 
   /* Redirect Listener */
@@ -117,17 +190,6 @@ document.addEventListener("DOMContentLoaded", () => {
       chat: text,
       timestamp: Timestamp.now()
     });
-  }
-
-  function validateMessage(text) {
-    const words = text.trim().split(/\s+/);
-
-    if (words.length > 20) {
-      alert("Max 20 words allowed.");
-      return false;
-    }
-
-    return true;
   }
 
 });

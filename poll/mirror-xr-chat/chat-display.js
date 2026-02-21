@@ -1,289 +1,211 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-import { getFirestore, collection, query, where, orderBy, onSnapshot, getDocs, deleteDoc } 
-from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+import { 
+  getFirestore, 
+  collection, 
+  query, 
+  where, 
+  onSnapshot, 
+  deleteDoc 
+} from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+
+/* =============================
+   FIREBASE SETUP
+============================= */
 
 const firebaseConfig = {
-    apiKey: "AIza...",
-    authDomain: "mira-7360b.firebaseapp.com",
-    projectId: "mira-7360b",
-    storageBucket: "mira-7360b.appspot.com",
-    messagingSenderId: "76074103771",
-    appId: "1:76074103771:web:1a2d4ca7e8b5df27a82dfe"
+  apiKey: "AIza...",
+  authDomain: "mira-7360b.firebaseapp.com",
+  projectId: "mira-7360b",
+  storageBucket: "mira-7360b.appspot.com",
+  messagingSenderId: "76074103771",
+  appId: "1:76074103771:web:1a2d4ca7e8b5df27a82dfe"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* Get showId from URL */
-const params = new URLSearchParams(window.location.search);
-const showId = params.get("showId"); // or Number() if Firestore stores number
+/* =============================
+   GET SHOW ID
+============================= */
 
-console.log("Projection showId:", showId);
+const params = new URLSearchParams(window.location.search);
+const showId = params.get("showId");
 
 if (!showId) {
-    console.error("No showId provided");
+  console.error("No showId provided");
 }
 
-/* settings */ 
+/* =============================
+   SETTINGS + GRID CONFIG
+============================= */
 
 const DISPLAY_DURATION = 30000;
 
-let bannedWords = [];
+const TOTAL_COLUMNS = 7;
+const TOTAL_ROWS = 8;
 
-await loadBadWords();
+const ALLOWED_COLUMNS = [2, 6];
+const ALLOWED_ROWS = [2, 3, 4, 5, 6];
 
-async function loadBadWords() {
-  try {
-    const snapshot = await getDocs(collection(db, "bad_words"));
+const occupiedSlots = new Set();
 
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      if (data.words && Array.isArray(data.words)) {
-        bannedWords = data.words.map(word => word.toLowerCase());
-      }
-    });
+/* =============================
+   LISTENERS
+============================= */
 
-    console.log("Loaded bad words:", bannedWords.length);
-  } catch (error) {
-    console.error("Error loading bad words:", error);
-  }
-}
+if (showId) {
 
+  /* ---------- CHAT LISTENER ---------- */
 
-function isValidMessage(text) {
-  if (!text) return false;
+  const chatQuery = query(
+    collection(db, "chat_message_collection"),
+    where("showId", "==", showId)
+  );
 
-  const trimmed = text.trim();
+  onSnapshot(chatQuery, (snapshot) => {
 
-  if (trimmed.length < 2) return false;
-  if (trimmed.length > 120) return false;
+    snapshot.docChanges().forEach(async (change) => {
 
-  // Repeated character spam
-  if (/^(.)\1+$/.test(trimmed)) return false;
+      if (change.type === "added") {
 
-  // Block links
-  if (/http|www/i.test(trimmed)) return false;
+        const data = change.doc.data();
+        const message = data.chat?.trim();
 
-  return true;
-}
-
-function containsHarmfulContent(text) {
-  if (!text) return true;
-
-  const lower = text.toLowerCase();
-
-  for (let word of bannedWords) {
-    if (lower.includes(word)) {
-      return true;
-    }
-  }
-
-  // Additional threat patterns
-  const harmfulPatterns = [
-    /(kill|stab|shoot|bomb|attack)/i,
-    /go\s*die/i,
-    /i\s*(will|'ll)?\s*(hurt|kill)/i,
-    /(kill|cut|hang)\s*(myself)/i,
-    /i\s*want\s*to\s*die/i,
-    /i\s*hate\s+\w+/i
-  ];
-
-  return harmfulPatterns.some(pattern => pattern.test(lower));
-}
-
-init();
-
-async function init() {
-  await loadBadWords();
-    
-    if (!showId) return;
-    const q = query(
-        collection(db, "chat_message_collection"),
-        where("showId", "==", showId)
-    );
-
-    onSnapshot(chatQuery, (snapshot) => {
-
-        snapshot.docChanges().forEach(async (change) => {
-
-        if (change.type === "added") {
-
-            const data = change.doc.data();
-            const message = data.chat?.trim();
-
-            if (
-            isValidMessage(message) &&
-            !containsHarmfulContent(message)
-            ) {
-            showMessage(message);
-            } else {
-            console.log("Blocked message:", message);
-            }
-
-            // Always remove after processing
-            await deleteDoc(change.doc.ref);
+        if (message) {
+          showMessage(message);
         }
+
+        await deleteDoc(change.doc.ref);
+      }
 
     });
 
   });
 
+  /* ---------- EMOJI LISTENER ---------- */
 
+  const emojiQuery = query(
+    collection(db, "emoji"),
+    where("showId", "==", showId)
+  );
 
-    //     onSnapshot(q, (snapshot) => {
+  onSnapshot(emojiQuery, (snapshot) => {
 
-    //         console.log("Snapshot size:", snapshot.size);
+    snapshot.docChanges().forEach(async (change) => {
 
-    //         snapshot.docChanges().forEach( async change => {
-    //             if (change.type === "added") {
-    //                 const data = change.doc.data();
-    //                 if (data.chat && data.chat.trim() !== "") {
-    //                     showMessage(data.chat);
-    //                     await deleteDoc(change.doc.ref);
-    //                 }
-    //             }
-    //         });
-    //     });
-    // }
-/*emoji*/
+      if (change.type === "added") {
 
-    // if (showId) {
+        const data = change.doc.data();
 
-    const emojiQuery = query(
-        collection(db, "emoji"),
-        where("showId", "==", showId)
-    );
+        if (data.emoji) {
+          showEmoji(data.emoji);
+        }
 
-    onSnapshot(emojiQuery, (snapshot) => {
-
-        snapshot.docChanges().forEach(async change => {
-
-            if (change.type === "added") {
-
-                const data = change.doc.data();
-
-                if (data.emoji) {
-
-                    showEmoji(data.emoji);
-                }
-                    
-                await deleteDoc(change.doc.ref);
-            }
-        
-
-        });
+        await deleteDoc(change.doc.ref);
+      }
 
     });
 
+  });
+
 }
-/* GRID CONFIG */
 
-const TOTAL_COLUMNS = 7;
-const TOTAL_ROWS = 8;
-
-const ALLOWED_COLUMNS = [2 , 6];   // left and right only
-const ALLOWED_ROWS = [2, 3, 4, 5, 6];
-
-const occupiedSlots = new Set();
-
-
-
+/* =============================
+   SHOW MESSAGE
+============================= */
 
 function showMessage(text) {
 
-    const container = document.querySelector('.chat-container');
-    if (!container) return;
+  const container = document.querySelector('.chat-container');
+  if (!container) return;
 
-    let slot = null;
+  let slot = null;
 
-    // Find first available slot
-    for (let row of ALLOWED_ROWS) {
-        for (let col of ALLOWED_COLUMNS) {
+  for (let row of ALLOWED_ROWS) {
+    for (let col of ALLOWED_COLUMNS) {
 
-            const key = `${row}-${col}`;
+      const key = `${row}-${col}`;
 
-            if (!occupiedSlots.has(key)) {
-                slot = { row, col, key };
-                break;
-            }
-        }
-        if (slot) break;
+      if (!occupiedSlots.has(key)) {
+        slot = { row, col, key };
+        break;
+      }
     }
+    if (slot) break;
+  }
 
-    if (!slot) return; // grid full
+  if (!slot) return;
 
-    const div = document.createElement('div');
-    div.className = 'floating-message';
-    div.innerText = text;
+  const div = document.createElement('div');
+  div.className = 'floating-message';
+  div.innerText = text;
 
-    const columnWidth = 100 / TOTAL_COLUMNS;
-    const rowHeight = 100 / TOTAL_ROWS;
+  const columnWidth = 100 / TOTAL_COLUMNS;
+  const rowHeight = 100 / TOTAL_ROWS;
 
-    // spacing inside each grid cell
-    const horizontalPadding = 0.25;
-    const verticalPadding = 0.35;
+  const horizontalPadding = 0.25;
+  const verticalPadding = 0.35;
 
-    const left =
-        (slot.col - 1) * columnWidth +
-        (columnWidth * horizontalPadding);
+  const left =
+    (slot.col - 1) * columnWidth +
+    (columnWidth * horizontalPadding);
 
-    const top =
-        (slot.row - 1) * rowHeight +
-        (rowHeight * verticalPadding);
+  const top =
+    (slot.row - 1) * rowHeight +
+    (rowHeight * verticalPadding);
 
-    div.style.left = left + "%";
-    div.style.top = top + "%";
+  div.style.left = left + "%";
+  div.style.top = top + "%";
 
-    container.appendChild(div);
-    occupiedSlots.add(slot.key);
+  container.appendChild(div);
+  occupiedSlots.add(slot.key);
 
-    requestAnimationFrame(() => {
-        div.classList.add("visible");
-    });
+  requestAnimationFrame(() => {
+    div.classList.add("visible");
+  });
 
+  setTimeout(() => {
+    div.classList.remove("visible");
     setTimeout(() => {
-        div.classList.remove("visible");
-        setTimeout(() => {
-            div.remove();
-            occupiedSlots.delete(slot.key);
-        }, 400);
-    }, DISPLAY_DURATION);
+      div.remove();
+      occupiedSlots.delete(slot.key);
+    }, 400);
+  }, DISPLAY_DURATION);
 }
 
+/* =============================
+   SHOW EMOJI
+============================= */
 
 function showEmoji(emoji) {
 
-    const container = document.querySelector('.chat-container');
-    if (!container) return;
+  const container = document.querySelector('.chat-container');
+  if (!container) return;
 
-    const div = document.createElement('div');
-    div.className = 'floating-emoji';
-    div.innerText = emoji;
+  const div = document.createElement('div');
+  div.className = 'floating-emoji';
+  div.innerText = emoji;
 
-    // Decide left or right side only
-    const side = Math.random() < 0.5 ? "left" : "right";
+  const side = Math.random() < 0.5 ? "left" : "right";
 
-    let left;
+  let left;
+  if (side === "left") {
+    left = Math.random() * 25 + 5;
+  } else {
+    left = Math.random() * 25 + 70;
+  }
 
-    if (side === "left") {
-        // 5% – 30%
-        left = Math.random() * 25 + 5;
-    } else {
-        // 70% – 95%
-        left = Math.random() * 25 + 70;
-    }
+  div.style.left = left + "%";
+  div.style.top = "85%";
 
-    div.style.left = left + "%";
-    div.style.top = "85%";
+  container.appendChild(div);
 
-    container.appendChild(div);
+  requestAnimationFrame(() => {
+    div.classList.add("visible");
+  });
 
-    requestAnimationFrame(() => {
-        div.classList.add("visible");
-    });
-
-    setTimeout(() => {
-        div.classList.remove("visible");
-        setTimeout(() => div.remove(), 500);
-    }, 4000);
+  setTimeout(() => {
+    div.classList.remove("visible");
+    setTimeout(() => div.remove(), 500);
+  }, 4000);
 }
