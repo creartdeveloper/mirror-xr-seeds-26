@@ -41,6 +41,7 @@ body {
     position: absolute;
     inset: 0;
     pointer-events: none;
+    overflow: hidden;
 }
 
 /* CHAT BUBBLE */
@@ -118,4 +119,18 @@ body {
     font-size: 14px;
     text-align: center;
     word-break: break-word;
+}
+
+.floating-emoji {
+    position: absolute;
+    font-size: 42px;
+    opacity: 0;
+    transform: translateY(0);
+    transition: all 4s ease-out;
+    pointer-events: none;
+}
+
+.floating-emoji.visible {
+    opacity: 1;
+    transform: translateY(-300px);
 }

@@ -40,27 +40,58 @@ if (showId) {
 
         console.log("Snapshot size:", snapshot.size);
 
-        snapshot.docChanges().forEach(change => {
+        snapshot.docChanges().forEach( async change => {
             if (change.type === "added") {
                 const data = change.doc.data();
                 if (data.chat && data.chat.trim() !== "") {
                     showMessage(data.chat);
+                    await deleteDoc(change.doc.ref);
                 }
             }
         });
-
     });
 }
+/*emoji*/
 
+if (showId) {
+
+    const emojiQuery = query(
+        collection(db, "emoji"),
+        where("showId", "==", showId)
+    );
+
+    onSnapshot(emojiQuery, (snapshot) => {
+
+        snapshot.docChanges().forEach(async change => {
+
+            if (change.type === "added") {
+
+                const data = change.doc.data();
+
+                if (data.emoji) {
+
+                    showEmoji(data.emoji);
+
+                   
+                    await deleteDoc(change.doc.ref);
+                }
+            }
+
+        });
+
+    });
+
+}
 /* GRID CONFIG */
 
-const TOTAL_COLUMNS = 3;
+const TOTAL_COLUMNS = 7;
 const TOTAL_ROWS = 8;
 
-const ALLOWED_COLUMNS = [1, 3];   // left and right only
+const ALLOWED_COLUMNS = [2 , 6];   // left and right only
 const ALLOWED_ROWS = [2, 3, 4, 5, 6];
 
 const occupiedSlots = new Set();
+
 function showMessage(text) {
 
     const container = document.querySelector('.chat-container');
@@ -120,4 +151,42 @@ function showMessage(text) {
             occupiedSlots.delete(slot.key);
         }, 400);
     }, DISPLAY_DURATION);
+}
+
+
+function showEmoji(emoji) {
+
+    const container = document.querySelector('.chat-container');
+    if (!container) return;
+
+    const div = document.createElement('div');
+    div.className = 'floating-emoji';
+    div.innerText = emoji;
+
+    // Decide left or right side only
+    const side = Math.random() < 0.5 ? "left" : "right";
+
+    let left;
+
+    if (side === "left") {
+        // 5% – 30%
+        left = Math.random() * 25 + 5;
+    } else {
+        // 70% – 95%
+        left = Math.random() * 25 + 70;
+    }
+
+    div.style.left = left + "%";
+    div.style.top = "85%";
+
+    container.appendChild(div);
+
+    requestAnimationFrame(() => {
+        div.classList.add("visible");
+    });
+
+    setTimeout(() => {
+        div.classList.remove("visible");
+        setTimeout(() => div.remove(), 500);
+    }, 4000);
 }
