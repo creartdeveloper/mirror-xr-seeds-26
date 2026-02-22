@@ -4,18 +4,34 @@ import {
   collection,
   addDoc,
   doc,
+  getDoc,
   updateDoc,
   increment,
   Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  async function validateShow(showId) {
+    const showRef = doc(db, "Mirror-XR-AF26-poll-magical-item", showId);
+    const snap = await getDoc(showRef);
+
+    if (!snap.exists() || snap.data().active !== true) {
+      sessionStorage.clear();
+      window.location.href = "../index.html"; // adjust path if needed
+    }
+  }
+
+  const showId = sessionStorage.getItem("showId");
+  if (!showId) {
+    window.location.href = "../show-id.html";
+    return;
+  }
+
+  await validateShow(showId);
 
   const COLLECTION_NAME = "Mirror-XR-AF26-poll-magical-item";
   const EMOJI_COLLECTION = "emoji";
   const PAGE_TYPE = "poll";
-
-  const showId = sessionStorage.getItem("showId");
   console.log("USER SHOW ID:", showId);
   let userId = sessionStorage.getItem("userId");
 

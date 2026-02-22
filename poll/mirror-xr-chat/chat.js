@@ -5,6 +5,7 @@ import {
   getFirestore, 
   collection, 
   addDoc, 
+  getDoc,
   Timestamp,
   doc,
   onSnapshot, 
@@ -27,9 +28,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+  async function validateShow(showId) {
+    const showRef = doc(
+      db,
+      "Mirror-XR-AF26-poll-magical-item",
+      showId
+    );
+
+    const snap = await getDoc(showRef);
+
+    if (!snap.exists() || snap.data().active !== true) {
+      sessionStorage.clear();
+      window.location.href = "../index.html";
+    }
+  }
 
   /* Session Data */
   const showId = sessionStorage.getItem("showId");
+  if (!showId) {
+    window.location.href = "../show-id.html";
+    return;
+  }
+
+await validateShow(showId);
   const username = sessionStorage.getItem("username") || "";
   const avatar = sessionStorage.getItem("avatar") || "";
   const avatarBgColor = sessionStorage.getItem("avatarBgColor") || "";

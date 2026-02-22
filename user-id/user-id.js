@@ -1,38 +1,53 @@
-import { doc, onSnapshot, setDoc } from 
+import { doc, onSnapshot, setDoc, getDoc } from 
 "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 import { db } from "../firebase.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   
   const showId = sessionStorage.getItem("showId");
 
-  if (showId) {
+
+    if (!showId) {
+      window.location.href = "../show-id.html";
+      return;
+    }
 
     const showRef = doc(
       db,
       "Mirror-XR-AF26-poll-magical-item",
       showId  
     );
+    const snap = await getDoc(showRef);
+
+    if (!snap.exists() || snap.data().active !== true) {
+      sessionStorage.clear();
+      window.location.href = "../index.html";
+      return;
+    }
 
     onSnapshot(showRef, (docSnap) => {
 
       if (!docSnap.exists()) return;
 
       const data = docSnap.data();
-
-    if (data.currentPage === "chat") {
-
-      const currentPath = window.location.pathname;
-
-      if (!currentPath.includes("chat.html")) {
-        window.location.href = "../poll/mirror-xr-chat/chat.html";
+      if (data.active === false) {
+        sessionStorage.clear();
+        window.location.href = "../index.html";
+        return;
       }
+
+      if (data.currentPage === "chat") {
+
+        const currentPath = window.location.pathname;
+
+        if (!currentPath.includes("chat.html")) {
+          window.location.href = "../poll/mirror-xr-chat/chat.html";
+        }
 
     }
 
-    });
+  });
 
-  }
   // console.log("Profile page JS loaded");
 
 /*DOM elements*/
