@@ -68,10 +68,15 @@ await validateShow(showId);
 
       snapshot.forEach(doc => {
         const data = doc.data();
-        if (data.words && Array.isArray(data.words)) {
-          bannedWords = data.words.map(w => w.toLowerCase());
-        }
-      });
+        if (data.word && typeof data.word === "string") {
+          const wordsArray = data.word
+            .toLowerCase()
+            .split(/\s+/)       // split by spaces
+            .filter(Boolean);   // remove empty values
+
+        bannedWords.push(...wordsArray);
+      }
+    });
 
       console.log("Bad words loaded:", bannedWords.length);
 
@@ -82,11 +87,25 @@ await validateShow(showId);
 
   await loadBadWords();
 
+  if (containsHarmfulContent(username)) {
+    alert("Inappropriate username not allowed.");
+    sessionStorage.clear();
+    window.location.replace("https://www.creartdigitalmedia.com.au/fringe-2026");
+    return;
+  }
+  
+  function normalizeText(text) {
+    return text
+      .toLowerCase()
+      .replace(/[^a-z]/g, "")        
+      .replace(/(.)\1+/g, "$1");    
+  }
+
   function containsHarmfulContent(text) {
-    const lower = text.toLowerCase();
+    const normalized = normalizeText(text);
 
     for (let word of bannedWords) {
-      if (lower.includes(word)) return true;
+      if (normalized.includes(word)) return true;
     }
 
     const harmfulPatterns = [
@@ -98,10 +117,12 @@ await validateShow(showId);
       /i\s*hate\s+\w+/i
     ];
 
-    return harmfulPatterns.some(pattern => pattern.test(lower));
+    return harmfulPatterns.some(pattern => pattern.test(text));
   }
 
-    function validateMessage(text) {
+
+
+  function validateMessage(text) {
 
     const trimmed = text.trim();
 
@@ -133,7 +154,6 @@ await validateShow(showId);
       alert("Inappropriate content not allowed.");
       return false;
     }
-
     return true;
   }
 

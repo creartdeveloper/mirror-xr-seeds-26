@@ -8,9 +8,7 @@ import {
   deleteDoc 
 } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
-/* =============================
-   FIREBASE SETUP
-============================= */
+/* firebase setup*/
 
 const firebaseConfig = {
   apiKey: "AIza...",
@@ -24,9 +22,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* =============================
-   GET SHOW ID
-============================= */
+/* get show id */
 
 const params = new URLSearchParams(window.location.search);
 const showId = params.get("showId");
@@ -41,22 +37,26 @@ if (!showId) {
 
 const DISPLAY_DURATION = 30000;
 
-const TOTAL_COLUMNS = 7;
-const TOTAL_ROWS = 8;
+const TOTAL_COLUMNS = 6;
+const TOTAL_ROWS = 6;
 
-const ALLOWED_COLUMNS = [2, 6];
+const ALLOWED_COLUMNS = [2, 3, 4, 5];
 const ALLOWED_ROWS = [2, 3, 4, 5, 6];
 
-const occupiedSlots = new Set();
+const SLOT_POSITIONS = [];
 
-/* =============================
-   LISTENERS
-============================= */
+for (let row of ALLOWED_ROWS) {
+    for (let col of ALLOWED_COLUMNS){
+        SLOT_POSITIONS.push({ row, col });
+    }
+}
+
+let currentSlotIndex = 0;
+/* Listeners */
 
 if (showId) {
 
   /* ---------- CHAT LISTENER ---------- */
-
   const chatQuery = query(
     collection(db, "chat_message_collection"),
     where("showId", "==", showId)
@@ -75,7 +75,7 @@ if (showId) {
           showMessage(message);
         }
 
-        await deleteDoc(change.doc.ref);
+        deleteDoc(change.doc.ref);
       }
 
     });
@@ -101,7 +101,7 @@ if (showId) {
           showEmoji(data.emoji);
         }
 
-        await deleteDoc(change.doc.ref);
+        deleteDoc(change.doc.ref);
       }
 
     });
@@ -110,55 +110,23 @@ if (showId) {
 
 }
 
-/* =============================
-   SHOW MESSAGE
-============================= */
-
+/*show Message  */
 function showMessage(text) {
 
   const container = document.querySelector('.chat-container');
   if (!container) return;
 
-  let slot = null;
-
-  for (let row of ALLOWED_ROWS) {
-    for (let col of ALLOWED_COLUMNS) {
-
-      const key = `${row}-${col}`;
-
-      if (!occupiedSlots.has(key)) {
-        slot = { row, col, key };
-        break;
-      }
-    }
-    if (slot) break;
-  }
-
-  if (!slot) return;
+  const slot = SLOT_POSITIONS[currentSlotIndex % SLOT_POSITIONS.length];
+  currentSlotIndex++;
 
   const div = document.createElement('div');
   div.className = 'floating-message';
-  div.innerText = text;
+  div.textContent=text;
 
-  const columnWidth = 100 / TOTAL_COLUMNS;
-  const rowHeight = 100 / TOTAL_ROWS;
-
-  const horizontalPadding = 0.25;
-  const verticalPadding = 0.35;
-
-  const left =
-    (slot.col - 1) * columnWidth +
-    (columnWidth * horizontalPadding);
-
-  const top =
-    (slot.row - 1) * rowHeight +
-    (rowHeight * verticalPadding);
-
-  div.style.left = left + "%";
-  div.style.top = top + "%";
-
+  div.style.left = ((slot.col - 1)* columnWidth + columnWidth *0.25) + "%";
+  div.style.top = ((slot.row - 1)* rowWidth + rowWidth *0.35) + "%";
+  
   container.appendChild(div);
-  occupiedSlots.add(slot.key);
 
   requestAnimationFrame(() => {
     div.classList.add("visible");
@@ -166,16 +134,11 @@ function showMessage(text) {
 
   setTimeout(() => {
     div.classList.remove("visible");
-    setTimeout(() => {
-      div.remove();
-      occupiedSlots.delete(slot.key);
-    }, 400);
-  }, DISPLAY_DURATION);
+    setTimeout(() => div.remove(), 400);
+    }, DISPLAY_DURATION);
 }
 
-/* =============================
-   SHOW EMOJI
-============================= */
+/* show emoji */
 
 function showEmoji(emoji) {
 
@@ -185,15 +148,13 @@ function showEmoji(emoji) {
   const div = document.createElement('div');
   div.className = 'floating-emoji';
   div.innerText = emoji;
+  div.style.willChange = "transform, opacity";
 
   const side = Math.random() < 0.5 ? "left" : "right";
 
-  let left;
-  if (side === "left") {
-    left = Math.random() * 25 + 5;
-  } else {
-    left = Math.random() * 25 + 70;
-  }
+  let left = side === "left"
+    ? Math.random() * 25 + 5
+    : Math.random() * 25 + 70;
 
   div.style.left = left + "%";
   div.style.top = "85%";
@@ -209,6 +170,7 @@ function showEmoji(emoji) {
     setTimeout(() => div.remove(), 500);
   }, 4000);
 }
+/*clear Button */
 
 const clearBtn = document.getElementById("clearMessagesBtn");
 
