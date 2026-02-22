@@ -8,10 +8,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     if (!showId) {
-      window.location.href = "../show-id.html";
+      window.location.replace(
+        "https://www.creartdigitalmedia.com.au/fringe-2026"
+      );
       return;
     }
-
     const showRef = doc(
       db,
       "Mirror-XR-AF26-poll-magical-item",
@@ -21,7 +22,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!snap.exists() || snap.data().active !== true) {
       sessionStorage.clear();
-      window.location.href = "../index.html";
+      window.location.replace(
+        "https://www.creartdigitalmedia.com.au/fringe-2026"
+      );
       return;
     }
 
@@ -32,7 +35,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       const data = docSnap.data();
       if (data.active === false) {
         sessionStorage.clear();
-        window.location.href = "../index.html";
+        window.location.replace(
+          "https://www.creartdigitalmedia.com.au/fringe-2026"
+        );
         return;
       }
 

@@ -17,7 +17,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!snap.exists() || snap.data().active !== true) {
       sessionStorage.clear();
-      window.location.href = "../index.html"; // adjust path if needed
+      window.location.replace(
+        "https://www.creartdigitalmedia.com.au/fringe-2026"
+      );
+      return;
     }
   }
 
@@ -41,7 +44,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   if (!showId) {
-    window.location.href = "../show-id.html";
+    window.location.replace(
+      "https://www.creartdigitalmedia.com.au/fringe-2026"
+    );
     return;
   }
 
@@ -230,6 +235,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const data = snapshot.data();
     if (!data) return;
+
+    if (data.active === false) {
+      sessionStorage.clear();
+      window.location.replace(
+        "https://www.creartdigitalmedia.com.au/fringe-2026"
+      );
+      return;
+    }
 
     /* Page Redirect Logic */
     if (data.currentPage === "chat") {

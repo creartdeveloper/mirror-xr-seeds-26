@@ -1,3 +1,7 @@
+import { doc, getDoc } from 
+"https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+import { db } from "./firebase.js";
+
 document.addEventListener("DOMContentLoaded", () => {
 
   const inputs = document.querySelectorAll('.show-id input');
@@ -23,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   });
 
-  function validatePin() {
+  async function validatePin() {
 
     let enteredPin = "";
 
@@ -31,22 +35,36 @@ document.addEventListener("DOMContentLoaded", () => {
       enteredPin += input.value;
     });
 
-    if (enteredPin === CURRENT_SHOW_ID) {
-
-      // Save show ID locally
-      sessionStorage.setItem("showId", enteredPin);
-
-      // Redirect to avatar selection
-      window.location.href = "/user-id/user-id.html";
-
-    } else {
-
+    if (enteredPin !== CURRENT_SHOW_ID) {
       alert("Please enter the correct PIN");
-
       inputs.forEach(input => input.value = "");
       inputs[0].focus();
+      return;
     }
 
-  }
+    const showRef = doc(
+      db,
+      "Mirror-XR-AF26-poll-magical-item",
+      enteredPin
+    );
+
+    const snap = await getDoc(showRef);
+
+    if (!snap.exists() || snap.data().active !== true) {
+      sessionStorage.clear();
+      window.location.replace(
+        "https://www.creartdigitalmedia.com.au/fringe-2026"
+      );
+      return;
+    }
+
+      // Save show ID locally
+    sessionStorage.setItem("showId", enteredPin);
+
+      // Redirect to avatar selection
+    window.location.href = "/user-id/user-id.html";
+
+    }
+
 
 });
