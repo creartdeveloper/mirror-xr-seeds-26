@@ -1,4 +1,15 @@
 
+import { db } from "../../firebase.js";
+
+import {
+  collection,
+  addDoc,
+  getDoc,
+  getDocs,
+  doc,
+  Timestamp,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
