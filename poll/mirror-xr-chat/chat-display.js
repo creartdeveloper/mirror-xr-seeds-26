@@ -5,7 +5,8 @@ import {
   query,
   where,
   onSnapshot,
-  deleteDoc
+  deleteDoc, 
+  doc
 } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 /* get show id */
 
@@ -16,9 +17,7 @@ if (!showId) {
   console.error("No showId provided");
 }
 
-/* =============================
-   SETTINGS + GRID CONFIG
-============================= */
+/* set up */
 
 const DISPLAY_DURATION = 30000;
 
@@ -29,6 +28,8 @@ const ALLOWED_COLUMNS = [2, 3, 4, 5];
 const ALLOWED_ROWS = [2, 3, 4, 5, 6];
 
 const SLOT_POSITIONS = [];
+const MAX_MESSAGES = 20;
+let activeMessages = [];
 
 for (let row of ALLOWED_ROWS) {
     for (let col of ALLOWED_COLUMNS){
@@ -57,10 +58,8 @@ if (showId) {
         const message = data.chat?.trim();
 
         if (message) {
-          showMessage(data);
+          showMessage(data, change.doc.id);
         }
-
-        deleteDoc(change.doc.ref);
       }
 
     });
@@ -85,8 +84,6 @@ if (showId) {
         if (data.emoji) {
           showEmoji(data.emoji);
         }
-
-        deleteDoc(change.doc.ref);
       }
 
     });
@@ -120,6 +117,8 @@ function showMessage(data, messageId) {
         <div class="avatar-wrapper" style="background:${data.avatarBgColor}">
             <img src="${data.avatar}" />
         </div>
+
+        <button class="delete-btn">×</button>
     </div>
   `;
 
@@ -127,7 +126,16 @@ function showMessage(data, messageId) {
   div.style.top = ((slot.row - 1) * rowWidth + rowWidth * 0.3) + "%";
 
   container.appendChild(div);
+// Auto remove after 30 seconds
+  setTimeout(() => {
+    div.classList.remove("visible");
 
+    setTimeout(() => {
+      div.remove();
+      activeMessages = activeMessages.filter(el => el !== div);
+    }, 300);
+
+  }, DISPLAY_DURATION);
   requestAnimationFrame(() => {
     div.classList.add("visible");
   });
@@ -185,12 +193,16 @@ function showEmoji(emoji) {
 }
 /*clear Button */
 
-const clearBtn = document.getElementById("clearMessagesBtn");
+  const deleteBtn = div.querySelector(".delete-btn");
 
-if (clearBtn) {
-  clearBtn.addEventListener("click", () => {
-    document.querySelectorAll(".floating-message").forEach(el => el.remove());
-    document.querySelectorAll(".floating-emoji").forEach(el => el.remove());
-    occupiedSlots.clear();
+  deleteBtn.addEventListener("click", async () => {
+
+    div.remove();
+
+    activeMessages = activeMessages.filter(el => el !== div);
+
+    // Also delete from Firestore
+    await deleteDoc(
+      doc(db, "chat_message_collection", messageId)
+    );
   });
-}
