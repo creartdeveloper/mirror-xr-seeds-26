@@ -177,23 +177,6 @@ nav{
   font-weight: 600;
 }
 
-.avatar-wrapper {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  margin: 0 auto 8px auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.avatar-wrapper img {
-  width: 85%;
-  height: 85%;
-  object-fit: contain;
-}
-
 
 /*emojis*/
 
