@@ -12,8 +12,9 @@ const firebaseConfig = {
     measurementId: "G-9YL8FHBDRX"
 };
 
-//intialize
-const app = initializeApp(firebaseConfig);
+// Prevent duplicate Firebase initialization
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
 //export count
 export const db = getFirestore(app);
+export const storage = getStorage(app);
