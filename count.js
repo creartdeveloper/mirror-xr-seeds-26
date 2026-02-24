@@ -4,7 +4,12 @@ import {
   getDoc,
   updateDoc,
   doc,
-  setDoc
+  setDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -123,10 +128,15 @@ document.addEventListener("DOMContentLoaded", () => {
       d: totalsRaw?.d || 0
     };
 
-    document.getElementById(`count-${levelId}-a`).textContent = totals.a;
-    document.getElementById(`count-${levelId}-b`).textContent = totals.b;
-    document.getElementById(`count-${levelId}-c`).textContent = totals.c;
-    document.getElementById(`count-${levelId}-d`).textContent = totals.d;
+    const aEl = document.getElementById(`count-${levelId}-a`);
+    const bEl = document.getElementById(`count-${levelId}-b`);
+    const cEl = document.getElementById(`count-${levelId}-c`);
+    const dEl = document.getElementById(`count-${levelId}-d`);
+
+    if (aEl) aEl.textContent = totals.a;
+    if (bEl) bEl.textContent = totals.b;
+    if (cEl) cEl.textContent = totals.c;
+    if (dEl) dEl.textContent = totals.d;
   }
 
   /*reset show */
