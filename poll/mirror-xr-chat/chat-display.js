@@ -113,13 +113,13 @@ function showMessage(data, messageId) {
 
   div.innerHTML = `
     <div class="bubble-content">
-      <div class="user-header">
-        <div class="avatar-wrapper" style="background:${data.avatarBgColor}">
-          <img src="${data.avatar}" />
-        </div>
+        <div class="chat-text">${data.chat}</div>
+
         <div class="username">${data.username}</div>
-      </div>
-      <div class="chat-text">${data.chat}</div>
+
+        <div class="avatar-wrapper" style="background:${data.avatarBgColor}">
+            <img src="${data.avatar}" />
+        </div>
     </div>
   `;
 
