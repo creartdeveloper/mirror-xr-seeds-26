@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js";
-import { getFirestore, collection, query, orderBy, limit, getDocs, where } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+import { getFirestore, collection, query, orderBy, limit, getDocs, where, addDoc, getDoc, Timestamp, doc, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDiCIatzcDsnHdX_t-m15S1a8pNlrB2egs",

@@ -1,33 +1,7 @@
-import { initializeApp } from 
-"https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-
-import { 
-  getFirestore, 
-  collection, 
-  addDoc, 
-  getDoc,
-  Timestamp,
-  doc,
-  onSnapshot, 
-  getDocs
-} from 
-"https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-  /* Firebase Config */
-  const firebaseConfig = {
-    apiKey: "AIza...",
-    authDomain: "mira-7360b.firebaseapp.com",
-    projectId: "mira-7360b",
-    storageBucket: "mira-7360b.appspot.com",
-    messagingSenderId: "76074103771",
-    appId: "1:76074103771:web:1a2d4ca7e8b5df27a82dfe"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
   async function validateShow(showId) {
     const showRef = doc(
       db,
