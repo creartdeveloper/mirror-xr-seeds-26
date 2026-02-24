@@ -96,7 +96,7 @@ if (showId) {
 }
 
 /*show Message  */
-function showMessage(data) {
+function showMessage(data, messageId) {
 
   const container = document.querySelector('.chat-container');
   if (!container) return;
@@ -109,6 +109,7 @@ function showMessage(data) {
 
   const div = document.createElement('div');
   div.className = 'floating-message';
+  div.dataset.id = messageId;
 
   div.innerHTML = `
     <div class="bubble-content">
@@ -131,12 +132,25 @@ function showMessage(data) {
     div.classList.add("visible");
   });
 
-  setTimeout(() => {
-    div.classList.remove("visible");
-    setTimeout(() => div.remove(), 400);
-  }, DISPLAY_DURATION);
-}
+  activeMessages.push(div);
 
+  if (activeMessages.length > MAX_MESSAGES) {
+    const oldest = activeMessages.shift();
+    oldest.remove();
+  }
+
+  //delete individual chat logic
+  const deleteBtn = div.querySelector(".delete-btn");
+
+  deleteBtn.addEventListener("click", async () => {
+    div.remove();
+
+    activeMessages = activeMessages.filter(el => el.dataset.id !== messageId);
+
+    // Optional: delete from Firestore too
+    await deleteDoc(doc(db, "chat_message_collection", messageId));
+  });
+}
 /* show emoji */
 
 function showEmoji(emoji) {
