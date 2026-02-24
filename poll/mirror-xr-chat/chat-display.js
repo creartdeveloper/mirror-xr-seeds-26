@@ -111,16 +111,17 @@ function showMessage(data) {
   div.className = 'floating-message';
 
   div.innerHTML = `
-    <div class="msg-avatar" style="background:${data.avatarBgColor}">
-      <img src="${data.avatar}" />
-    </div>
-    <div class="msg-content">
-      <div class="msg-username">${data.username}</div>
-      <div class="msg-text">${data.chat}</div>
+    <div class="bubble-content">
+      <div class="user-header">
+        <div class="avatar-wrapper" style="background:${data.avatarBgColor}">
+          <img src="${data.avatar}" />
+        </div>
+        <div class="username">${data.username}</div>
+      </div>
+      <div class="chat-text">${data.chat}</div>
     </div>
   `;
 
-  div.style.position = "absolute";
   div.style.left = ((slot.col - 1) * columnWidth + columnWidth * 0.2) + "%";
   div.style.top = ((slot.row - 1) * rowWidth + rowWidth * 0.3) + "%";
 
@@ -133,7 +134,7 @@ function showMessage(data) {
   setTimeout(() => {
     div.classList.remove("visible");
     setTimeout(() => div.remove(), 400);
-    }, DISPLAY_DURATION);
+  }, DISPLAY_DURATION);
 }
 
 /* show emoji */
