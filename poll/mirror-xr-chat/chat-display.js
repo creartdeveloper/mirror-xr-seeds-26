@@ -1,27 +1,12 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-import { 
-  getFirestore, 
-  collection, 
-  query, 
-  where, 
-  onSnapshot, 
-  deleteDoc 
+import { db } from "../../firebase.js";
+
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-
-/* firebase setup*/
-
-const firebaseConfig = {
-  apiKey: "AIza...",
-  authDomain: "mira-7360b.firebaseapp.com",
-  projectId: "mira-7360b",
-  storageBucket: "mira-7360b.appspot.com",
-  messagingSenderId: "76074103771",
-  appId: "1:76074103771:web:1a2d4ca7e8b5df27a82dfe"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
 /* get show id */
 
 const params = new URLSearchParams(window.location.search);
@@ -72,7 +57,7 @@ if (showId) {
         const message = data.chat?.trim();
 
         if (message) {
-          showMessage(message);
+          showMessage(data);
         }
 
         deleteDoc(change.doc.ref);
@@ -111,7 +96,7 @@ if (showId) {
 }
 
 /*show Message  */
-function showMessage(text) {
+function showMessage(data) {
 
   const container = document.querySelector('.chat-container');
   if (!container) return;
@@ -119,13 +104,26 @@ function showMessage(text) {
   const slot = SLOT_POSITIONS[currentSlotIndex % SLOT_POSITIONS.length];
   currentSlotIndex++;
 
+  const columnWidth = 100 / TOTAL_COLUMNS;
+  const rowWidth = 100 / TOTAL_ROWS;
+
   const div = document.createElement('div');
   div.className = 'floating-message';
-  div.textContent=text;
 
-  div.style.left = ((slot.col - 1)* columnWidth + columnWidth *0.25) + "%";
-  div.style.top = ((slot.row - 1)* rowWidth + rowWidth *0.35) + "%";
-  
+  div.innerHTML = `
+    <div class="msg-avatar" style="background:${data.avatarBgColor}">
+      <img src="${data.avatar}" />
+    </div>
+    <div class="msg-content">
+      <div class="msg-username">${data.username}</div>
+      <div class="msg-text">${data.chat}</div>
+    </div>
+  `;
+
+  div.style.position = "absolute";
+  div.style.left = ((slot.col - 1) * columnWidth + columnWidth * 0.2) + "%";
+  div.style.top = ((slot.row - 1) * rowWidth + rowWidth * 0.3) + "%";
+
   container.appendChild(div);
 
   requestAnimationFrame(() => {
