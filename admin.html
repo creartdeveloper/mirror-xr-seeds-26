@@ -6,11 +6,28 @@
 <title>Mirror XR Admin</title>
 
 <style>
+    *{
+    padding: 0;
+    margin:0; 
+    box-sizing: border-box;
+    }
+
+    html, body {
+    min-height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+    }
+
+    .logo {will-change: ;
+        width: auto;
+        height: 40px;
+    }
+
     body {
         font-family: "Poppins", sans-serif;
-        background:#fff;
+        background:url("./poll/assets/background/chat-bg.jpg");
         margin: 0;
-        color: #111;
+        color: white;
     }
 
 
@@ -39,8 +56,8 @@
         border: none;
         font-weight: 600;
         cursor: pointer;
-        background: #fff;
-        color: black;
+        background: transparent;
+        color: white;
     }
 
     button:hover {
@@ -179,7 +196,7 @@
         position: absolute;
         left: 0;
         top: 100%;
-        background-color: red;
+        background-color:#FFB6C1 ;
         width: 200px;
         z-index: 10;
     }
@@ -193,224 +210,232 @@
 </head>
 
 <body>
-<button id="exitBtn" class="exit-btn">Exit Projection</button>
-    <div id="adminControls">
-        <div class="subnav">
-            <button class="program-btn" data-program="program1"><h2> Mirror XR Seed</h2><h3>Years 5-6</h3></button>
-                <div class="subnav-content">
-                    <a href="#button1">Button1</a>
-                    <a href="#button2">Button2</a>
-                    <a href="#button3">Button3</a>
+<main class="app-shell">
+    <div class="app-content">
+        <button id="exitBtn" class="exit-btn">Exit Projection</button>
+            <div id="adminControls">
+                <div class="nav-logo">
+                    <img src="./poll/assets/logo/logo.png"  alt="Mirror XR Logo" class="logo">
+                </div>  
+                <div class="subnav">
+                    <button class="program-btn" data-program="program1"><h2> Mirror XR Seed</h2><h3>Years 5-6</h3></button>
+                        <div class="subnav-content">
+                            <a href="#button1">Button1</a>
+                            <a href="#button2">Button2</a>
+                            <a href="#button3">Button3</a>
+                        </div>
                 </div>
-        </div>
-        <div class="subnav">
-            <button class="program-btn" data-program="program2"><h2>Mirror XR Quest</h2><h3>Years 7-10</h3></button>
-                <div class="subnav-content">
-                    <a href="#button4">Button4</a>
-                    <a href="#button5">Button5</a>
-                    <a href="#button6">Button6</a>
+                <div class="subnav">
+                    <button class="program-btn" data-program="program2"><h2>Mirror XR Quest</h2><h3>Years 7-10</h3></button>
+                        <div class="subnav-content">
+                            <a href="#button4">Button4</a>
+                            <a href="#button5">Button5</a>
+                            <a href="#button6">Button6</a>
+                        </div>
                 </div>
-        </div>
-        <div class="subnav">
-            <button class="program-btn" data-program="program3"><h2>Mirror XR Horizons</h2><h3>Years 10-12</h3></button>
-                <div class="subnav-content">
-                    <a href="#button7">Button7</a>
-                    <a href="#button8">Button8</a>
-                    <a href="#button9">Button9</a>
+                <div class="subnav">
+                    <button class="program-btn" data-program="program3"><h2>Mirror XR Horizons</h2><h3>Years 10-12</h3></button>
+                        <div class="subnav-content">
+                            <a href="#button7">Button7</a>
+                            <a href="#button8">Button8</a>
+                            <a href="#button9">Button9</a>
+                        </div>
                 </div>
-        </div>
-        <div class="control-row">
-            <input type="number" id="audienceSizeInput" placeholder="Audience Size" min="1">
-            <input type="text" id="adminShowIdInput" placeholder="Enter Show ID">
-        </div>
-        <div id = "school-program-controls">
-            
-        </div>
-        <!-- <div class="admin-showid">
-            <input type="number" id="audienceSizeInput" placeholder="Audience Size" min="1" style="width:120px;">
-            <input type="text" id="adminShowIdInput" placeholder="Enter Show ID">
-            <button id="loadShow">Load Show</button>
-            <button id="resetShow">Reset Show</button>
-            <button id="goToUserId">User Setup</button>
-            <button id="startChat">Start Chat</button>
-            <button id="goToPoll">Go To Poll</button>
-            <button id="goToChat">Go To Chat</button>
-            <button id="projectionToggle" class="projectionBtn">Projection Mode</button>
-            <button id="advanceStory">Advance Story</button>
-            <button id="backToP1">back To P1</button>
-            <button id="backToP2">back To P2</button>
-            <button id="backToP3">back To P3</button>
-            <button id="backToChat">Back to Chat</button>
-            <button id="backToUser">Back To User</button> 
-            <button id="openFringeBtn">Open Fringe 2026 Page</button>
-                        
-        </div> -->
+                <div class="control-row">
+                    <input type="number" id="audienceSizeInput" placeholder="Audience Size" min="1">
+                    <input type="text" id="adminShowIdInput" placeholder="Enter Show ID">
+                </div>
+                <div id = "school-program-controls">
+                    
+                </div>
+                <!-- <div class="admin-showid">
+                    <input type="number" id="audienceSizeInput" placeholder="Audience Size" min="1" style="width:120px;">
+                    <input type="text" id="adminShowIdInput" placeholder="Enter Show ID">
+                    <button id="loadShow">Load Show</button>
+                    <button id="resetShow">Reset Show</button>
+                    <button id="goToUserId">User Setup</button>
+                    <button id="startChat">Start Chat</button>
+                    <button id="goToPoll">Go To Poll</button>
+                    <button id="goToChat">Go To Chat</button>
+                    <button id="projectionToggle" class="projectionBtn">Projection Mode</button>
+                    <button id="advanceStory">Advance Story</button>
+                    <button id="backToP1">back To P1</button>
+                    <button id="backToP2">back To P2</button>
+                    <button id="backToP3">back To P3</button>
+                    <button id="backToChat">Back to Chat</button>
+                    <button id="backToUser">Back To User</button> 
+                    <button id="openFringeBtn">Open Fringe 2026 Page</button>
+                                
+                </div> -->
+            </div>
+
+            <div id="main-container">
+
+            <div class="poll-container" data-level="p1">
+                <h2>Poll 1</h2>
+
+                <div class="option-row">
+                    <div class="bar-fill" id="bar-p1-a"></div>
+                    <div class="option-content">
+                        <img src="./poll/assets/P1/A.png" class="item-img">
+                            Option A
+                        <span class="vote-count" id="count-p1-a">0</span>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <div class="bar-fill" id="bar-p1-b"></div>
+                    <div class="option-content">
+                        <img src="./poll/assets/P1/B.png" class="item-img">
+                        Option B
+                        <span class="vote-count" id="count-p1-b">0</span>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <div class="bar-fill" id="bar-p1-c"></div>
+                    <div class="option-content">
+                    <img src="./poll/assets/P1/C.png" class="item-img">
+                        Option C
+                        <span class="vote-count" id="count-p1-c">0</span>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <div class="bar-fill" id="bar-p1-d"></div>
+                    <div class="option-content">
+                        <img src="./poll/assets/P1/D.png" class="item-img">
+                        Option D
+                        <span class="vote-count" id="count-p1-d">0</span>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="poll-container" data-level="p2">
+                <h2>Poll 2</h2>
+
+                <div class="option-row">
+                    <div class="bar-fill" id="bar-p2-a"></div>
+                    <div class="option-content">
+                        <img src="./poll/assets/P2/1-dewdrop-poll.png" class="item-img">
+                        Option A
+                        <span class="vote-count" id="count-p2-a">0</span>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <div class="bar-fill" id="bar-p2-b"></div>
+                    <div class="option-content">
+                        <img src="./poll/assets/P2/2-whimsy-poll.png" class="item-img">
+                        Option B
+                        <span class="vote-count" id="count-p2-b">0</span>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <div class="bar-fill" id="bar-p2-c"></div>
+                    <div class="option-content">
+                        <img src="./poll/assets/P2/3-twinkle-poll.png" class="item-img">
+                        Option C
+                        <span class="vote-count" id="count-p2-c">0</span>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <div class="bar-fill" id="bar-p2-d"></div>
+                    <div class="option-content">
+                        <img src="./poll/assets/P2/4-pebble-poll.png" class="item-img">
+                        Option D
+                        <span class="vote-count" id="count-p2-d">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="poll-container" data-level="p3">
+                <h2>Poll 3</h2>
+
+                <div class="option-row">
+                    <div class="bar-fill" id="bar-p3-a"></div>
+                    <div class="option-content">
+                        <img src="./poll/assets/P2/1-dewdrop-poll.png" class="item-img">
+                        Option A
+                        <span class="vote-count" id="count-p3-a">0</span>
+                    </div>
+                </div> 
+
+                <div class="option-row">
+                    <div class="bar-fill" id="bar-p3-b"></div>
+                    <div class="option-content">
+                        <img src="./poll/assets/P2/2-whimsy-poll.png" class="item-img">
+                        Option B
+                        <span class="vote-count" id="count-p3-b">0</span>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <div class="bar-fill" id="bar-p3-c"></div>
+                    <div class="option-content">
+                        <img src="./poll/assets/P2/3-twinkle-poll.png" class="item-img">
+                        Option C
+                        <span class="vote-count" id="count-p3-c">0</span>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <div class="bar-fill" id="bar-p3-d"></div>
+                    <div class="option-content">
+                        <img src="./poll/assets/P2/4-pebble-poll.png" class="item-img">
+                        Option D
+                        <span class="vote-count" id="count-p3-d">0</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="poll-container" data-level="p4">
+                <h2>Poll 4</h2>
+
+                <div class="option-row">
+                    <div class="bar-fill" id="bar-p4-a"></div>
+                    <div class="option-content">
+                        <img src="./poll/assets/P2/1-dewdrop-poll.png" class="item-img">
+                        Option A
+                        <span class="vote-count" id="count-p4-a">0</span>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <div class="bar-fill" id="bar-p4-b"></div>
+                    <div class="option-content">
+                        <img src="./poll/assets/P2/3-twinkle-poll.png"class="item-img">
+                        Option B
+                        <span class="vote-count" id="count-p4-b">0</span>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <div class="bar-fill" id="bar-p4-c"></div>
+                    <div class="option-content">
+                        <img src="./poll/assets/P2/3-twinkle-poll.png" class="item-img">
+                        Option C
+                        <span class="vote-count" id="count-p4-c">0</span>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <div class="bar-fill" id="bar-p4-d"></div>
+                    <div class="option-content">
+                        <img src="./poll/assets/P2/1-dewdrop-poll.png" class="item-img">
+                        Option D
+                        <span class="vote-count" id="count-p4-d">0</span>
+                    </div>
+                </div>
+            </div>
+        
     </div>
-
-    <div id="main-container">
-
-    <div class="poll-container" data-level="p1">
-        <h2>Poll 1</h2>
-
-        <div class="option-row">
-            <div class="bar-fill" id="bar-p1-a"></div>
-            <div class="option-content">
-                <img src="./poll/assets/P1/A.png" class="item-img">
-                    Option A
-                <span class="vote-count" id="count-p1-a">0</span>
-            </div>
-        </div>
-
-        <div class="option-row">
-            <div class="bar-fill" id="bar-p1-b"></div>
-            <div class="option-content">
-                <img src="./poll/assets/P1/B.png" class="item-img">
-                Option B
-                <span class="vote-count" id="count-p1-b">0</span>
-            </div>
-        </div>
-
-        <div class="option-row">
-            <div class="bar-fill" id="bar-p1-c"></div>
-            <div class="option-content">
-            <img src="./poll/assets/P1/C.png" class="item-img">
-                Option C
-                <span class="vote-count" id="count-p1-c">0</span>
-            </div>
-        </div>
-
-        <div class="option-row">
-            <div class="bar-fill" id="bar-p1-d"></div>
-            <div class="option-content">
-                <img src="./poll/assets/P1/D.png" class="item-img">
-                Option D
-                <span class="vote-count" id="count-p1-d">0</span>
-            </div>
-        </div>
-    </div>
-
-
-
-    <div class="poll-container" data-level="p2">
-        <h2>Poll 2</h2>
-
-        <div class="option-row">
-            <div class="bar-fill" id="bar-p2-a"></div>
-            <div class="option-content">
-                <img src="./poll/assets/P2/1-dewdrop-poll.png" class="item-img">
-                Option A
-                <span class="vote-count" id="count-p2-a">0</span>
-            </div>
-        </div>
-
-        <div class="option-row">
-            <div class="bar-fill" id="bar-p2-b"></div>
-            <div class="option-content">
-                <img src="./poll/assets/P2/2-whimsy-poll.png" class="item-img">
-                Option B
-                <span class="vote-count" id="count-p2-b">0</span>
-            </div>
-        </div>
-
-        <div class="option-row">
-            <div class="bar-fill" id="bar-p2-c"></div>
-            <div class="option-content">
-                <img src="./poll/assets/P2/3-twinkle-poll.png" class="item-img">
-                Option C
-                <span class="vote-count" id="count-p2-c">0</span>
-            </div>
-        </div>
-
-        <div class="option-row">
-            <div class="bar-fill" id="bar-p2-d"></div>
-            <div class="option-content">
-                <img src="./poll/assets/P2/4-pebble-poll.png" class="item-img">
-                Option D
-                <span class="vote-count" id="count-p2-d">0</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="poll-container" data-level="p3">
-        <h2>Poll 3</h2>
-
-        <div class="option-row">
-            <div class="bar-fill" id="bar-p3-a"></div>
-            <div class="option-content">
-                <img src="./poll/assets/P2/1-dewdrop-poll.png" class="item-img">
-                Option A
-                <span class="vote-count" id="count-p3-a">0</span>
-            </div>
-        </div> 
-
-        <div class="option-row">
-            <div class="bar-fill" id="bar-p3-b"></div>
-            <div class="option-content">
-                <img src="./poll/assets/P2/2-whimsy-poll.png" class="item-img">
-                Option B
-                <span class="vote-count" id="count-p3-b">0</span>
-            </div>
-        </div>
-
-        <div class="option-row">
-            <div class="bar-fill" id="bar-p3-c"></div>
-            <div class="option-content">
-                <img src="./poll/assets/P2/3-twinkle-poll.png" class="item-img">
-                Option C
-                <span class="vote-count" id="count-p3-c">0</span>
-            </div>
-        </div>
-
-        <div class="option-row">
-            <div class="bar-fill" id="bar-p3-d"></div>
-            <div class="option-content">
-                <img src="./poll/assets/P2/4-pebble-poll.png" class="item-img">
-                Option D
-                <span class="vote-count" id="count-p3-d">0</span>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="poll-container" data-level="p4">
-        <h2>Poll 4</h2>
-
-        <div class="option-row">
-            <div class="bar-fill" id="bar-p4-a"></div>
-            <div class="option-content">
-                <img src="./poll/assets/P2/1-dewdrop-poll.png" class="item-img">
-                Option A
-                <span class="vote-count" id="count-p4-a">0</span>
-            </div>
-        </div>
-
-        <div class="option-row">
-            <div class="bar-fill" id="bar-p4-b"></div>
-            <div class="option-content">
-                <img src="./poll/assets/P2/3-twinkle-poll.png"class="item-img">
-                Option B
-                <span class="vote-count" id="count-p4-b">0</span>
-            </div>
-        </div>
-
-        <div class="option-row">
-            <div class="bar-fill" id="bar-p4-c"></div>
-            <div class="option-content">
-                <img src="./poll/assets/P2/3-twinkle-poll.png" class="item-img">
-                Option C
-                <span class="vote-count" id="count-p4-c">0</span>
-            </div>
-        </div>
-
-        <div class="option-row">
-            <div class="bar-fill" id="bar-p4-d"></div>
-            <div class="option-content">
-                <img src="./poll/assets/P2/1-dewdrop-poll.png" class="item-img">
-                Option D
-                <span class="vote-count" id="count-p4-d">0</span>
-            </div>
-        </div>
-    </div>
+ </main>
 <script type="module" src="./count.js"></script>
 </body>
 </html>
