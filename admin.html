@@ -33,21 +33,36 @@
 
     #adminControls {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
+        gap: 12px;
         padding: 15px 30px;
         color: white;
     }
 
     .admin-showid {
         display: flex;
-        gap: 10px;
+        flex-wrap: wrap; 
+        gap: 8px; 
+        width: 100%; 
     }
 
     .admin-showid input {
         padding: 8px;
         border-radius: 6px;
         border: none;
+    }
+    .admin-showid button {
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+
+    .top-row{
+        display: flex; 
+        width: 100%; 
+        gap: 20px; 
+        align-items: center; 
     }
 
     button {
@@ -214,9 +229,10 @@
     <div class="app-content">
         <button id="exitBtn" class="exit-btn">Exit Projection</button>
             <div id="adminControls">
-                <div class="nav-logo">
-                    <img src="./poll/assets/logo/logo.png"  alt="Mirror XR Logo" class="logo">
-                </div>  
+                <div class="top-row">
+                    <div class="nav-logo">
+                        <img src="./poll/assets/logo/logo.png"  alt="Mirror XR Logo" class="logo">
+                    </div>  
                 <div class="subnav">
                     <button class="program-btn" data-program="program1"><h2> Mirror XR Seed</h2><h3>Years 5-6</h3></button>
                         <div class="subnav-content">
@@ -241,14 +257,7 @@
                             <a href="#button9">Button9</a>
                         </div>
                 </div>
-                <div class="control-row">
-                    <input type="number" id="audienceSizeInput" placeholder="Audience Size" min="1">
-                    <input type="text" id="adminShowIdInput" placeholder="Enter Show ID">
-                </div>
-                <div id = "school-program-controls">
-                    
-                </div>
-                <!-- <div class="admin-showid">
+                <div class="admin-showid">
                     <input type="number" id="audienceSizeInput" placeholder="Audience Size" min="1" style="width:120px;">
                     <input type="text" id="adminShowIdInput" placeholder="Enter Show ID">
                     <button id="loadShow">Load Show</button>
@@ -265,8 +274,11 @@
                     <button id="backToChat">Back to Chat</button>
                     <button id="backToUser">Back To User</button> 
                     <button id="openFringeBtn">Open Fringe 2026 Page</button>
-                                
-                </div> -->
+                </div>
+                <div id = "school-program-controls">
+                    
+                </div>
+
             </div>
 
             <div id="main-container">
