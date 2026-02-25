@@ -8,10 +8,7 @@ import {   doc,
 import { db } from "../firebase.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  
-  const params = new URLSearchParams(window.location.search);
-  const showId = params.get("showId");
-
+const showId = sessionStorage.getItem("showId");
 
     if (!showId) {
       window.location.replace(
