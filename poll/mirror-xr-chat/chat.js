@@ -34,12 +34,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   /* Session Data */
   const showId = sessionStorage.getItem("showId");
   if (!showId) {
-    window.location.replace(
-      "https://www.creartdigitalmedia.com.au/fringe-2026"
-    );
+    console.log("No showId in sessionStorage");
     return;
   }
-
 await validateShow(showId);
   const username = sessionStorage.getItem("username") || "";
   const avatar = sessionStorage.getItem("avatar") || "";
