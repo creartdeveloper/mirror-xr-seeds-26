@@ -256,7 +256,7 @@ pickr.on('change', (color) => {
       {
         username: finalUsername,
         avatar: finalAvatar,
-        avataBgColor: finalBgColor,
+        avatarBgColor: finalBgColor,
         timestamp: Date.now()
       }
     );

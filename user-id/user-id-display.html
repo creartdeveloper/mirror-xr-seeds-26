@@ -12,7 +12,7 @@ body {
     margin: 0;
     width: 100vw;
     height: 100vh;
-    background-image: url("../poll/assets/background/Mirror-XR-OBS.png");
+    background: #00ff00; /* Pure chroma green */
     background-size: cover;
     overflow: hidden;
     display: flex;
@@ -113,11 +113,10 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 /* ===== GET SHOW ID FROM URL ===== */
-const params = new URLSearchParams(window.location.search);
-const showId = params.get("showId") || params.get("showid");
+const showId = sessionStorage.getItem("showId");
 
 if (!showId) {
-  console.error("No showId found in URL.");
+  console.error("No showId in sessionStorage");
 }
 
 /* ===== FIRESTORE LISTENER ===== */
