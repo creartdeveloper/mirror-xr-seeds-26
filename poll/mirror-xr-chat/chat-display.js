@@ -46,24 +46,19 @@ if (showId) {
   const chatQuery = query(
     collection(db, "chat_message_collection"),
     where("showId", "==", showId),
-    orderBy("timestamp", "desc")
   );
-
-  let initialLoad = true;
-
+  
   onSnapshot(chatQuery, (snapshot) => {
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
 
-    snapshot.docChanges().forEach((change) => {
+      if (!data.chat) return;
+      if (!data.chat.trim()) return;
 
-      if (change.type === "added") {
+      // Prevent duplicate rendering
+      if (activeMessages.some(m => m.dataset.id === docSnap.id)) return;
 
-        const data = change.doc.data();
-        const message = data.chat?.trim();
-
-        if (message) {
-          showMessage(data, change.doc.id);
-        }
-      }
+      showMessage(data, docSnap.id);
     });
 
   });
