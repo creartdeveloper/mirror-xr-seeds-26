@@ -193,10 +193,10 @@ nav{
 
 .msg-text-box {
   position: absolute;
-  top: 22px;
-  left: 22px;
-  width: 180px;
-  height: 60px;
+  top: 15%;
+  left: 10%;
+  width: 80%;
+  height: 60%;
   background: transparent;
   border: none;
   resize: none;
