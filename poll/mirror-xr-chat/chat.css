@@ -119,6 +119,58 @@ nav{
     background: #00FF00;
 }
 
+.chat-messages {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 10px;
+  max-height: 40vh;
+  overflow-y: auto;
+  padding: 10px 0;
+}
+
+.user-message {
+  width: 220px;
+  height: 95px;
+  position: relative;
+  background-image: url("../assets/poll-components/text-box.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  padding: 12px;
+  align-self: center;
+}
+
+
+.user-message .chat-text {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 75%;
+  font-size: 15px;
+  text-align: center;
+}
+
+.user-message .username {
+  position: absolute;
+  bottom: -8px;
+  left: 30%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.user-message .avatar-wrapper {
+  position: absolute;
+  bottom: -10px;
+  right: 3px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+}
 .message-box {
   position: relative;
   width: clamp(280px, 40vw, 520px);
