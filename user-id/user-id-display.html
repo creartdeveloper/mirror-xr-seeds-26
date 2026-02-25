@@ -3,36 +3,164 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mirror XR Greenscreen</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Delius&family=Pacifico&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css">
-<link rel="stylesheet" href="./user-id-display.css">
+<style>
 
-<title>Mirror XR</title>
+/* ===== GREENSREEN BACKGROUND ===== */
+body {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url("../poll/assets/background/Mirror-XR-OBS.png");
+    background-size: cover;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ===== CONTAINER ===== */
+.users-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
+}
+
+/* ===== USER CARD ===== */
+.user-card {
+    width: 180px;
+    text-align: center;
+    animation: popIn 0.6s ease forwards;
+    transform: scale(0);
+    opacity: 0;
+}
+
+/* ===== AVATAR CIRCLE ===== */
+.user-avatar-wrapper {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+/* ===== AVATAR IMAGE ===== */
+.user-avatar-wrapper img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+}
+
+/* ===== USERNAME ===== */
+.user-card p {
+    margin-top: 18px;
+    font-size: 28px;
+    font-weight: bold;
+    color: black;
+}
+
+/* ===== ANIMATION ===== */
+@keyframes popIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    70% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+</style>
 </head>
 
-<body data-page="profile">
+<body>
 
-<nav class="nav-header">
-    <div class="nav-logo">
-        <img src="../poll/assets/logo/logo.png" alt="Mirror XR Logo" class="logo">
-    </div>
-</nav>
+<div id="usersContainer" class="users-container"></div>
 
-<main class="app-shell">
-    <div class="app-content">
+<script type="module">
 
-        <div class="profile-container">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+import { 
+  getFirestore, 
+  collection, 
+  query, 
+  orderBy, 
+  onSnapshot 
+} from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
-            <h2 class="choose-title">Welcome to MirrorXR</h2>
-                <div id="usersContainer" class="users-container"></div>
+/* ===== FIREBASE CONFIG ===== */
+const firebaseConfig = {
+  apiKey: "AIza...",
+  authDomain: "mira-7360b.firebaseapp.com",
+  projectId: "mira-7360b",
+  storageBucket: "mira-7360b.appspot.com",
+  messagingSenderId: "76074103771",
+  appId: "1:76074103771:web:1a2d4ca7e8b5df27a82dfe"
+};
 
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+/* ===== GET SHOW ID FROM URL ===== */
+const params = new URLSearchParams(window.location.search);
+const showId = params.get("showId") || params.get("showid");
+
+if (!showId) {
+  console.error("No showId found in URL.");
+}
+
+/* ===== FIRESTORE LISTENER ===== */
+const container = document.getElementById("usersContainer");
+
+const q = query(
+  collection(db, "Mirror-XR-AF26-poll-magical-item", showId, "users"),
+  orderBy("timestamp", "asc")
+);
+
+onSnapshot(q, (snapshot) => {
+
+  snapshot.docChanges().forEach((change) => {
+
+    if (change.type === "added") {
+
+      const data = change.doc.data();
+      const docId = change.doc.id;
+
+      // Prevent duplicates
+      if (container.querySelector(`[data-id="${docId}"]`)) return;
+
+      const card = document.createElement("div");
+      card.className = "user-card";
+      card.dataset.id = docId;
+
+      card.innerHTML = `
+        <div class="user-avatar-wrapper" style="background:${data.avatarBgColor || '#ffffff'}">
+          <img src="${data.avatar}" />
         </div>
+        <p>${data.username}</p>
+      `;
 
-    </div>
-</main>
+      container.appendChild(card);
+      setTimeout(() => {
+        card.remove();
+      }, 20000);
+    }
 
-<script type="module" src="./user-id-display.js"></script>
+  });
+
+});
+</script>
 
 </body>
 </html>
