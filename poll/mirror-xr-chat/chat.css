@@ -183,7 +183,7 @@ nav{
 
 .message-box {
   position: relative;
-  width: 240px;
+  width: 400px;
   min-height: 100px;
   background-image: url("../assets/poll-components/text-box.png");
   background-size: 100% 100%;
