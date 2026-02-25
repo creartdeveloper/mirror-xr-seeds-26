@@ -183,12 +183,12 @@ nav{
 
 .message-box {
   position: relative;
-  width: 400px;
-  min-height: 200px;
+  width: clamp(300px, 60vw, 700px);
+  min-height: clamp(140px, 20vh, 220px);
   background-image: url("../assets/poll-components/text-box.png");
   background-size: 100% 100%;
   background-repeat: no-repeat;
-  padding: 14px;
+  padding: 20px;
 }
 
 .msg-text-box {
