@@ -7,20 +7,15 @@
 
 <style>
     *{
-    padding: 0;
-    margin:0; 
-    box-sizing: border-box;
+        padding: 0;
+        margin:0; 
+        box-sizing: border-box;
     }
 
     html, body {
-    min-height: 100%;
-    width: 100%;
-    overflow-x: hidden;
-    }
-
-    .logo {
-        width: auto;
-        height: 40px;
+        min-height: 100%;
+        width: 100%;
+        overflow-x: hidden;
     }
 
     body {
@@ -28,118 +23,201 @@
         background:url("./poll/assets/background/Mirror-XR-OBS.png");
         background-size: cover;
         margin: 0;
-        color: white;
+        color: white;   
+
+    }
+    .logo{
+        height: 40px;
     }
 
+    button{
+        padding: 8px 16px;
+        border-radius: 8px; 
+        border: none; 
+        font-weight: 600; 
+        cursor: pointer; 
+        background: rgba(255, 255, 255, 0.1);
+        color: white; 
+        transition: 0.2s ease;
+    }
+    button:hover{
+        background: rgba(255, 255, 255, 0.2);
+    }
 
-    #adminControls {
+    /*admin layout*/
+    #adminControls{
+        display:flex; 
+        flex-direction: column; 
+        gap: 20px; 
+        padding: 20px 30px; 
+    }
+
+    .admin-topbar{
         display: flex;
-        flex-direction: column;
-        flex-wrap: wrap;
         justify-content: space-between;
-        align-items: center;
-        gap: 15px;
-        padding: 20px 30px;
-        color: white;
+        align-items: center; 
+        flex-wrap: wrap;
+
     }
 
-    .admin-showid {
+    .show-controls {
         display: flex;
-        flex-wrap: wrap; 
-        gap: 8px; 
-        width: 100%; 
+        gap: 10px; 
+        align-items: center; 
+        flex-wrap: wrap;
     }
 
-    .admin-showid input {
-        padding: 8px;
-        border-radius: 6px;
+    .show-controls input{
+        padding: 8px; 
+        border-radius: 6px; 
         border: none;
     }
-    .admin-showid button {
-        font-size: 13px;
-        padding: 6px 10px;
+
+    /*program navigation*/
+    .program-nav {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 30px;
+        padding: 10px 40px;
+        margin-top: 15px;
+        position: relative; 
+        z-index:1000;
     }
+
+    .program-menu {
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .program-menu li {
+        position: relative;
+    }
+
+    .program-menu a {
+        text-decoration: none;
+        color: white;
+        font-weight: 600;
+        font-size: 15px;
+        padding: 8px 18px;
+        border-radius: 8px;
+        background: rgba(0,0,0,0.35);
+        backdrop-filter: blur(10px);
+        transition: 0.2s ease;
+    }
+
+    .program-menu a:hover {
+        background: rgba(255,255,255,0.15);
+    }
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        top: 110%;
+        left: 0;
+
+        min-width: 240px; 
+        padding: 14 px 0;
+
+        background: rgba(0,0,0,0.85);
+        backdrop-filter: blur(14px);
+
+        border-radius: 14px;
+
+        box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        z-index: 5000; 
+    }
+
+    .dropdown-content li {
+        list-style: none;
+    }
+    .dropdown-content button {
+        width: 100%;
+        padding: 10px 16px;
+        background: none;
+        border: none;
+        color: white;
+        text-align: left;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .dropdown-content button,
+    .dropdown-content a {
+        width: 100%;
+        padding: 12px 16px;
+        background: none;
+        border: none;
+        color: white;
+        text-align: left;
+        cursor: pointer;
+        font-size: 14px;
+    }
+    .dropdown-content button:hover,
+    .dropdown-content a:hover {
+        background: rgba(255,255,255,0.1);
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown-content hr {
+        border: none;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        margin: 8px 0;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+    /*action rows*/
 
     .admin-row{
-        display: flex; 
+        display:flex; 
+        justify-content: center; 
         gap: 15px; 
-        flex-wrap: wrap; 
-        align-items: center; 
+        flex-wrap: wrap;
     }
 
-    .top-row{
-        display: flex; 
-        width: 100%; 
-        gap: 20px; 
-        align-items: center; 
-    }
-
-    button {
-        padding: 8px 16px;
-        border-radius: 8px;
-        border: none;
-        font-weight: 600;
-        cursor: pointer;
-        background: transparent;
-        color: white;
-    }
-
-    button:hover {
-        opacity: 0.85;
-    }
-
+    /*poll display*/
 
     #main-container {
-        max-width: 900px;
-        margin: 60px auto;
-        text-align: center;
+        max-width: 900px; 
+        margin: 60px auto; 
+        text-align: center; 
     }
 
-    .poll-container {
-        display: block;
-    }
-    .poll-container.active {
-        display: block;
-    }
     .poll-container h2 {
-        font-size: 52px;
-        margin-bottom: 50px;
+        font-size: 52px; 
+        margin-bottom: 40px;
     }
 
-
-    .option-row {
-        position: relative;
-        overflow: hidden;
-        padding: 22px 30px;
-        border-radius: 20px;
-        margin-bottom: 25px;
-
-        background: rgba(255, 255, 255, 0.08);
+    .option-row{
+        position: relative; 
+        overflow: hidden; 
+        padding: 22px 30px; 
+        border-radius: 20px; 
+        margin-bottom: 25px; 
+        /* background: rgba(255, 255, 255, 0.8); */
         backdrop-filter: blur(6px);
         border: 1px solid rgba(255, 255, 255, 0.2);
-
         transition: transform 0.2s ease;
     }
 
-
-    .option-row > * {
-        position: relative;
-        z-index: 2;
-
-    }
-
-    .option-row:hover {
+    .option-row:hover{
         transform: scale(1.02);
     }
 
-    .bar-fill {
-        position: absolute;
-        left: 0;
+    .bar-fill{
+        position: absolute; 
+        left: 0; 
         top: 0;
-        height: 100%;
-        width: 0%;
-        border-radius: 20px;
-
+        height: 100%; 
+        width: 0%; 
+        border-radius: 20px; 
         background: linear-gradient(
             90deg,
             rgba(255, 0, 200, 0.6),
@@ -149,25 +227,27 @@
         box-shadow: 0 0 20px rgba(255, 0, 200, 0.5);
         transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .item-left {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        font-size: 28px;
-        font-weight: 600;
+
+    .option-content {
+        position: relative;
+        z-index: 2; 
+        display: flex; 
+        align-items:center; 
+        justify-content: space-between;
     }
 
     .item-img {
-        width: 60px;
-        height: 60px;
+        width: 60px; 
+        height: 60px; 
         object-fit: contain;
     }
 
     .vote-count {
-        font-size: 34px;
-        font-weight: bold;
+        font-size: 34px; 
+        font-weight: bold; 
     }
 
+    /*projection mode*/
     body.projection-mode #adminControls {
         display: none;
     }
@@ -177,7 +257,7 @@
     }
 
     body.projection-mode {
-        background: #04f404;
+        background: #000;
     }
 
     body.projection-mode #main-container {
@@ -198,6 +278,7 @@
         background: linear-gradient(90deg, #00ff88, #00ccff);
     }
 
+    /*exit button*/
     .exit-btn {
         position: fixed;
         top: 20px;
@@ -205,65 +286,11 @@
         padding: 10px 20px;
         font-size: 18px;
         z-index: 9999;
-    }
-    .exit-projection-btn {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 12px 20px;
-        font-size: 16px;
-        z-index: 9999;
-        background: #04f404;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-    }
+        }
 
-    /*when in admin mde*/
-    body:not(.projection-mode) .exit-btn {
-    display: none;
-    }
-    .subnav {
-        position: relative;
-        display: inline-block;
-    }
-    .subnav-content{
-        display: none;
-        position: absolute;
-        left: 0;
-        top: 100%;
-        background-color:#FFB6C1 ;
-        width: 200px;
-        z-index: 10;
-    }
-
-    .subnav:hover .subnav-content {
-        display: block;
-    }
-
-    .programs-row{
-        justify-content: center;
-    }
-
-    .dynamic-row{
-        justify-content: center;
-    }
-
-    .show-row{
-        justify-content: center; 
-    }
-
-    .program-btn {
-        background: rgba(255,255,255,0.1);
-        border: 1px solid rgba(255,255,255,0.3);
-        padding: 10px 18px;
-        border-radius: 10px;
-    }
-
-    .program-btn:hover {
-        background: rgba(255,255,255,0.2);
-    }
+        body:not(.projection-mode) .exit-btn {
+            display: none;
+        }
 
 </style>
 </head>
@@ -272,65 +299,79 @@
 <main class="app-shell">
     <div class="app-content">
         <button id="exitBtn" class="exit-btn">Exit Projection</button>
+        <header class="header">
             <div id="adminControls">
+                <!--top control bar-->
                 <div class="top-row">
-                    <div class="nav-logo">
-                        <img src="./poll/assets/logo/logo.png"  alt="Mirror XR Logo" class="logo">
-                    </div>  
-                    <div class="admin-row programs-row">
-                        <div class="subnav">
-                            <button class="program-btn" data-program="program1"><h2> Mirror XR Seed</h2><h3>Years 5-6</h3></button>
-                                <div class="subnav-content">
-                                    <a href="#button1">Button1</a>
-                                    <a href="#button2">Button2</a>
-                                    <a href="#button3">Button3</a>
-                                </div>
+                    <div class="admin-topbar">
+                        <div class="nav-logo">
+                            <img src="./poll/assets/logo/logo.png"  alt="Mirror XR Logo" class="logo">
+                        </div>  
+                        <div class="show-controls">
+                            <input type="number" id="audienceSizeInput" placeholder="Audience Size" min="1" style="width:120px;">
+                            <input type="text" id="adminShowIdInput" placeholder="Enter Show ID">
+                            <button id="loadShow">Load Show</button>
+                            <button id="resetShow">Reset Show</button>
                         </div>
-                        <div class="subnav">
-                            <button class="program-btn" data-program="program2"><h2>Mirror XR Quest</h2><h3>Years 7-10</h3></button>
-                                <div class="subnav-content">
-                                    <a href="#button4">Button4</a>
-                                    <a href="#button5">Button5</a>
-                                    <a href="#button6">Button6</a>
-                                </div>
-                        </div>
-                        <div class="subnav">
-                            <button class="program-btn" data-program="program3"><h2>Mirror XR Horizons</h2><h3>Years 10-12</h3></button>
-                                <div class="subnav-content">
-                                    <a href="#button7">Button7</a>
-                                    <a href="#button8">Button8</a>
-                                    <a href="#button9">Button9</a>
-                                </div>
-                        </div>
+                        <!--program navigation bar -->
+                        <nav class="program-nav">
+                            <ul class="program-menu">
+                                <li class="dropdown">
+                                    <a href = "#">Mirror XR Seed</a> 
+                                    <ul class="dropdown-content">
+                                        <li><button id="seedbutton1">Button1</button></li>
+                                        <li><button id="seedbutton2">Button2</button></li>
+                                        <li><button id="seedbutton3">Button3</button></li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#">Mirror XR Quest</a>
+                                    <ul class="dropdown-content">
+                                        <li><a href="questbutton1">Button4</a></li>
+                                        <li><a href="questbutton2">Button5</a></li>
+                                        <li><a href="questbutton3">Button6</a></li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a href=#>Mirror XR Horizons</a>
+                                    <ul class="dropdown-content">
+                                        <li><a href="Horizonbutton1">Button7</a></li>
+                                        <li><a href="Horizonbutton2">Button8</a></li>
+                                        <li><a href="Horizonbutton3">Button9</a></li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#">Fringe</a>
+                                        <ul class="dropdown-content">
+
+                                            <li><button id="goToUserId">User Setup</button></li>
+                                            <li><button id="startChat">Start Chat</button></li>
+                                            <li><button id="goToPoll">Go To Poll</button></li>
+                                            <li><button id="goToChat">Go To Chat</button></li>
+                                            <li><button id="projectionToggle">Projector</button></li>
+
+                                            <li><hr></li>
+
+                                            <li><button id="backToP1">Back To P1</button></li>
+                                            <li><button id="backToP2">Back To P2</button></li>
+                                            <li><button id="backToP3">Back To P3</button></li>
+                                            <li><button id="backToChat">Back To Chat</button></li>
+                                            <li><button id="backToUser">Back To User</button></li>
+
+                                            <li><hr></li>
+
+                                            <li><button id="advanceStory">Advance Story</button></li>
+                                            <li><button id="openFringeBtn">Open Fringe 2026</button></li>
+
+                                        </ul>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
-                <div class="admin-row dynamic-row">
-                    <button id="goToUserId">User Setup</button>
-                    <button id="startChat">Start Chat</button>
-                    <button id="goToPoll">Go To Poll</button>
-                    <button id="goToChat">Go To Chat</button>
-                    <button id="projectionToggle" class="projectionBtn">Projection Mode</button>
-                    <button id="advanceStory">Advance Story</button>
-                </div>
-                <div class="admin-row show-row">
-                    <input type="number" id="audienceSizeInput" placeholder="Audience Size" min="1" style="width:120px;">
-                    <input type="text" id="adminShowIdInput" placeholder="Enter Show ID">
-                    <button id="loadShow">Load Show</button>
-                    <button id="resetShow">Reset Show</button>
-                    <button id="backToP1">back To P1</button>
-                    <button id="backToP2">back To P2</button>
-                    <button id="backToP3">back To P3</button>
-                    <button id="backToChat">Back to Chat</button>
-                    <button id="backToUser">Back To User</button> 
-                    <button id="openFringeBtn">Open Fringe 2026 Page</button>
-                </div>
-                <div id = "school-program-controls">
-                    
-                </div>
-
             </div>
-
-            <div id="main-container">
+        </header>
+        <div id="main-container">
 
             <div class="poll-container" data-level="p1">
                 <h2>Poll 1</h2>
@@ -493,9 +534,9 @@
                         <span class="vote-count" id="count-p4-d">0</span>
                     </div>
                 </div>
-            </div>
-        
-    </div> -->
+            </div>--->
+        </div>
+<!-- </div> -->
  </main>
 <script type="module" src="./count.js"></script>
 </body>
