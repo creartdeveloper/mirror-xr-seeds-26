@@ -183,27 +183,25 @@ nav{
 
 .message-box {
   position: relative;
-  width: clamp(280px, 40vw, 520px);
-  aspect-ratio: 4 / 3;
-  max-height: 50vh;
+  width: 240px;
+  min-height: 100px;
   background-image: url("../assets/poll-components/text-box.png");
-  
+  background-size: 100% 100%;
   background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
+  padding: 14px;
 }
 
 .msg-text-box {
   position: absolute;
-  top: 26%;
-  left: 16%;
-  width: 68%;
-  height: 38%;
+  top: 22px;
+  left: 22px;
+  width: 180px;
+  height: 60px;
   background: transparent;
   border: none;
   resize: none;
   font-family: "Delius", cursive;
-  font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+  font-size: 14px;
   color: #555;
 }
 
