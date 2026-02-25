@@ -121,8 +121,8 @@ function showMessage(data, messageId) {
         <button class="delete-btn">×</button>
     </div>
   `;
-
-  div.style.left = ((slot.col - 1) * columnWidth + columnWidth * 0.2) + "%";
+ 
+  div.style.left = ((slot.col - 1) * columnWidth + columnWidth * 0.15) + "%";
   div.style.top = ((slot.row - 1) * rowWidth + rowWidth * 0.3) + "%";
 
   container.appendChild(div);
