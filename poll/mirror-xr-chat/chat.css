@@ -156,23 +156,23 @@ nav{
 .user-message .username {
   position: absolute;
   bottom: -14px;
-  left: 50%;
+  left: 40%;
   transform: translateX(-50%);
   font-size: 12px;
   font-weight: bold;
-  color: black;
+  color:black;
 }
 
 .user-message .avatar-wrapper {
   position: absolute;
-  bottom: -18px;
-  right: 6px;
-  width: 30px;
-  height: 30px;
+  bottom: -16px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   overflow: hidden;
-  display: flex;
-  align-items: center;
+  display:flex;
+  align-items:center;
   justify-content: center;
 }
 
@@ -180,28 +180,29 @@ nav{
   width: 18px; 
   height: 18px;
 }
-
 .message-box {
   position: relative;
-  width: min(90%, 520px);   /* never larger than 520px */
-  aspect-ratio: 240 / 100;
+  width: clamp(280px, 40vw, 520px);
+  aspect-ratio: 4 / 3;
+  max-height: 50vh;
   background-image: url("../assets/poll-components/text-box.png");
-  background-size: contain; /* prevents distortion */
+  
   background-repeat: no-repeat;
+  background-size: contain;
   background-position: center;
 }
 
 .msg-text-box {
   position: absolute;
-  top: 28%;
-  left: 12%;
-  width: 76%;
-  height: 45%;
+  top: 26%;
+  left: 16%;
+  width: 68%;
+  height: 38%;
   background: transparent;
   border: none;
   resize: none;
   font-family: "Delius", cursive;
-  font-size: 14px;
+  font-size: clamp(0.9rem, 1.4vw, 1.05rem);
   color: #555;
 }
 
