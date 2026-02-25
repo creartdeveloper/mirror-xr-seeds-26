@@ -257,13 +257,13 @@ pickr.on('change', (color) => {
 
     nextButton.disabled = true;
 
-    await addDoc(
-      collection(db, "Mirror-XR-AF26-poll-magical-item", showId, "users"),
+    await setDoc(
+      doc(db, "Mirror-XR-AF26-poll-magical-item", showId, "users", userId),
       {
         username: finalUsername,
         avatar: finalAvatar,
-        avatarBgColor: finalBgColor,   // <-- capital B
-        timestamp: Timestamp.now()
+        avatarBgColor: finalBgColor,
+        timestamp: Date.now()
       }
     );
 
