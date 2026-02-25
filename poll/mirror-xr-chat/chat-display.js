@@ -53,16 +53,16 @@ if (showId) {
 
   onSnapshot(chatQuery, (snapshot) => {
 
-    if (initialLoad) {
-      initialLoad = false;
-      return; // skip existing messages
-    }
-
     snapshot.docChanges().forEach((change) => {
+
       if (change.type === "added") {
+
         const data = change.doc.data();
         const message = data.chat?.trim();
-        if (message) showMessage(data, change.doc.id);
+
+        if (message) {
+          showMessage(data, change.doc.id);
+        }
       }
     });
 
