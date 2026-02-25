@@ -40,8 +40,23 @@ body {
 .chat-container {
     position: absolute;
     inset: 0;
+    z-index: 2;
     pointer-events: none;
-    overflow: hidden;
+}
+.overlay-wrapper {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+.mira-character {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 85vh;
+    z-index: 1;
+    pointer-events: none;
 }
 
 /* CHAT BUBBLE */
