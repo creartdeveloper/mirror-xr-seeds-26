@@ -260,10 +260,6 @@ pickr.on('change', (color) => {
         timestamp: Date.now()
       }
     );
-    window.open(
-  `/user-id/user-id-display.html?showId=${showId}`,
-  "_blank"
-);
 
   });
 /*button state*/
