@@ -6,7 +6,7 @@ import {
   where,
   onSnapshot,
   deleteDoc, 
-  doc
+  doc,orderBy, Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 /* get show id */
 
@@ -45,23 +45,25 @@ if (showId) {
   /* ---------- CHAT LISTENER ---------- */
   const chatQuery = query(
     collection(db, "chat_message_collection"),
-    where("showId", "==", showId)
+    where("showId", "==", showId),
+    orderBy("timestamp", "desc")
   );
+
+  let initialLoad = true;
 
   onSnapshot(chatQuery, (snapshot) => {
 
-    snapshot.docChanges().forEach(async (change) => {
+    if (initialLoad) {
+      initialLoad = false;
+      return; // skip existing messages
+    }
 
+    snapshot.docChanges().forEach((change) => {
       if (change.type === "added") {
-
         const data = change.doc.data();
         const message = data.chat?.trim();
-
-        if (message) {
-          showMessage(data, change.doc.id);
-        }
+        if (message) showMessage(data, change.doc.id);
       }
-
     });
 
   });
@@ -127,7 +129,10 @@ function showMessage(data, messageId) {
 
   container.appendChild(div);
 // Auto remove after 30 seconds
-  setTimeout(() => {
+// Auto remove after 30 seconds (UI + Firestore)
+  setTimeout(async () => {
+    if (!div.isConnected) return;
+    // Remove visually
     div.classList.remove("visible");
 
     setTimeout(() => {
@@ -135,7 +140,15 @@ function showMessage(data, messageId) {
       activeMessages = activeMessages.filter(el => el !== div);
     }, 300);
 
+    // Delete from Firestore
+    try {
+      await deleteDoc(doc(db, "chat_message_collection", messageId));
+    } catch (error) {
+      console.error("Error auto deleting message:", error);
+    }
+
   }, DISPLAY_DURATION);
+
   requestAnimationFrame(() => {
     div.classList.add("visible");
   });
@@ -148,15 +161,20 @@ function showMessage(data, messageId) {
   }
 
   //delete individual chat logic
-  const deleteBtn = div.querySelector(".delete-btn");
+const deleteBtn = div.querySelector(".delete-btn");
 
-  deleteBtn.addEventListener("click", async () => {
-    div.remove();
+deleteBtn.addEventListener("click", async (e) => {
+  e.stopPropagation();
 
-    activeMessages = activeMessages.filter(el => el !== div);
-
+  try {
     await deleteDoc(doc(db, "chat_message_collection", messageId));
-  });
+  } catch (error) {
+    console.error("Error deleting message:", error);
+  }
+
+  div.remove();
+  activeMessages = activeMessages.filter(el => el !== div);
+});
 }
 /* show emoji */
 
