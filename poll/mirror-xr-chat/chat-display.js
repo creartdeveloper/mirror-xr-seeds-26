@@ -153,9 +153,8 @@ function showMessage(data, messageId) {
   deleteBtn.addEventListener("click", async () => {
     div.remove();
 
-    activeMessages = activeMessages.filter(el => el.dataset.id !== messageId);
+    activeMessages = activeMessages.filter(el => el !== div);
 
-    // Optional: delete from Firestore too
     await deleteDoc(doc(db, "chat_message_collection", messageId));
   });
 }
@@ -191,18 +190,3 @@ function showEmoji(emoji) {
     setTimeout(() => div.remove(), 500);
   }, 4000);
 }
-/*clear Button */
-
-  const deleteBtn = div.querySelector(".delete-btn");
-
-  deleteBtn.addEventListener("click", async () => {
-
-    div.remove();
-
-    activeMessages = activeMessages.filter(el => el !== div);
-
-    // Also delete from Firestore
-    await deleteDoc(
-      doc(db, "chat_message_collection", messageId)
-    );
-  });
