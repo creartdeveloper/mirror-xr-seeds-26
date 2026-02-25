@@ -1,14 +1,11 @@
-import {   doc, 
-  onSnapshot, 
-  getDoc,
-  addDoc,
-  collection,
-  Timestamp } from 
+import { doc, onSnapshot, setDoc, getDoc } from 
 "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 import { db } from "../firebase.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-const showId = sessionStorage.getItem("showId");
+  
+  const showId = sessionStorage.getItem("showId");
+
 
     if (!showId) {
       window.location.replace(
@@ -259,7 +256,7 @@ pickr.on('change', (color) => {
       {
         username: finalUsername,
         avatar: finalAvatar,
-        avatarBgColor: finalBgColor,
+        avataBgColor: finalBgColor,
         timestamp: Date.now()
       }
     );
