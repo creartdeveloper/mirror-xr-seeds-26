@@ -156,23 +156,23 @@ nav{
 .user-message .username {
   position: absolute;
   bottom: -14px;
-  left: 40%;
+  left: 50%;
   transform: translateX(-50%);
   font-size: 12px;
   font-weight: bold;
-  color:black;
+  color: black;
 }
 
 .user-message .avatar-wrapper {
   position: absolute;
-  bottom: -16px;
-  right: 8px;
-  width: 28px;
-  height: 28px;
+  bottom: -18px;
+  right: 6px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   overflow: hidden;
-  display:flex;
-  align-items:center;
+  display: flex;
+  align-items: center;
   justify-content: center;
 }
 
