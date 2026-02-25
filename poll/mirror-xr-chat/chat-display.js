@@ -19,7 +19,7 @@ if (!showId) {
 
 /* set up */
 
-const DISPLAY_DURATION = 30000;
+const DISPLAY_DURATION = 20000; //20 seconds
 
 const TOTAL_COLUMNS = 6;
 const TOTAL_ROWS = 6;
@@ -49,16 +49,20 @@ if (showId) {
   );
   
   onSnapshot(chatQuery, (snapshot) => {
-    snapshot.forEach((docSnap) => {
-      const data = docSnap.data();
 
-      if (!data.chat) return;
-      if (!data.chat.trim()) return;
+    snapshot.docChanges().forEach((change) => {
 
-      // Prevent duplicate rendering
-      if (activeMessages.some(m => m.dataset.id === docSnap.id)) return;
+      if (change.type === "added") {
+        const data = change.doc.data();
 
-      showMessage(data, docSnap.id);
+        if (!data.chat?.trim()) return;
+
+        // Prevent duplicate rendering
+        if (activeMessages.some(m => m.dataset.id === change.doc.id)) return;
+
+        showMessage(data, change.doc.id);
+      }
+
     });
 
   });
