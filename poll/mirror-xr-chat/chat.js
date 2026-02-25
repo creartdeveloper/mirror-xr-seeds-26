@@ -82,8 +82,19 @@ await validateShow(showId);
   function normalizeText(text) {
     return text
       .toLowerCase()
-      .replace(/[^a-z]/g, "")        
-      .replace(/(.)\1+/g, "$1");    
+      .replace(/[@4]/g, "a")
+      .replace(/[!1]/g, "i")
+      .replace(/3/g, "e")
+      .replace(/0/g, "o")
+      .replace(/5/g, "s")
+      .replace(/7/g, "t")
+      .replace(/\$/g, "s")
+      .replace(/[^a-z]/g, "")
+      .replace(/(.)\1+/g, "$1");
+  }
+
+  function containsEmoji(text) {
+    return /[\p{Emoji_Presentation}\p{Extended_Pictographic}]/u.test(text);
   }
 
   function containsHarmfulContent(text) {
@@ -105,11 +116,18 @@ await validateShow(showId);
     return harmfulPatterns.some(pattern => pattern.test(text));
   }
 
-
+  let lastMessageTime = 0;
 
   function validateMessage(text) {
 
     const trimmed = text.trim();
+
+    // Rate limit (1 message per 3 seconds)
+    const now = Date.now();
+    if (now - lastMessageTime < 3000) {
+      alert("Please wait before sending another message.");
+      return false;
+    }
 
     if (trimmed.length < 2 || trimmed.length > 120) {
       alert("Invalid message length.");
@@ -122,23 +140,40 @@ await validateShow(showId);
       return false;
     }
 
-    // Repeated character spam
-    if (/^(.)\1+$/.test(trimmed)) {
+    // Block pasted emojis
+    if (containsEmoji(trimmed)) {
+      alert("Emojis are not allowed in chat messages.");
+      return false;
+    }
+
+    // Too many special characters
+    if (/[^a-zA-Z0-9\s]{3,}/.test(trimmed)) {
+      alert("Too many special characters.");
+      return false;
+    }
+
+    // Repeated character spam (aaaaaaa)
+    if (/(.)\1{5,}/.test(trimmed)) {
       alert("Spam not allowed.");
       return false;
     }
 
     // Block links
-    if (/http|www/i.test(trimmed)) {
+    if (/http|www|\.com|\.net|\.org/i.test(trimmed)) {
       alert("Links not allowed.");
       return false;
     }
+    if (!/^[a-zA-Z0-9\s.,!?']+$/.test(trimmed)) {
+      alert("Only letters and basic punctuation allowed.");
+      return false;
+    }
 
-    // Block harmful content
     if (containsHarmfulContent(trimmed)) {
       alert("Inappropriate content not allowed.");
       return false;
     }
+
+    lastMessageTime = now;
     return true;
   }
 
@@ -196,6 +231,11 @@ await validateShow(showId);
 
   const sendButton = document.querySelector(".send-button");
   const textArea = document.querySelector(".msg-text-box");
+
+  textArea.addEventListener("paste", (e) => {
+    e.preventDefault();
+    alert("Pasting is not allowed.");
+  });
 
   sendButton.addEventListener("click", () => {
     const message = textArea.value.trim();
