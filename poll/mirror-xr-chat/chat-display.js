@@ -24,7 +24,7 @@ const DISPLAY_DURATION = 30000;
 const TOTAL_COLUMNS = 6;
 const TOTAL_ROWS = 6;
 
-const ALLOWED_COLUMNS = [2, 3, 4, 5];
+const ALLOWED_COLUMNS = [1, 2, 5, 6];
 const ALLOWED_ROWS = [2, 3, 4, 5, 6];
 
 const SLOT_POSITIONS = [];
