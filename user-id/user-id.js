@@ -1,4 +1,9 @@
-import { doc, onSnapshot, setDoc, getDoc } from 
+import {   doc, 
+  onSnapshot, 
+  getDoc,
+  addDoc,
+  collection,
+  Timestamp } from 
 "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 import { db } from "../firebase.js";
 
@@ -252,13 +257,13 @@ pickr.on('change', (color) => {
 
     nextButton.disabled = true;
 
-    await setDoc(
-      doc(db, "Mirror-XR-AF26-poll-magical-item", showId, "users", userId),
+    await addDoc(
+      collection(db, "Mirror-XR-AF26-poll-magical-item", showId, "users"),
       {
         username: finalUsername,
         avatar: finalAvatar,
-        avatarbgColor: finalBgColor,
-        timestamp: Date.now()
+        avatarBgColor: finalBgColor,   // <-- capital B
+        timestamp: Timestamp.now()
       }
     );
 
