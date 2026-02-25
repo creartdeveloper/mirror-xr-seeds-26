@@ -269,48 +269,4 @@ await validateShow(showId);
       timestamp: Timestamp.now()
     });
   }
-
-
-  /*listen chat messages */
-
-  const chatMessagesContainer = document.getElementById("chatMessages");
-
-  const chatQuery = collection(db, CHAT_MESSAGE_COLLECTION);
-
-  onSnapshot(chatQuery, (snapshot) => {
-    snapshot.docChanges().forEach((change) => {
-
-      if (change.type === "added") {
-
-        const data = change.doc.data();
-
-        if (data.showId !== showId) return;
-        if (!data.chat?.trim()) return;
-
-        renderMessage(data);
-      }
-
-    });
-  });
-
-  function renderMessage(data) {
-
-    const div = document.createElement("div");
-    div.className = "user-message";
-
-    div.innerHTML = `
-      <div class="chat-text">${data.chat}</div>
-      <div class="username">${data.username}</div>
-      <div class="avatar-wrapper" style="background:${data.avatarBgColor}">
-        <img src="${data.avatar}" />
-      </div>
-    `;
-
-    chatMessagesContainer.appendChild(div);
-
-    // auto scroll
-    chatMessagesContainer.scrollTop =
-      chatMessagesContainer.scrollHeight;
-  }
-
 });
