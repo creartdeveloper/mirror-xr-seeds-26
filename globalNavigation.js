@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!docSnap.exists()) return;
 
     const pageType = document.body.dataset.page;
-    if (pageType === "profile") return;
+    if (pageType === "landing" || pageType === "profile" || pageType === "userid") return;
 
     const data = docSnap.data();
 

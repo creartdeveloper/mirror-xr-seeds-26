@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mirror XR Seeds</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; background: #000; }
+    body { overflow: hidden; font-family: Arial, sans-serif; color: #fff; }
+    iframe { width: 100%; height: 100%; border: 0; display: block; }
+    #message {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      text-align: center;
+      background: #000;
+    }
+    #message[hidden] { display: none; }
+  </style>
+</head>
+<body>
+  <div id="message">Waiting for the admin to select a session…</div>
+  <iframe id="sessionFrame" title="Mirror XR seed session" allow="fullscreen" hidden></iframe>
+
+  <script type="module">
+    import { db } from "./firebase.js";
+    import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+
+    const selectionRef = doc(db, "mirror-xr-seeds", "current-session");
+    const frame = document.getElementById("sessionFrame");
+    const message = document.getElementById("message");
+
+    // Paste each iframe link next to its session number.
+    const sessionLinks = {
+      1: "https://view.genially.com/6a9028d8a092cb60ff3501f4",
+      2: "https://view.genially.com/6a8e69ed0b59b6e8815a4c81",
+      3: "https://view.genially.com/6a71966531886815608d2608",
+      4: "https://view.genially.com/6a8e690f63ff45d0650bed21",
+      5: "https://view.genially.com/6a8e692f0b59b6e8815a1bf4",
+      6: "https://view.genially.com/6a8d89fdd89433fdb815b50b",
+      7: "https://view.genially.com/6a8d8a0c39bb2afdcb522a4e",
+      8:  "https://view.genially.com/6a8d8a0c39bb2afdcb522a4e"
+    };
+
+    onSnapshot(selectionRef, snapshot => {
+      const sessionNumber = Number(snapshot.data()?.currentSession);
+      const url = sessionLinks[sessionNumber];
+
+      if (!snapshot.exists() || !Number.isInteger(sessionNumber)) {
+        frame.hidden = true;
+        frame.removeAttribute("src");
+        message.hidden = false;
+        message.textContent = "Waiting for the admin to select a session…";
+        return;
+      }
+
+      console.log() ;
+
+      if (frame.getAttribute("src") !== url) frame.src = url;
+      frame.hidden = false;
+      message.hidden = true;
+    }, error => {
+      console.error("Could not load seed session:", error);
+      frame.hidden = true;
+      message.hidden = false;
+      message.textContent = "Unable to connect to the session controller.";
+    });
+  </script>
+</body>
+</html>

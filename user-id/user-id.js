@@ -41,16 +41,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      if (data.currentPage === "chat") {
-
-        const currentPath = window.location.pathname;
-
-        if (!currentPath.includes("chat.html")) {
-          window.location.href = "../poll/mirror-xr-chat/chat.html";
-        }
-
-    }
-
   });
 
   // console.log("Profile page JS loaded");
@@ -260,6 +250,8 @@ pickr.on('change', (color) => {
         timestamp: Date.now()
       }
     );
+
+    window.location.href = "../mirror-xr-seeds.html";
 
   });
 /*button state*/
