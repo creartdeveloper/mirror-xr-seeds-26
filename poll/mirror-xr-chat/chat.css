@@ -508,10 +508,14 @@ nav{
        and (max-width: 1100px) 
        and (orientation: portrait) {
 
-    /* Chat box */
     .chat-wrapper {
         width: 90%;
         max-width: 800px;
+
+        /* Move slightly left and up */
+        position: relative;
+        left: -25px;
+        top: -35px;
     }
 
     .message-box {
@@ -522,7 +526,7 @@ nav{
     .msg-text-box {
         width: 100%;
         min-height: 200px;
-        font-size: 26px;
+        font-size: 22px;
         padding: 22px;
     }
 
