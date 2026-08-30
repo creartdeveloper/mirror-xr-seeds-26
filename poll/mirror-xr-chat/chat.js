@@ -95,23 +95,34 @@ await validateShow(showId);
   }
 
   function containsHarmfulContent(text) {
-    const normalized = normalizeText(text);
+  const normalizedWords = text
+    .split(/\s+/)
+    .map(word => normalizeText(word))
+    .filter(Boolean);
 
-    for (let word of bannedWords) {
-      if (normalized.includes(word)) return true;
-    }
+  const bannedSet = new Set(
+    bannedWords
+      .map(word => normalizeText(word))
+      .filter(Boolean)
+  );
 
-    const harmfulPatterns = [
-      /(kill|stab|shoot|bomb|attack)/i,
-      /go\s*die/i,
-      /i\s*(will|'ll)?\s*(hurt|kill)/i,
-      /(kill|cut|hang)\s*(myself)/i,
-      /i\s*want\s*to\s*die/i,
-      /i\s*hate\s+\w+/i
-    ];
-
-    return harmfulPatterns.some(pattern => pattern.test(text));
+  // Match complete words only
+  if (normalizedWords.some(word => bannedSet.has(word))) {
+    return true;
   }
+
+  const harmfulPatterns = [
+    /\b(kill|stab|shoot|bomb|attack)\b/i,
+    /\bgo\s+die\b/i,
+    /\bi\s*(?:will|'ll)?\s*(?:hurt|kill)\b/i,
+    /\b(kill|cut|hang)\s+myself\b/i,
+    /\bi\s+want\s+to\s+die\b/i,
+    /\bi\s+hate\s+\w+/i
+  ];
+
+  return harmfulPatterns.some(pattern => pattern.test(text));
+}
+
 
   let lastMessageTime = 0;
 
