@@ -1,284 +1,719 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
     <title>Mira Control</title>
 
     <style>
-       body {
-    font-family: sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background-image: url("poll/assets/background/Mirror-XR-OBS.png");
-    background-size: cover; /* ✅ Keep image full, no zoom */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-color: #f4f4f9; /* fallback color */
-}
-
-
-        .chat-container {
-            width: 440px;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        h2 {
-            margin-top: 0;
-            color: #333;
-            text-align: center;
-        }
-
-        textarea {
-            width: 100%;
-            height: 120px;
-            padding: 10px;
-            margin-bottom: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            resize: none;
-            font-size: 16px;
+        * {
             box-sizing: border-box;
         }
 
-       .buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-button {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-/* Button colors */
-#askBtn {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.4);
-}
-
-#sayBtn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
-}
-
-/* Hover effect */
-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-}
-
-/* Disabled state */
-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-
- .status {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 14px;
-    color: #666;
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+            margin: 0;
+            padding: 0;
         }
 
-textarea {
-    width: 100%;
-    height: 120px;
-    padding: 10px;
-    margin-bottom: 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    resize: none;
-    font-size: 16px;
-    box-sizing: border-box;
-    background: transparent; /* ✅ Transparent background */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    color: #333; /* Optional: set text color */
-    outline: none; /* Remove outline on focus */
+        body {
+            font-family: sans-serif;
+
+            min-height: 100vh;
+            min-height: 100dvh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding:
+                max(20px, env(safe-area-inset-top))
+                max(16px, env(safe-area-inset-right))
+                max(20px, env(safe-area-inset-bottom))
+                max(16px, env(safe-area-inset-left));
+
+            background-image:
+                url("poll/assets/background/Mirror-XR-OBS.png");
+
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            background-color: #f4f4f9;
+
+            overflow-x: hidden;
+        }
+
+
+        /* -----------------------------
+           CHAT CONTAINER
+        ----------------------------- */
+
+        .chat-container {
+            width: min(440px, 100%);
+
+            padding: 24px;
+
+            border-radius: 30px;
+
+            position: relative;
+
+            background: transparent;
+
+
+            isolation: isolate;
+        }
+
+
+        /* Background panel */
+
+        .chat-container::before {
+            content: "";
+
+            position: absolute;
+
+            inset: 0;
+
+            border-radius: 30px;
+
+            background-image:
+                url("poll/assets/background/text-box.png");
+
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            z-index: -1;
+        }
+
+
+        /* -----------------------------
+           HEADING
+        ----------------------------- */
+
+        h2 {
+            margin: 0 0 18px;
+
+            color: #333;
+
+            text-align: center;
+
+            font-size: clamp(
+                24px,
+                6vw,
+                32px
+            );
+        }
+
+
+        /* -----------------------------
+           TEXT AREA
+        ----------------------------- */
+
+        textarea {
+            display: block;
+
+            width: 100%;
+
+            min-height: 120px;
+
+            padding: 12px;
+
+            margin: 0;
+
+            border:
+                1px solid
+                rgba(30, 20, 40, 0.25);
+
+            border-radius: 10px;
+
+            resize: vertical;
+
+            font-family: inherit;
+
+            /*
+             * 16px prevents iOS Safari
+             * automatically zooming into
+             * the textarea.
+             */
+            font-size: 16px;
+
+            line-height: 1.4;
+
+            background: transparent;
+
+            color: #333;
+
+            outline: none;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        textarea:focus {
+            border-color:
+                rgba(0, 123, 255, 0.75);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(0, 123, 255, 0.12);
+        }
+
+
+        /* -----------------------------
+           BUTTON AREA
+        ----------------------------- */
+
+        .buttons {
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 15px;
+        }
+
+
+       button {
+        flex: 1;
+        min-height: 42px;
+        padding: 9px 12px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: inherit;
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            opacity 0.2s ease;
+
+        touch-action: manipulation;
 }
-.chat-container {
-    width: 440px;
-    background: transparent; /* ✅ Make container transparent */
-    padding: 20px;
-    border-radius: 30px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    position: relative; /* Optional: for positioning */
+        /* Ask Mira */
+
+        #askBtn {
+            background-color: #28a745;
+
+            color: white;
+
+            box-shadow:
+                0 4px 8px
+                rgba(40, 167, 69, 0.4);
+        }
+
+
+        /* Say Exactly This */
+
+        #sayBtn {
+            background-color: #007bff;
+
+            color: white;
+
+            box-shadow:
+                0 4px 8px
+                rgba(0, 123, 255, 0.4);
+        }
+
+
+        button:hover {
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 6px 12px
+                rgba(0, 0, 0, 0.15);
+        }
+
+
+        button:active {
+            transform:
+                translateY(0);
+        }
+
+
+        /* Disabled */
+
+        button:disabled {
+            background-color: #ccc;
+
+            cursor: not-allowed;
+
+            opacity: 0.6;
+
+            box-shadow: none;
+
+            transform: none;
+        }
+
+
+        /* -----------------------------
+           STATUS
+        ----------------------------- */
+
+       .status {
+            text-align: center;
+            margin-top: 15px;
+            min-height: 20px;
+            font-size: 14px;
+            color: #666;
+
+            position: relative;
+            left: -50px;
 }
 
-/* ✅ Add background image to container */
-.chat-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 30px;
-    border-color: rgb(22, 7, 36);
-    background-image: url("poll/assets/background/text-box.png");
-    background-size: contain; /* ✅ No zooming, keep image full */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    z-index: -1; /* Behind textarea */
-}
+
+        /* -----------------------------
+           MOBILE
+        ----------------------------- */
+
+        @media (max-width: 600px) {
+
+            body {
+                /*
+                 * Moving the panel towards
+                 * the top works better when
+                 * the mobile keyboard opens.
+                 */
+                align-items: flex-start;
+
+                padding-top:
+                    max(
+                        24px,
+                        env(safe-area-inset-top)
+                    );
+            }
+
+
+            .chat-container {
+                width: 100%;
+
+                padding: 20px 16px;
+
+                border-radius: 24px;
+            }
+
+
+            .chat-container::before {
+                border-radius: 24px;
+            }
+
+
+            textarea {
+                min-height: 150px;
+            }
+
+
+            /*
+             * Stack controls vertically
+             * for easier touch interaction.
+             */
+
+            .buttons {
+                flex-direction: column;
+
+                gap: 10px;
+            }
+
+
+            button {
+                flex: none;
+
+                width: 100%;
+
+                min-height: 52px;
+
+                font-size: 16px;
+            }
+
+
+            .status {
+                font-size: 13px;
+            }
+        }
+
+
+        /* -----------------------------
+           VERY SMALL PHONES
+        ----------------------------- */
+
+        @media (max-width: 380px) {
+
+            body {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+
+            .chat-container {
+                padding: 16px 12px;
+            }
+
+
+            textarea {
+                min-height: 130px;
+            }
+        }
+
+
+        /* -----------------------------
+           TOUCH DEVICES
+        ----------------------------- */
+
+        @media (hover: none) {
+
+            button:hover {
+                transform: none;
+            }
+        }
 
     </style>
 </head>
 
+
 <body>
 
-<div class="chat-container">
+    <div class="chat-container">
 
-    <h2>Mira</h2>
-
-   
-    <div>
-    <textarea
-        id="messageInput"
-        placeholder="Type here..."
-    ></textarea>
-   </div>
+        <h2>Mira</h2>
 
 
-    <div class="buttons">
-        <button id="askBtn" onclick="askMira()">
-            Ask Mira
-        </button>
+        <div>
 
-        <button id="sayBtn" onclick="sayExactly()">
-            Say Exactly This
-        </button>
+            <textarea
+                id="messageInput"
+                placeholder="Type here..."
+                aria-label="Message for Mira"
+            ></textarea>
+
+        </div>
+
+
+        <div class="buttons">
+
+            <button
+                id="askBtn"
+                type="button"
+                onclick="askMira()"
+            >
+                Ask Mira
+            </button>
+
+
+            <button
+                id="sayBtn"
+                type="button"
+                onclick="sayExactly()"
+            >
+                Say Exactly This
+            </button>
+
+        </div>
+
+
+        <div
+            id="status"
+            class="status"
+            role="status"
+            aria-live="polite"
+        >
+            Connecting...
+        </div>
+
     </div>
 
-    <div id="status" class="status">
-        Connecting...
-    </div>
-
-</div>
 
 <script>
 
+    /* =====================================================
+       WEBSOCKET CONNECTION
+    ===================================================== */
+
     const ws = new WebSocket(
-         "wss://mai-behavior-eyes-greetings.trycloudflare.com/client-ws"
+        "wss://mai-behavior-eyes-greetings.trycloudflare.com/client-ws"
+    );
+
+
+    const input =
+        document.getElementById(
+            "messageInput"
         );
 
-    const input = document.getElementById("messageInput");
-    const askBtn = document.getElementById("askBtn");
-    const sayBtn = document.getElementById("sayBtn");
-    const statusDiv = document.getElementById("status");
 
+    const askBtn =
+        document.getElementById(
+            "askBtn"
+        );
+
+
+    const sayBtn =
+        document.getElementById(
+            "sayBtn"
+        );
+
+
+    const statusDiv =
+        document.getElementById(
+            "status"
+        );
+
+
+
+    /* =====================================================
+       INITIAL STATE
+    ===================================================== */
+
+    /*
+     * Disable buttons until the
+     * websocket connection is ready.
+     */
+
+    askBtn.disabled = true;
+    sayBtn.disabled = true;
+
+
+
+    /* =====================================================
+       CONNECTION OPEN
+    ===================================================== */
 
     ws.onopen = () => {
 
-        statusDiv.textContent = "Connected to Mira";
-        statusDiv.style.color = "green";
+        statusDiv.textContent =
+            "Connected to Mira";
+
+        statusDiv.style.color =
+            "green";
+
+
+        askBtn.disabled = false;
+        sayBtn.disabled = false;
+
 
         input.focus();
+
     };
 
+
+
+    /* =====================================================
+       CONNECTION CLOSED
+    ===================================================== */
 
     ws.onclose = () => {
 
-        statusDiv.textContent = "Disconnected";
-        statusDiv.style.color = "red";
+        statusDiv.textContent =
+            "Disconnected";
+
+        statusDiv.style.color =
+            "red";
+
 
         askBtn.disabled = true;
         sayBtn.disabled = true;
+
     };
 
+
+
+    /* =====================================================
+       CONNECTION ERROR
+    ===================================================== */
 
     ws.onerror = (err) => {
 
-        statusDiv.textContent = "Connection Error";
-        statusDiv.style.color = "red";
+        statusDiv.textContent =
+            "Connection Error";
 
-        console.error(err);
+        statusDiv.style.color =
+            "red";
+
+
+        askBtn.disabled = true;
+        sayBtn.disabled = true;
+
+
+        console.error(
+            "WebSocket error:",
+            err
+        );
+
     };
 
 
-    // ----------------------------
-    // ASK MIRA
-    // Text → LLM → TTS → Avatar
-    // ----------------------------
+
+    /* =====================================================
+       ASK MIRA
+
+       Text
+         ↓
+       LLM
+         ↓
+       TTS
+         ↓
+       Avatar
+    ===================================================== */
 
     function askMira() {
 
-        const text = input.value.trim();
+        const text =
+            input.value.trim();
 
-        if (!text) return;
 
-        ws.send(JSON.stringify({
-            type: "text-input",
-            text: text
-        }));
+        if (!text) {
+
+            input.focus();
+
+            return;
+
+        }
+
+
+        /*
+         * Extra safeguard in case
+         * websocket has disconnected.
+         */
+
+        if (
+            ws.readyState !==
+            WebSocket.OPEN
+        ) {
+
+            statusDiv.textContent =
+                "Mira is not connected";
+
+            statusDiv.style.color =
+                "red";
+
+            return;
+
+        }
+
+
+        ws.send(
+            JSON.stringify({
+                type: "text-input",
+                text: text
+            })
+        );
+
 
         input.value = "";
+
 
         askBtn.disabled = true;
         sayBtn.disabled = true;
 
-        statusDiv.textContent = "Mira is thinking...";
+
+        statusDiv.textContent =
+            "Mira is thinking...";
+
+        statusDiv.style.color =
+            "#666";
+
     }
 
 
-    // --------------------------------
-    // SAY EXACTLY THIS
-    // Text → TTS → Avatar
-    // ------------------------------
+
+    /* =====================================================
+       SAY EXACTLY THIS
+
+       Text
+         ↓
+       TTS
+         ↓
+       Avatar
+    ===================================================== */
 
     function sayExactly() {
 
-        const text = input.value.trim();
+        const text =
+            input.value.trim();
 
-        if (!text) return;
 
-        ws.send(JSON.stringify({
-            type: "direct-tts",
-            text: text
-        }));
+        if (!text) {
+
+            input.focus();
+
+            return;
+
+        }
+
+
+        if (
+            ws.readyState !==
+            WebSocket.OPEN
+        ) {
+
+            statusDiv.textContent =
+                "Mira is not connected";
+
+            statusDiv.style.color =
+                "red";
+
+            return;
+
+        }
+
+
+        ws.send(
+            JSON.stringify({
+                type: "direct-tts",
+                text: text
+            })
+        );
+
 
         input.value = "";
+
 
         askBtn.disabled = true;
         sayBtn.disabled = true;
 
-        statusDiv.textContent = "Mira is speaking...";
+
+        statusDiv.textContent =
+            "Mira is speaking...";
+
+        statusDiv.style.color =
+            "#666";
+
     }
 
+
+
+    /* =====================================================
+       SERVER MESSAGES
+    ===================================================== */
 
     ws.onmessage = (event) => {
 
         try {
 
-            const data = JSON.parse(event.data);
+            const data =
+                JSON.parse(
+                    event.data
+                );
 
-            console.log("Server:", data);
 
+            console.log(
+                "Server:",
+                data
+            );
+
+
+            /* -------------------------
+               Mira processing
+            ------------------------- */
 
             if (
                 data.type === "control" &&
@@ -286,50 +721,86 @@ textarea {
             ) {
 
                 statusDiv.textContent =
-                    "Mira is thinking. ..";
+                    "Mira is thinking...";
+
+                statusDiv.style.color =
+                    "#666";
 
             }
 
 
+            /* -------------------------
+               LLM response complete
+            ------------------------- */
+
             else if (
                 data.type === "control" &&
-                data.text === "response-ready"
+                data.text ===
+                    "response-ready"
             ) {
 
                 statusDiv.textContent =
                     "Response complete";
 
+                statusDiv.style.color =
+                    "green";
+
+
                 askBtn.disabled = false;
                 sayBtn.disabled = false;
 
+
                 input.focus();
+
             }
 
 
+            /* -------------------------
+               Direct TTS complete
+            ------------------------- */
+
             else if (
                 data.type === "control" &&
-                data.text === "direct-tts-ready"
+                data.text ===
+                    "direct-tts-ready"
             ) {
 
                 statusDiv.textContent =
                     "Speech complete";
 
+                statusDiv.style.color =
+                    "green";
+
+
                 askBtn.disabled = false;
                 sayBtn.disabled = false;
 
+
                 input.focus();
+
             }
 
 
-        } catch (e) { 
+        }
+        catch (e) {
 
             console.log(
                 "Raw WebSocket message:",
                 event.data
             );
+
         }
+
     };
 
+
+
+    /* =====================================================
+       KEYBOARD CONTROL
+
+       Enter       = Ask Mira
+       Shift+Enter = New line
+    ===================================================== */
 
     input.addEventListener(
         "keydown",
@@ -343,7 +814,9 @@ textarea {
                 event.preventDefault();
 
                 askMira();
+
             }
+
         }
     );
 
@@ -351,3 +824,4 @@ textarea {
 
 </body>
 </html>
+```
