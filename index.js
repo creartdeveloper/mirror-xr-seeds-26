@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const showRef = doc(
       db,
-      "Mirror-XR-AF26-poll-magical-item",
+      "mirror-xr-seeds",
       enteredPin
     );
 

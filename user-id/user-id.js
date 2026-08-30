@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     const showRef = doc(
       db,
-      "Mirror-XR-AF26-poll-magical-item",
+      "mirror-xr-seeds",
       showId  
     );
     const snap = await getDoc(showRef);
@@ -242,7 +242,7 @@ pickr.on('change', (color) => {
     nextButton.disabled = true;
 
     await setDoc(
-      doc(db, "Mirror-XR-AF26-poll-magical-item", showId, "users", userId),
+      doc(db, "mirror-xr-seeds", showId, "users", userId),
       {
         username: finalUsername,
         avatar: finalAvatar,

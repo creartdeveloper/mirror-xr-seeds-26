@@ -44,7 +44,7 @@ if (showId) {
 
   /* ---------- CHAT LISTENER ---------- */
   const chatQuery = query(
-    collection(db, "chat_message_collection"),
+    collection(db, "chat_message_collection_seeds"),
     where("showId", "==", showId),
   );
   
@@ -70,7 +70,7 @@ if (showId) {
   /* ---------- EMOJI LISTENER ---------- */
 
   const emojiQuery = query(
-    collection(db, "emoji"),
+    collection(db, "emoji_seeds"),
     where("showId", "==", showId)
   );
 
@@ -141,7 +141,7 @@ function showMessage(data, messageId) {
 
     // Delete from Firestore
     try {
-      await deleteDoc(doc(db, "chat_message_collection", messageId));
+      await deleteDoc(doc(db, "chat_message_collection_seeds", messageId));
     } catch (error) {
       console.error("Error auto deleting message:", error);
     }
@@ -166,7 +166,7 @@ deleteBtn.addEventListener("click", async (e) => {
   e.stopPropagation();
 
   try {
-    await deleteDoc(doc(db, "chat_message_collection", messageId));
+    await deleteDoc(doc(db, "chat_message_collection_seeds", messageId));
   } catch (error) {
     console.error("Error deleting message:", error);
   }

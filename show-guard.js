@@ -10,7 +10,7 @@ export async function validateShow(showId) {
     return;
   }
 
-  const showRef = doc(db, "Mirror-XR-AF26-poll-magical-item", showId);
+  const showRef = doc(db, "mirror-xr-seeds", showId);
   const snap = await getDoc(showRef);
 
   if (!snap.exists()) {

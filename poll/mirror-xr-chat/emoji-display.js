@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const emojiContainer = document.querySelector(".emoji-container");
 
   const emojiQuery = query(
-    collection(db, "emoji"),
+    collection(db, "emoji_seeds"),
     where("showId", "==", showId),
     orderBy("timestamp", "desc")
   );
