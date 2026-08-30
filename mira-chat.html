@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mira Control</title>
+
+    <style>
+       body {
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-image: url("poll/assets/background/Mirror-XR-OBS.png");
+    background-size: cover; /* ✅ Keep image full, no zoom */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: #f4f4f9; /* fallback color */
+}
+
+
+        .chat-container {
+            width: 440px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #333;
+            text-align: center;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: none;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+       .buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Button colors */
+#askBtn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.4);
+}
+
+#sayBtn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+}
+
+/* Hover effect */
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* Disabled state */
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+
+ .status {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #666;
+        }
+
+textarea {
+    width: 100%;
+    height: 120px;
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: none;
+    font-size: 16px;
+    box-sizing: border-box;
+    background: transparent; /* ✅ Transparent background */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #333; /* Optional: set text color */
+    outline: none; /* Remove outline on focus */
+}
+.chat-container {
+    width: 440px;
+    background: transparent; /* ✅ Make container transparent */
+    padding: 20px;
+    border-radius: 30px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    position: relative; /* Optional: for positioning */
+}
+
+/* ✅ Add background image to container */
+.chat-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 30px;
+    border-color: rgb(22, 7, 36);
+    background-image: url("poll/assets/background/text-box.png");
+    background-size: contain; /* ✅ No zooming, keep image full */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    z-index: -1; /* Behind textarea */
+}
+
+    </style>
+</head>
+
+<body>
+
+<div class="chat-container">
+
+    <h2>Mira</h2>
+
+   
+    <div>
+    <textarea
+        id="messageInput"
+        placeholder="Type here..."
+    ></textarea>
+   </div>
+
+
+    <div class="buttons">
+        <button id="askBtn" onclick="askMira()">
+            Ask Mira
+        </button>
+
+        <button id="sayBtn" onclick="sayExactly()">
+            Say Exactly This
+        </button>
+    </div>
+
+    <div id="status" class="status">
+        Connecting...
+    </div>
+
+</div>
+
+<script>
+
+    const ws = new WebSocket(
+         "wss://mai-behavior-eyes-greetings.trycloudflare.com/client-ws"
+        );
+
+    const input = document.getElementById("messageInput");
+    const askBtn = document.getElementById("askBtn");
+    const sayBtn = document.getElementById("sayBtn");
+    const statusDiv = document.getElementById("status");
+
+
+    ws.onopen = () => {
+
+        statusDiv.textContent = "Connected to Mira";
+        statusDiv.style.color = "green";
+
+        input.focus();
+    };
+
+
+    ws.onclose = () => {
+
+        statusDiv.textContent = "Disconnected";
+        statusDiv.style.color = "red";
+
+        askBtn.disabled = true;
+        sayBtn.disabled = true;
+    };
+
+
+    ws.onerror = (err) => {
+
+        statusDiv.textContent = "Connection Error";
+        statusDiv.style.color = "red";
+
+        console.error(err);
+    };
+
+
+    // ----------------------------
+    // ASK MIRA
+    // Text → LLM → TTS → Avatar
+    // ----------------------------
+
+    function askMira() {
+
+        const text = input.value.trim();
+
+        if (!text) return;
+
+        ws.send(JSON.stringify({
+            type: "text-input",
+            text: text
+        }));
+
+        input.value = "";
+
+        askBtn.disabled = true;
+        sayBtn.disabled = true;
+
+        statusDiv.textContent = "Mira is thinking...";
+    }
+
+
+    // --------------------------------
+    // SAY EXACTLY THIS
+    // Text → TTS → Avatar
+    // ------------------------------
+
+    function sayExactly() {
+
+        const text = input.value.trim();
+
+        if (!text) return;
+
+        ws.send(JSON.stringify({
+            type: "direct-tts",
+            text: text
+        }));
+
+        input.value = "";
+
+        askBtn.disabled = true;
+        sayBtn.disabled = true;
+
+        statusDiv.textContent = "Mira is speaking...";
+    }
+
+
+    ws.onmessage = (event) => {
+
+        try {
+
+            const data = JSON.parse(event.data);
+
+            console.log("Server:", data);
+
+
+            if (
+                data.type === "control" &&
+                data.text === "typing..."
+            ) {
+
+                statusDiv.textContent =
+                    "Mira is thinking. ..";
+
+            }
+
+
+            else if (
+                data.type === "control" &&
+                data.text === "response-ready"
+            ) {
+
+                statusDiv.textContent =
+                    "Response complete";
+
+                askBtn.disabled = false;
+                sayBtn.disabled = false;
+
+                input.focus();
+            }
+
+
+            else if (
+                data.type === "control" &&
+                data.text === "direct-tts-ready"
+            ) {
+
+                statusDiv.textContent =
+                    "Speech complete";
+
+                askBtn.disabled = false;
+                sayBtn.disabled = false;
+
+                input.focus();
+            }
+
+
+        } catch (e) { 
+
+            console.log(
+                "Raw WebSocket message:",
+                event.data
+            );
+        }
+    };
+
+
+    input.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Enter" &&
+                !event.shiftKey
+            ) {
+
+                event.preventDefault();
+
+                askMira();
+            }
+        }
+    );
+
+</script>
+
+</body>
+</html>
