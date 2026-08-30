@@ -301,7 +301,7 @@ function spawnStar() {
     star.style.left = `${randomLeft}px`;
 
     // Random falling speed
-    const fallDuration = 4 + Math.random() * 5;
+    const fallDuration = 10 + Math.random() * 5;
 
     star.style.setProperty(
         "--fall-duration",
@@ -337,6 +337,16 @@ function spawnStar() {
             star.remove();
         }
     });
+    star.addEventListener("click", () => {
+
+    collectedStars++;
+
+    starCountDisplay.textContent = collectedStars;
+
+    // Immediately remove star
+    star.remove();
+
+});
 
     starLayer.appendChild(star);
 }
