@@ -413,10 +413,7 @@ nav{
     }
 }
 
-.falling-star.collected {
-    animation: starCollect 0.35s ease forwards;
-    pointer-events: none;
-}
+
 
 @keyframes starCollect {
     0% {
