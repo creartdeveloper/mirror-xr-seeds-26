@@ -278,3 +278,85 @@ await validateShow(showId);
     });
   }
 });
+
+
+//The Start interaction
+const starLayer = document.getElementById("starLayer");
+const starCountDisplay = document.getElementById("starCount");
+
+let collectedStars = 0;
+
+function spawnStar() {
+    const star = document.createElement("button");
+
+    star.type = "button";
+    star.className = "falling-star";
+    star.textContent = "⭐";
+
+    // Random horizontal spawn position
+    const starWidth = 60;
+    const maxLeft = window.innerWidth - starWidth;
+    const randomLeft = Math.random() * maxLeft;
+
+    star.style.left = `${randomLeft}px`;
+
+    // Random falling speed
+    const fallDuration = 4 + Math.random() * 5;
+
+    star.style.setProperty(
+        "--fall-duration",
+        `${fallDuration}s`
+    );
+
+    // Slight random size variation
+    const scale = 0.8 + Math.random() * 0.5;
+    star.style.setProperty("--star-scale", scale);
+
+    star.addEventListener("click", () => {
+        if (star.classList.contains("collected")) {
+            return;
+        }
+
+        star.classList.add("collected");
+
+        collectedStars++;
+
+        starCountDisplay.textContent = collectedStars;
+
+        setTimeout(() => {
+            star.remove();
+        }, 350);
+    });
+
+    // Remove untapped star when it reaches bottom
+    star.addEventListener("animationend", (event) => {
+        if (
+            event.animationName === "starFall" &&
+            !star.classList.contains("collected")
+        ) {
+            star.remove();
+        }
+    });
+
+    starLayer.appendChild(star);
+}
+
+
+/*
+Continuous random spawning
+*/
+function scheduleNextStar() {
+    // Random time before next star:
+    // 500ms – 1800ms
+    const delay =
+        500 + Math.random() * 1300;
+
+    setTimeout(() => {
+        spawnStar();
+        scheduleNextStar();
+    }, delay);
+}
+
+
+// Start
+scheduleNextStar();
