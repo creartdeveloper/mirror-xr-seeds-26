@@ -14,7 +14,7 @@ import {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const COLLECTION_NAME = "Mirror-XR-AF26-poll-magical-item";
+  const COLLECTION_NAME = "mirror-xr-seeds";
 
 
   let currentShowId = null;
@@ -159,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, { merge: true });
 
     const chatQuery = query(
-      collection(db, "chat_message_collection"),
+      collection(db, "chat_message_collection_seeds"),
       where("showId", "==", currentShowId)
     );
 

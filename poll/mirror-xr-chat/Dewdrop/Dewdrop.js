@@ -17,7 +17,7 @@ const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 const db = getFirestore(app);
 const CHAR_MESSAGE_COLLECTION = "chat_box_1";
-const MAGICAL_ITEM_COLLECTION = "magical_item";
+const MAGICAL_ITEM_COLLECTION = "item_seeds";
 const PAGE_TYPE = "dewdrop";
 
 const sendButton = document.querySelector('.pebble-button');

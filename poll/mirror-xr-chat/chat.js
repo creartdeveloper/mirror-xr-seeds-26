@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function validateShow(showId) {
     const showRef = doc(
       db,
-      "Mirror-XR-AF26-poll-magical-item",
+      "mirror-xr-seeds",
       showId
     );
 
@@ -177,7 +177,7 @@ await validateShow(showId);
   /* Redirect Listener */
   const showRef = doc(
     db,
-    "Mirror-XR-AF26-poll-magical-item",
+    "mirror-xr-seeds",
     showId
   );
 
@@ -223,8 +223,8 @@ await validateShow(showId);
   if (avatarWrapper) avatarWrapper.style.backgroundColor = avatarBgColor;
 
   /* Chat Logic */
-  const CHAT_MESSAGE_COLLECTION = "chat_message_collection";
-  const EMOJI_COLLECTION = "emoji";
+  const CHAT_MESSAGE_COLLECTION = "chat_message_collection_seeds";
+  const EMOJI_COLLECTION = "emoji_seeds";
 
   const sendButton = document.querySelector(".send-button");
   const textArea = document.querySelector(".msg-text-box");

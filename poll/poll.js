@@ -12,7 +12,7 @@ import {
 
 document.addEventListener("DOMContentLoaded", async () => {
   async function validateShow(showId) {
-    const showRef = doc(db, "Mirror-XR-AF26-poll-magical-item", showId);
+    const showRef = doc(db, "mirror-xr-seeds", showId);
     const snap = await getDoc(showRef);
 
     if (!snap.exists() || snap.data().active !== true) {
@@ -32,8 +32,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   await validateShow(showId);
 
-  const COLLECTION_NAME = "Mirror-XR-AF26-poll-magical-item";
-  const EMOJI_COLLECTION = "emoji";
+  const COLLECTION_NAME = "mirror-xr-seeds";
+  const EMOJI_COLLECTION = "emoji_seeds";
   const PAGE_TYPE = "poll";
   console.log("USER SHOW ID:", showId);
   let userId = sessionStorage.getItem("userId");
@@ -438,8 +438,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // document.addEventListener("DOMContentLoaded", () => {
 
-//   const COLLECTION_NAME = "Mirror-XR-AF26-poll-magical-item";
-//   const EMOJI_COLLECTION = "emoji";
+//   const COLLECTION_NAME = "mirror-xr-seeds";
+//   const EMOJI_COLLECTION = "emoji_seeds";
 //   const PAGE_TYPE = "poll";
 
 //   // const showId = sessionStorage.getItem("showId");

@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!showId) return;
 
   const currentPage = document.body.dataset.page;
-  const showRef = doc(db, "Mirror-XR-AF26-poll-magical-item",showId);
+  const showRef = doc(db, "mirror-xr-seeds",showId);
 
   onSnapshot(showRef, (docSnap) => {
 
